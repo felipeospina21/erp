@@ -1,11 +1,12 @@
 import React from "react";
 import SideNav from "./SideNav";
+import { Box } from "@chakra-ui/react";
 
 const Layout = ({ children }) => {
   return (
     <>
       <SideNav />
-      <main>{children}</main>
+      <Box as='main' p='1rem'>{children}</Box>
     </>
   );
 };
