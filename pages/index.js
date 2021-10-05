@@ -1,9 +1,10 @@
-import SideNav from "../components/SideNav/SideNav";
+import SideNav from "../components/SideNav";
+import CardsContainer from "../components/CardsContainer";
 
 export default function Home() {
   return (
-    <div className={styles.container}>
-      <SideNav />
+    <div>
+      <CardsContainer/>
     </div>
   );
 }
