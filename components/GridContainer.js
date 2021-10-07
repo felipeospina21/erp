@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid } from "@chakra-ui/react";
+import { Grid, Input} from "@chakra-ui/react";
 import GridRow from "./GridRow.js";
 import GridHeader from "./GridHeader.js";
 
@@ -13,6 +13,8 @@ const GridContainer = ({ templateCol, header, data }) => {
       mt='0.5rem'>
       <GridHeader obj={header}/>
       <GridRow obj={data}/>
+      <Input size='xs'/>
+      <Input size='xs'/>
     </Grid>
   );
 };
