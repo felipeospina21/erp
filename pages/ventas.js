@@ -7,60 +7,52 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 
 const ventas = () => {
-  const salesHeader = [
-    "producto",
-    "cantidad",
-    "descuento",
-    "precio bruto",
-    "precio neto",
-  ];
 
-  const [rowData, setRowData] = useState([
-    {
-      producto: null,
-      cantidad: null,
-      descuento: null,
-      "precio bruto": null,
-      "precio neto": null,
-    },
-  ]);
   const [data, setData] = useState([{}]);
+  const [gridApi, setGridApi] = useState(null);
+  const [gridColumnApi, setGridColumnApi] = useState(null);
+
+  const onGridReady = params => {
+    setGridApi(params.api);
+    setGridColumnApi(params.columnApi);
+
+    params.api.sizeColumnsToFit();
+  };
 
   function numberParser(params) {
     return Number(params.newValue);
   }
 
-  const onCellValueChanged = event => {
-    setRowData([
-      {
-        producto: event.data.producto,
-        cantidad: event.data.cantidad,
-        descuento: event.data.descuento,
-        "precio bruto": event.data.cantidad * 20000,
-        "precio neto": event.data["precio bruto"] * (1 - event.data.descuento),
-      },
-    ]);
+  function createNewRowData() {
+    const newData = {};
+    return newData;
+  }
+  const addRow = () => {
+    const newItems = [createNewRowData()];
+    const res = gridApi.applyTransaction({
+      add: newItems,
+      // addIndex: addIndex,
+    });
   };
 
-  const onClick = () => {
-    const prevRowData = [ ...rowData]
-    console.log(prevRowData)
-    console.log(rowData, 'rowdata')
-    setData([
-      ...prevRowData,
-      {
-        producto: null,
-        cantidad: null,
-        descuento: null,
-        "precio bruto": null,
-        "precio neto": null,
-      },
-    ]);
-  };
+  // Value Getters
+  const brutePrice = (params) => {
+    const brutePrice = params.data.cantidad * 20000
+    return params.data.brutePrice = brutePrice
+  }
+
+  const netPrice = (params) =>{
+    const netPrice = params.data.brutePrice * (1 - params.data.descuento)
+    return  params.data.netPrice = netPrice
+  }
+
 
   return (
     <div className='ag-theme-alpine' style={{ height: 400, width: 1200 }}>
-      <AgGridReact rowData={data} onCellValueChanged={onCellValueChanged}>
+      <AgGridReact
+        onGridReady={onGridReady}
+        rowData={data}
+        >
         <AgGridColumn editable={true} sortable={true} field='producto'></AgGridColumn>
         <AgGridColumn
           valueParser={numberParser}
@@ -72,10 +64,10 @@ const ventas = () => {
           editable={true}
           sortable={true}
           field='descuento'></AgGridColumn>
-        <AgGridColumn sortable={true} field='precio bruto'></AgGridColumn>
-        <AgGridColumn sortable={true} field='precio neto'></AgGridColumn>
+        <AgGridColumn sortable={true} valueGetter={brutePrice} field='precio bruto'></AgGridColumn>
+        <AgGridColumn sortable={true} valueGetter={netPrice} field='precio neto'></AgGridColumn>
       </AgGridReact>
-      <button onClick={onClick}>click</button>
+      <button onClick={() => addRow()}>click</button>
     </div>
   );
 };
