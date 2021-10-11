@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Input } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import GridContainer from "../components/GridContainer";
 import { AgGridColumn, AgGridReact } from "ag-grid-react";
+import { BsPlusCircle } from "react-icons/bs";
 
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
@@ -34,15 +35,29 @@ const ventas = () => {
     });
   };
 
-  // Value Getters
-  const price = params => {
-    const price = params.data.cantidad * 20000;
-    return (params.data.price = price);
+  const onChange = () => {
+    setData([...data, {}]);
   };
 
-  const total = params => {
-    const total = params.data.price * (1 - params.data.descuento);
-    return (params.data.total = total);
+  // Value Getters
+  const priceGetter = params => {
+    if (!params.data.cantidad) {
+      const price = 0;
+      return (params.data.price = price);
+    } else {
+      const price = params.data.cantidad * 20000;
+      return (params.data.price = price);
+    }
+  };
+
+  const totalGetter = params => {
+    if (!params.data.descuento || !params.data.price) {
+      const total = 0;
+      return (params.data.total = total);
+    } else {
+      const total = params.data.price * (1 - params.data.descuento);
+      return (params.data.total = total);
+    }
   };
 
   //TODO: style button
@@ -59,17 +74,20 @@ const ventas = () => {
           valueParser={numberParser}
           editable={true}
           sortable={true}
+          onCellValueChanged={onChange}
           field='descuento'></AgGridColumn>
         <AgGridColumn
           sortable={true}
-          valueGetter={price}
+          valueGetter={priceGetter}
           field='precio'></AgGridColumn>
         <AgGridColumn
           sortable={true}
-          valueGetter={total}
+          valueGetter={totalGetter}
           field='total'></AgGridColumn>
       </AgGridReact>
-      <button onClick={() => addRow()}>click</button>
+      <Button m='1rem' leftIcon={<BsPlusCircle />} onClick={() => addRow()}>
+        Agregar Fila
+      </Button>
     </div>
   );
 };
