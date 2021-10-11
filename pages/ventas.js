@@ -1,15 +1,18 @@
 import React, { useState } from "react";
-import { Button, Box } from "@chakra-ui/react";
-import GridContainer from "../components/GridContainer";
+import { Button, Box, Input } from "@chakra-ui/react";
 import { AgGridColumn, AgGridReact } from "ag-grid-react";
 import { BsPlusCircle } from "react-icons/bs";
+import ValueContainer from "../components/ValueContainer";
 
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
+import TaxPicker from "../components/TaxPicker";
 
 const ventas = () => {
   const [data, setData] = useState([{}]);
   const [total, setTotal] = useState(0);
+  const [tax, setTax]=useState(0)
+
   const [gridApi, setGridApi] = useState(null);
   const [gridColumnApi, setGridColumnApi] = useState(null);
 
@@ -36,8 +39,10 @@ const ventas = () => {
     });
   };
 
-  const onChange = () => {
-    setData([...data, {}]);
+  const onChange = (event) => {
+    if(event.oldValue === undefined){
+      setData([...data, {}]);
+    }
     let newTotal = 0;
     data.forEach(item => {
       newTotal = newTotal + item.total;
@@ -67,37 +72,41 @@ const ventas = () => {
   };
 
   return (
-    <div className='ag-theme-alpine' style={{ height: 400, width: 1200 }}>
-      <AgGridReact onGridReady={onGridReady} rowData={data}>
-        <AgGridColumn editable={true} sortable={true} field='producto'></AgGridColumn>
-        <AgGridColumn
-          valueParser={numberParser}
-          editable={true}
-          sortable={true}
-          field='cantidad'></AgGridColumn>
-        <AgGridColumn
-          valueParser={numberParser}
-          editable={true}
-          sortable={true}
-          onCellValueChanged={onChange}
-          field='descuento'></AgGridColumn>
-        <AgGridColumn
-          sortable={true}
-          valueGetter={priceGetter}
-          field='precio'></AgGridColumn>
-        <AgGridColumn
-          sortable={true}
-          valueGetter={totalGetter}
-          field='total'></AgGridColumn>
-      </AgGridReact>
-      <Button m='1rem' leftIcon={<BsPlusCircle />} onClick={() => addRow()}>
-        Agregar Fila
-      </Button>
-      <Box>
-        <span>total: </span>
-        <span>{total}</span>
-      </Box>
-    </div>
+    <Box>
+      <Input placeholder='Nombre Proveedor' size='lg' />
+      <div className='ag-theme-alpine' style={{ height: 400, width: "100%" }}>
+        <AgGridReact onGridReady={onGridReady} rowData={data}>
+          <AgGridColumn editable={true} sortable={true} field='producto'></AgGridColumn>
+          <AgGridColumn
+            valueParser={numberParser}
+            editable={true}
+            sortable={true}
+            field='cantidad'></AgGridColumn>
+          <AgGridColumn
+            valueParser={numberParser}
+            editable={true}
+            sortable={true}
+            onCellValueChanged={onChange}
+            field='descuento'></AgGridColumn>
+          <AgGridColumn
+            sortable={true}
+            valueGetter={priceGetter}
+            field='precio'></AgGridColumn>
+          <AgGridColumn
+            sortable={true}
+            valueGetter={totalGetter}
+            field='total'></AgGridColumn>
+        </AgGridReact>
+        <Button m='1rem' leftIcon={<BsPlusCircle />} onClick={() => addRow()}>
+          Agregar Fila
+        </Button>
+        <Box float='right' justifyItems='right' m='1rem 1rem 1rem auto'>
+          <ValueContainer text='Subtotal: ' value={total} />
+          <TaxPicker value={tax} setTax={setTax}/>
+          <ValueContainer text='Total: ' value={total * (1 + tax/100)} />
+        </Box>
+      </div>
+    </Box>
   );
 };
 
