@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button } from "@chakra-ui/react";
+import { Button, Box } from "@chakra-ui/react";
 import GridContainer from "../components/GridContainer";
 import { AgGridColumn, AgGridReact } from "ag-grid-react";
 import { BsPlusCircle } from "react-icons/bs";
@@ -9,6 +9,7 @@ import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 
 const ventas = () => {
   const [data, setData] = useState([{}]);
+  const [total, setTotal] = useState(0);
   const [gridApi, setGridApi] = useState(null);
   const [gridColumnApi, setGridColumnApi] = useState(null);
 
@@ -37,11 +38,16 @@ const ventas = () => {
 
   const onChange = () => {
     setData([...data, {}]);
+    let newTotal = 0;
+    data.forEach(item => {
+      newTotal = newTotal + item.total;
+    });
+    setTotal(newTotal);
   };
 
   // Value Getters
   const priceGetter = params => {
-    if (!params.data.cantidad) {
+    if (isNaN(params.data.cantidad)) {
       const price = 0;
       return (params.data.price = price);
     } else {
@@ -51,7 +57,7 @@ const ventas = () => {
   };
 
   const totalGetter = params => {
-    if (!params.data.descuento || !params.data.price) {
+    if (isNaN(params.data.descuento) || isNaN(params.data.price)) {
       const total = 0;
       return (params.data.total = total);
     } else {
@@ -60,7 +66,6 @@ const ventas = () => {
     }
   };
 
-  //TODO: style button
   return (
     <div className='ag-theme-alpine' style={{ height: 400, width: 1200 }}>
       <AgGridReact onGridReady={onGridReady} rowData={data}>
@@ -88,6 +93,10 @@ const ventas = () => {
       <Button m='1rem' leftIcon={<BsPlusCircle />} onClick={() => addRow()}>
         Agregar Fila
       </Button>
+      <Box>
+        <span>total: </span>
+        <span>{total}</span>
+      </Box>
     </div>
   );
 };
