@@ -30,7 +30,7 @@ const SideNav = () => {
           <DrawerHeader>Módulos</DrawerHeader>
 
           <DrawerBody display='flex' flexDir='column'>
-            <NavLinks />
+            <NavLinks onClose={onClose}/>
           </DrawerBody>
         </DrawerContent>
       </Drawer>
