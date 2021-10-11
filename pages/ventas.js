@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button, Box, Input } from "@chakra-ui/react";
 import { AgGridColumn, AgGridReact } from "ag-grid-react";
 import { BsPlusCircle } from "react-icons/bs";
+import { thousandSeparator } from "../utils";
 import ValueContainer from "../components/ValueContainer";
 
 import "ag-grid-community/dist/styles/ag-grid.css";
@@ -11,7 +12,7 @@ import TaxPicker from "../components/TaxPicker";
 const ventas = () => {
   const [data, setData] = useState([{}]);
   const [total, setTotal] = useState(0);
-  const [tax, setTax]=useState(0)
+  const [tax, setTax] = useState(0);
 
   const [gridApi, setGridApi] = useState(null);
   const [gridColumnApi, setGridColumnApi] = useState(null);
@@ -39,8 +40,8 @@ const ventas = () => {
     });
   };
 
-  const onChange = (event) => {
-    if(event.oldValue === undefined){
+  const onChange = event => {
+    if (event.oldValue === undefined) {
       setData([...data, {}]);
     }
     let newTotal = 0;
@@ -57,7 +58,9 @@ const ventas = () => {
       return (params.data.price = price);
     } else {
       const price = params.data.cantidad * 20000;
-      return (params.data.price = price);
+      params.data.price = price;
+      params.data.strprice = thousandSeparator(price, 0);
+      return params.data.strprice;
     }
   };
 
@@ -67,7 +70,9 @@ const ventas = () => {
       return (params.data.total = total);
     } else {
       const total = params.data.price * (1 - params.data.descuento);
-      return (params.data.total = total);
+      params.data.total = total;
+      params.data.strTotal = thousandSeparator(total, 0);
+      return params.data.strTotal;
     }
   };
 
@@ -102,8 +107,8 @@ const ventas = () => {
         </Button>
         <Box float='right' justifyItems='right' m='1rem 1rem 1rem auto'>
           <ValueContainer text='Subtotal: ' value={total} />
-          <TaxPicker value={tax} setTax={setTax}/>
-          <ValueContainer text='Total: ' value={total * (1 + tax/100)} />
+          <TaxPicker value={tax} setTax={setTax} />
+          <ValueContainer text='Total: ' value={total * (1 + tax / 100)} />
         </Box>
       </div>
     </Box>
