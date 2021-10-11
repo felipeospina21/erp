@@ -78,7 +78,7 @@ const ventas = () => {
 
   return (
     <Box>
-      <Input placeholder='Nombre Proveedor' size='lg' />
+      <Input placeholder='Nombre Proveedor' size='lg' m='1rem auto'/>
       <div className='ag-theme-alpine' style={{ height: 400, width: "100%" }}>
         <AgGridReact onGridReady={onGridReady} rowData={data}>
           <AgGridColumn editable={true} sortable={true} field='producto'></AgGridColumn>
@@ -102,10 +102,10 @@ const ventas = () => {
             valueGetter={totalGetter}
             field='total'></AgGridColumn>
         </AgGridReact>
-        <Button m='1rem' leftIcon={<BsPlusCircle />} onClick={() => addRow()}>
+        {/* <Button m='1rem' leftIcon={<BsPlusCircle />} onClick={() => addRow()}>
           Agregar Fila
-        </Button>
-        <Box float='right' justifyItems='right' m='1rem 1rem 1rem auto'>
+        </Button> */}
+        <Box float='right' justifyItems='right' m='1rem 5rem 1rem auto'>
           <ValueContainer text='Subtotal: ' value={total} />
           <TaxPicker value={tax} setTax={setTax} />
           <ValueContainer text='Total: ' value={total * (1 + tax / 100)} />
