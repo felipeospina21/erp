@@ -7,7 +7,6 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 
 const ventas = () => {
-
   const [data, setData] = useState([{}]);
   const [gridApi, setGridApi] = useState(null);
   const [gridColumnApi, setGridColumnApi] = useState(null);
@@ -36,23 +35,20 @@ const ventas = () => {
   };
 
   // Value Getters
-  const brutePrice = (params) => {
-    const brutePrice = params.data.cantidad * 20000
-    return params.data.brutePrice = brutePrice
-  }
+  const price = params => {
+    const price = params.data.cantidad * 20000;
+    return (params.data.price = price);
+  };
 
-  const netPrice = (params) =>{
-    const netPrice = params.data.brutePrice * (1 - params.data.descuento)
-    return  params.data.netPrice = netPrice
-  }
+  const total = params => {
+    const total = params.data.price * (1 - params.data.descuento);
+    return (params.data.total = total);
+  };
 
-
+  //TODO: style button
   return (
     <div className='ag-theme-alpine' style={{ height: 400, width: 1200 }}>
-      <AgGridReact
-        onGridReady={onGridReady}
-        rowData={data}
-        >
+      <AgGridReact onGridReady={onGridReady} rowData={data}>
         <AgGridColumn editable={true} sortable={true} field='producto'></AgGridColumn>
         <AgGridColumn
           valueParser={numberParser}
@@ -64,8 +60,14 @@ const ventas = () => {
           editable={true}
           sortable={true}
           field='descuento'></AgGridColumn>
-        <AgGridColumn sortable={true} valueGetter={brutePrice} field='precio bruto'></AgGridColumn>
-        <AgGridColumn sortable={true} valueGetter={netPrice} field='precio neto'></AgGridColumn>
+        <AgGridColumn
+          sortable={true}
+          valueGetter={price}
+          field='precio'></AgGridColumn>
+        <AgGridColumn
+          sortable={true}
+          valueGetter={total}
+          field='total'></AgGridColumn>
       </AgGridReact>
       <button onClick={() => addRow()}>click</button>
     </div>
