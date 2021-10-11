@@ -1,16 +1,18 @@
 import React from "react";
 import { useDisclosure } from "@chakra-ui/react";
+import { RiMenu2Line } from "react-icons/ri";
 import {
+  Icon,
   Button,
   Box,
   Drawer,
   DrawerBody,
-  DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
 } from "@chakra-ui/react";
+import NavLinks from "./NavLinks";
 
 const SideNav = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -19,7 +21,7 @@ const SideNav = () => {
   return (
     <Box m='1rem'>
       <Button ref={btnRef} colorScheme='teal' onClick={onOpen}>
-        Open
+        <Icon as={RiMenu2Line} />
       </Button>
       <Drawer isOpen={isOpen} placement='left' onClose={onClose} finalFocusRef={btnRef}>
         <DrawerOverlay />
@@ -27,10 +29,8 @@ const SideNav = () => {
           <DrawerCloseButton />
           <DrawerHeader>Módulos</DrawerHeader>
 
-          <DrawerBody>
-            <h3>Costos</h3>
-            <h3>Ventas</h3>
-            <h3>Materias primas</h3>
+          <DrawerBody display='flex' flexDir='column'>
+            <NavLinks />
           </DrawerBody>
         </DrawerContent>
       </Drawer>
