@@ -13,15 +13,11 @@ export default function Home() {
       .then(prods => setProducts(prods));
   };
 
-  useEffect(() => getProducts(db));
+  useEffect(() => getProducts(db), []);
 
   return (
     <div>
-      <button onClick={() => getProducts(db)}>click</button>
-      {products.map(producto => {
-        return <div key={producto.id}>{producto.name}</div>;
-      })}
-      {/* <CardsContainer /> */}
+      <CardsContainer products={products} />
     </div>
   );
 }

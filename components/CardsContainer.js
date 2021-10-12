@@ -2,12 +2,12 @@ import React from "react";
 import { Flex } from "@chakra-ui/react";
 import Card from "./Card";
 
-const CardsContainer = () => {
+const CardsContainer = props => {
   return (
-    <Flex m='1rem' w='100%'>
-      <Card />
-      <Card />
-      <Card />
+    <Flex m='1rem' w='100%' wrap='wrap'>
+      {props.products.map(product => (
+        <Card key={product.id} product={product} />
+      ))}
     </Flex>
   );
 };
