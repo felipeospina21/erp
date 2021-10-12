@@ -4,11 +4,11 @@ import { AgGridColumn, AgGridReact } from "ag-grid-react";
 import { BsPlusCircle } from "react-icons/bs";
 import { thousandSeparator } from "../utils";
 import ValueContainer from "../components/ValueContainer";
-import RowDeleteBtn from "../components/RowDeleteBtn";
+import TaxPicker from "../components/TaxPicker";
 
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
-import TaxPicker from "../components/TaxPicker";
+
 
 const ventas = () => {
   const [data, setData] = useState([{id:0}]);
@@ -21,7 +21,6 @@ const ventas = () => {
   const onGridReady = params => {
     setGridApi(params.api);
     setGridColumnApi(params.columnApi);
-
     params.api.sizeColumnsToFit();
   };
 
@@ -29,17 +28,8 @@ const ventas = () => {
     return Number(params.newValue);
   }
 
-  function createNewRowData() {
-    const newData = {};
-    return newData;
-  }
   const addRow = () => {
     setData([...data, {id:data.length}])
-    // const newItems = [createNewRowData()];
-    // const res = gridApi.applyTransaction({
-    //   add: newItems,
-    //   // addIndex: addIndex,
-    // });
   };
 
   const deleteRow = params => {;
@@ -60,9 +50,6 @@ const ventas = () => {
     setTotal(newTotal);
   };
 
-  const updateTotal = ()=>{
-    
-  }
   // Value Getters
   const priceGetter = params => {
     if (isNaN(params.data.cantidad)) {
@@ -91,10 +78,10 @@ const ventas = () => {
 
 
 
-  //TODO: get proveedor input value
+  //TODO: get cliente input value
   return (
     <Box>
-      <Input placeholder='Nombre Proveedor' size='lg' m='1rem auto' />
+      <Input placeholder='Nombre Cliente' size='lg' m='1rem auto' />
       <div className='ag-theme-alpine' style={{ height: 400, width: "100%" }}>
         <AgGridReact onGridReady={onGridReady} rowData={data}>
           <AgGridColumn editable={true} sortable={true} field='producto'></AgGridColumn>
