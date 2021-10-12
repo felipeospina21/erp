@@ -4,13 +4,14 @@ import { AgGridColumn, AgGridReact } from "ag-grid-react";
 import { BsPlusCircle } from "react-icons/bs";
 import { thousandSeparator } from "../utils";
 import ValueContainer from "../components/ValueContainer";
+import RowDeleteBtn from "../components/RowDeleteBtn";
 
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import TaxPicker from "../components/TaxPicker";
 
 const ventas = () => {
-  const [data, setData] = useState([{}]);
+  const [data, setData] = useState([{id:0}]);
   const [total, setTotal] = useState(0);
   const [tax, setTax] = useState(0);
 
@@ -33,16 +34,24 @@ const ventas = () => {
     return newData;
   }
   const addRow = () => {
-    const newItems = [createNewRowData()];
-    const res = gridApi.applyTransaction({
-      add: newItems,
-      // addIndex: addIndex,
-    });
+    setData([...data, {id:data.length}])
+    // const newItems = [createNewRowData()];
+    // const res = gridApi.applyTransaction({
+    //   add: newItems,
+    //   // addIndex: addIndex,
+    // });
+  };
+
+  const deleteRow = params => {;
+    const newData = data.filter((element)=>(element.id !== params.rowIndex))
+    setData(newData)
   };
 
   const onChange = event => {
     if (event.oldValue === undefined) {
-      setData([...data, {}]);
+      const newData = [...data]
+      newData[event.data.id] = event.data
+      setData(newData);
     }
     let newTotal = 0;
     data.forEach(item => {
@@ -51,6 +60,9 @@ const ventas = () => {
     setTotal(newTotal);
   };
 
+  const updateTotal = ()=>{
+    
+  }
   // Value Getters
   const priceGetter = params => {
     if (isNaN(params.data.cantidad)) {
@@ -70,15 +82,19 @@ const ventas = () => {
       return (params.data.total = total);
     } else {
       const total = params.data.price * (1 - params.data.descuento);
+      params.data.id = params.node.rowIndex
       params.data.total = total;
       params.data.strTotal = thousandSeparator(total, 0);
       return params.data.strTotal;
     }
   };
 
+
+
+  //TODO: get proveedor input value
   return (
     <Box>
-      <Input placeholder='Nombre Proveedor' size='lg' m='1rem auto'/>
+      <Input placeholder='Nombre Proveedor' size='lg' m='1rem auto' />
       <div className='ag-theme-alpine' style={{ height: 400, width: "100%" }}>
         <AgGridReact onGridReady={onGridReady} rowData={data}>
           <AgGridColumn editable={true} sortable={true} field='producto'></AgGridColumn>
@@ -101,10 +117,17 @@ const ventas = () => {
             sortable={true}
             valueGetter={totalGetter}
             field='total'></AgGridColumn>
+          <AgGridColumn
+            cellRendererFramework={params => (
+              <div>
+                <button onClick={() => deleteRow(params)}>Eliminar</button>
+              </div>
+            )}
+            field='acción'></AgGridColumn>
         </AgGridReact>
-        {/* <Button m='1rem' leftIcon={<BsPlusCircle />} onClick={() => addRow()}>
+        <Button m='1rem' leftIcon={<BsPlusCircle />} onClick={() => addRow()}>
           Agregar Fila
-        </Button> */}
+        </Button>
         <Box float='right' justifyItems='right' m='1rem 5rem 1rem auto'>
           <ValueContainer text='Subtotal: ' value={total} />
           <TaxPicker value={tax} setTax={setTax} />
