@@ -1,48 +1,24 @@
-import React, { useState } from "react";
-import { Input } from "@chakra-ui/react";
-import GridContainer from "../components/GridContainer";
-import { AgGridColumn, AgGridReact } from "ag-grid-react";
+import React, {useEffect, useState} from "react";
+import TableContainer from "../components/TableContainer";
+import { collection, getDocs } from "firebase/firestore/lite";
+import db from "../firebase/clientApp";
 
-import "ag-grid-community/dist/styles/ag-grid.css";
-import "ag-grid-community/dist/styles/ag-theme-alpine.css";
+const ventasc = () => {
+  const [products, setProducts] =useState([])
 
-// TODO: check this page for row-inline components
-
-const ventas = () => {
-  const actionButton = params => {
-    console.log(params);
-    alert(`${params.data.make} ${params.value}`);
+  const getProducts = db => {
+    const prodsColl = collection(db, "productos");
+    getDocs(prodsColl)
+      .then(snapshot => snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })))
+      .then(prods => setProducts(prods));
   };
-  const columnDefs = [
-    { headerName: "Make", field: "make" },
-    { headerName: "Model", field: "model" },
-    { headerName: "Price", field: "price" },
-    {
-      headerName: "Action",
-      field: "price",
-      cellRendererFramework: params => (
-        <div>
-          <button onClick={() => actionButton(params)}>Click me</button>
-        </div>
-      ),
-    },
-  ];
-  const rowData = [
-    { make: "Toyota", model: "Celica", price: 35000 },
-    { make: "Ford", model: "Mondeo", price: 32000 },
-    { make: "Porsche", model: "Boxter", price: 72000 },
-  ];
+  useEffect(() => getProducts(db), [])
 
   return (
-    <div className='App'>
-      <h1 align='center'>React-App</h1>
-      <div className='ag-theme-alpine' style={{ height: "200px" }}>
-        <AgGridReact
-          columnDefs={columnDefs}
-          rowData={rowData}
-          defaultColDef={{ flex: 1 }}></AgGridReact>
-      </div>
-    </div>
+    <>
+      <TableContainer products={products}/>
+    </>
   );
 };
-export default ventas;
+
+export default ventasc;
