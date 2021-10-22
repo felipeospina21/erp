@@ -1,19 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Button, Box, Input } from "@chakra-ui/react";
 import { AgGridColumn, AgGridReact } from "ag-grid-react";
 import { BsPlusCircle } from "react-icons/bs";
 import { thousandSeparator } from "../utils";
+import { ProductsContext } from "../context/productsContext";
 import ValueContainer from "../components/ValueContainer";
 import TaxPicker from "../components/TaxPicker";
+import { collection, getDocs } from "firebase/firestore/lite";
+import db from "../firebase/clientApp";
 
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 
-
 const ventas = () => {
-  const [data, setData] = useState([{id:0}]);
+  const [data, setData] = useState([{ id: 0 }]);
   const [total, setTotal] = useState(0);
   const [tax, setTax] = useState(0);
+  const [products, setProducts] = useContext(ProductsContext);
 
   const [gridApi, setGridApi] = useState(null);
   const [gridColumnApi, setGridColumnApi] = useState(null);
@@ -29,18 +32,18 @@ const ventas = () => {
   }
 
   const addRow = () => {
-    setData([...data, {id:data.length}])
+    setData([...data, { id: data.length }]);
   };
 
-  const deleteRow = params => {;
-    const newData = data.filter((element)=>(element.id !== params.rowIndex))
-    setData(newData)
+  const deleteRow = params => {
+    const newData = data.filter(element => element.id !== params.rowIndex);
+    setData(newData);
   };
 
   const onChange = event => {
     if (event.oldValue === undefined) {
-      const newData = [...data]
-      newData[event.data.id] = event.data
+      const newData = [...data];
+      newData[event.data.id] = event.data;
       setData(newData);
     }
     let newTotal = 0;
@@ -69,14 +72,21 @@ const ventas = () => {
       return (params.data.total = total);
     } else {
       const total = params.data.price * (1 - params.data.descuento);
-      params.data.id = params.node.rowIndex
+      params.data.id = params.node.rowIndex;
       params.data.total = total;
       params.data.strTotal = thousandSeparator(total, 0);
       return params.data.strTotal;
     }
   };
 
+  const getProducts = db => {
+    const prodsColl = collection(db, "productos");
+    getDocs(prodsColl)
+      .then(snapshot => snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })))
+      .then(prods => setProducts(prods));
+  };
 
+  useEffect(() => getProducts(db), []);
 
   //TODO: get cliente input value
   return (
@@ -84,7 +94,12 @@ const ventas = () => {
       <Input placeholder='Nombre Cliente' size='lg' m='1rem auto' />
       <div className='ag-theme-alpine' style={{ height: 400, width: "100%" }}>
         <AgGridReact onGridReady={onGridReady} rowData={data}>
-          <AgGridColumn editable={true} sortable={true} field='producto'></AgGridColumn>
+          <AgGridColumn
+            field='producto'
+            cellEditor='agRichSelectCellEditor'
+            cellEditorParams={{ values: ["Ireland", "USA"] }}
+            // sortable={true}
+            ></AgGridColumn>
           <AgGridColumn
             valueParser={numberParser}
             editable={true}

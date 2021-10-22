@@ -6,7 +6,9 @@ const Layout = ({ children }) => {
   return (
     <>
       <SideNav />
-      <Box as='main' p='1rem'>{children}</Box>
+      <Box as='main' p='1rem'>
+        {children}
+      </Box>
     </>
   );
 };
