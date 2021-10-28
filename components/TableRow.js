@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { Tr, Td, Select } from "@chakra-ui/react";
+import { Tr, Td, Select, IconButton, NumberInput, Input } from "@chakra-ui/react";
+import { BiTrash } from "react-icons/bi";
+import TableCellBody from "./TableCellBody";
 
-const TableRow = ({  products }) => {
+const TableRow = ({ products, cellStyles, removeRow, id }) => {
   const [price, setPrice] = useState(0);
   const [stock, setStock] = useState(0);
 
@@ -16,15 +18,41 @@ const TableRow = ({  products }) => {
   };
   return (
     <Tr>
-      <Td>
-        <Select placeholder='Select option' onChange={handleChange}>
+      <Td p='0' w={["170px", "auto"]} maxW='300px' border={cellStyles.border}>
+        <Select
+          placeholder='Select option'
+          onChange={handleChange}
+          size='sm'
+          fontSize={["sm", "md"]}>
           {products.map(product => {
-            return <option value={product.name}>{product.name}</option>;
+            return (
+              <option key={product.id} value={product.name}>
+                {product.name}
+              </option>
+            );
           })}
         </Select>
       </Td>
-      <Td isNumeric>{price}</Td>
-      <Td isNumeric>{stock}</Td>
+      <TableCellBody cellStyles={cellStyles}>{stock}</TableCellBody>
+      <TableCellBody cellStyles={cellStyles}>{price}</TableCellBody>
+      <TableCellBody cellStyles={cellStyles}>
+        <Input />
+      </TableCellBody>
+      <TableCellBody cellStyles={cellStyles}>
+        <Input />
+      </TableCellBody>
+      <TableCellBody cellStyles={cellStyles}>{price}</TableCellBody>
+      <TableCellBody cellStyles={cellStyles}>
+        {" "}
+        <IconButton
+          onClick={() => removeRow(id)}
+          aria-label='eliminar fila'
+          icon={<BiTrash />}
+          colorScheme='red'
+          size='sm'
+          variant='ghost'
+        />
+      </TableCellBody>
     </Tr>
   );
 };
