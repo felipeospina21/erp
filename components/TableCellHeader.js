@@ -1,7 +1,10 @@
-import React from "react";
+import React, {useContext} from "react";
 import { Th } from "@chakra-ui/react";
+import { TableStylesContext } from "../context/TableStylesContext";
 
-const TableCellHeader = ({ cellStyles, children }) => {
+const TableCellHeader = ({ children }) => {
+  const [cellStyles, setCellStyles] = useContext(TableStylesContext);
+
   return (
     <Th textAlign={cellStyles.textAlign} border={cellStyles.border}>
       {children}

@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Tr, Td, Select, IconButton, Input } from "@chakra-ui/react";
 import { BiTrash } from "react-icons/bi";
 import TableCellBody from "./TableCellBody";
+import InputCell from "./InputCell";
+import { TableStylesContext } from "../context/TableStylesContext";
 
 const TableRow = props => {
   const [item, setItem] = useState("");
@@ -10,6 +12,7 @@ const TableRow = props => {
   const [discount, setDiscount] = useState(0);
   const [quantity, setQuantity] = useState(0);
   const [subtotal, setSubtotal] = useState(0);
+  const [cellStyles, setCellStyles] = useContext(TableStylesContext);
 
   const handleSelectChange = event => {
     let prodIndex = props.products
@@ -50,7 +53,7 @@ const TableRow = props => {
 
   return (
     <Tr>
-      <Td p='0' w={["170px", "auto"]} maxW='300px' border={props.cellStyles.border}>
+      <Td p='0' w={["170px", "auto"]} maxW='300px' border={cellStyles.border}>
         <Select
           placeholder='Select option'
           onChange={handleSelectChange}
@@ -65,16 +68,24 @@ const TableRow = props => {
           })}
         </Select>
       </Td>
-      <TableCellBody cellStyles={props.cellStyles}>{stock}</TableCellBody>
-      <TableCellBody cellStyles={props.cellStyles}>{price}</TableCellBody>
-      <TableCellBody cellStyles={props.cellStyles}>
-        <Input id='quantity' onChange={handleInputChange} />
+      <TableCellBody>{stock}</TableCellBody>
+      <TableCellBody>{price}</TableCellBody>
+      <TableCellBody>
+        <InputCell
+          id='quantity'
+          handleInputChange={handleInputChange}
+          textAlign={cellStyles.textAlign}
+        />
       </TableCellBody>
-      <TableCellBody cellStyles={props.cellStyles}>
-        <Input id='discount' onChange={handleInputChange} />
+      <TableCellBody>
+        <InputCell
+          id='discount'
+          handleInputChange={handleInputChange}
+          textAlign={cellStyles.textAlign}
+        />
       </TableCellBody>
-      <TableCellBody cellStyles={props.cellStyles}>{subtotal}</TableCellBody>
-      <TableCellBody cellStyles={props.cellStyles}>
+      <TableCellBody>{subtotal}</TableCellBody>
+      <TableCellBody>
         {" "}
         <IconButton
           onClick={() => props.removeRow(props.id)}
