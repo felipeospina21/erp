@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Table, Thead, Tbody, Tr, Th, Button, Box } from "@chakra-ui/react";
+import { Table, Thead, Tbody, Tr, Button, Box } from "@chakra-ui/react";
 import TableRow from "./TableRow";
 import TableCellHeader from "./TableCellHeader";
 import ValueContainer from "./ValueContainer";
