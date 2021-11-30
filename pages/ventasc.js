@@ -5,8 +5,9 @@ import { collection, getDocs } from "firebase/firestore/lite";
 import db from "../firebase/clientApp";
 import ValueContainer from "../components/ValueContainer";
 import TaxPicker from "../components/TaxPicker";
+import ReduxTest from "../components/ReduxTest";
 
-const ventasc = () => {
+const Ventasc = () => {
   const [products, setProducts] = useState([]);
   const [tax, setTax] = useState(0);
   const [total, setTotal] = useState(0);
@@ -19,6 +20,8 @@ const ventasc = () => {
   };
   useEffect(() => getProducts(db), []);
 
+  //TODO: Agregar boton de venta, descontando inventario de la bd y almacenando la venta en la bd.
+
   return (
     <>
       <TableContainer products={products} setTotal={setTotal} />
@@ -27,8 +30,9 @@ const ventasc = () => {
         <TaxPicker value={tax} setTax={setTax} />
         <ValueContainer text='Total: ' value={total * (1 + tax / 100)} />
       </Box>
+      <ReduxTest/>
     </>
   );
 };
 
-export default ventasc;
+export default Ventasc;

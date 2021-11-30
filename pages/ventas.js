@@ -12,7 +12,7 @@ import db from "../firebase/clientApp";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 
-const ventas = () => {
+const Ventas = () => {
   const [data, setData] = useState([{ id: 0 }]);
   const [total, setTotal] = useState(0);
   const [tax, setTax] = useState(0);
@@ -140,4 +140,4 @@ const ventas = () => {
   );
 };
 
-export default ventas;
+export default Ventas;

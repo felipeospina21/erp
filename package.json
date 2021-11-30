@@ -7,12 +7,14 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest"
+    "test": "jest",
+    "test-cover": "jest --coverage"
   },
   "dependencies": {
     "@chakra-ui/react": "^1.6.8",
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
+    "@reduxjs/toolkit": "^1.6.2",
     "ag-grid-community": "^26.1.0",
     "ag-grid-react": "^26.1.0",
     "firebase": "^9.1.2",
@@ -22,7 +24,8 @@
     "react-dom": "17.0.2",
     "react-firebase-hooks": "^3.0.4",
     "react-firebaseui": "^5.0.2",
-    "react-icons": "^4.3.1"
+    "react-icons": "^4.3.1",
+    "react-redux": "^7.2.6"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.14.1",
