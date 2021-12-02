@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import CardsContainer from "../components/CardsContainer";
 import { collection, getDocs } from "firebase/firestore/lite";
-import { ProductsContext } from "../context/productsContext";
+import { ProductsContext } from "../context/ProductsContext";
 import db from "../firebase/clientApp";
 
 export default function Home() {

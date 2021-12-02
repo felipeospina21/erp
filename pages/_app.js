@@ -1,5 +1,5 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import { ProductsProvider } from "../context/productsContext";
+import { ProductsProvider } from "../context/ProductsContext";
 import Layout from "../components/Layout";
 import { store } from "../app/store";
 import { Provider } from "react-redux";

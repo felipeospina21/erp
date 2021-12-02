@@ -4,6 +4,7 @@ import { BiTrash } from "react-icons/bi";
 import TableCellBody from "./TableCellBody";
 import InputCell from "./InputCell";
 import { TableStylesContext } from "../context/TableStylesContext";
+import { thousandSeparator } from "../utils";
 
 const TableRow = props => {
   const [item, setItem] = useState("");
@@ -84,7 +85,7 @@ const TableRow = props => {
           textAlign={cellStyles.textAlign}
         />
       </TableCellBody>
-      <TableCellBody>{subtotal}</TableCellBody>
+      <TableCellBody>{thousandSeparator(subtotal)}</TableCellBody>
       <TableCellBody>
         {" "}
         <IconButton
