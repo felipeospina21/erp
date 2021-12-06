@@ -4,11 +4,8 @@ import TableRow from "./TableRow";
 import TableCellHeader from "./TableCellHeader";
 import { TableStylesProvider } from "../context/TableStylesContext";
 
-const TableContainer = props => {
-  const [rowsData, setRowsData] = useState([
-    { id: "1", item: null, q: null, subtotal: 0 },
-  ]);
-
+const TableContainer = ({products, setTotal, rowsData, setRowsData}) => {
+ 
   const [header, setHeader] = useState([
     "Producto",
     "Stock",
@@ -34,7 +31,7 @@ const TableContainer = props => {
     rowsData.forEach(row => {
       newTotal = newTotal + row.subtotal;
     });
-    props.setTotal(newTotal);
+    setTotal(newTotal);
   }, [rowsData]);
 
   return (
@@ -54,7 +51,7 @@ const TableContainer = props => {
                 <TableRow
                   key={row.id}
                   id={row.id}
-                  products={props.products}
+                  products={products}
                   removeRow={removeRow}
                   rowsData={rowsData}
                   setRowsData={setRowsData}
