@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Box } from "@chakra-ui/react";
+import { Box, Button } from "@chakra-ui/react";
 import TableContainer from "../components/TableContainer";
-import { collection, getDocs } from "firebase/firestore/lite";
-import { load, getProducts} from "../app/slices/productsSlice";
+import {  getProducts, decreaseStock} from "../app/slices/productsSlice";
 import { useSelector, useDispatch } from "react-redux";
 
 import db from "../firebase/clientApp";
@@ -29,6 +28,12 @@ const Ventasc = () => {
         <TaxPicker value={tax} setTax={setTax} />
         <ValueContainer text='Total: ' value={total * (1 + tax / 100)} />
       </Box>
+      <Button
+        onClick={() =>
+          dispatch(decreaseStock({ db, productId: "4jdx08dPUYYbz6hDiuWa",quantity: 1 }))
+        }>
+        Vender
+      </Button>
       <ReduxTest/>
     </>
   );

@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { load, update, getProducts, updateProducts } from "../app/slices/productsSlice";
+import { load, getProducts, decreaseStock } from "../app/slices/productsSlice";
 import { Button } from "@chakra-ui/react";
 import db from "../firebase/clientApp";
 
@@ -10,14 +10,14 @@ const ReduxTest = () => {
 
   return (
     <div>
-      <Button onClick={() => dispatch(update("4jdx08dPUYYbz6hDiuWa"))}>test redux</Button>
+      <Button onClick={() => dispatch(getProducts(db))}>get products</Button>
       <Button
         onClick={() =>
-          dispatch(updateProducts({ db, productId: "4jdx08dPUYYbz6hDiuWa" }))
+          dispatch(decreaseStock({ db, productId: "4jdx08dPUYYbz6hDiuWa",quantity: 1 }))
         }>
-        click
+        update products
       </Button>
-      <Button onClick={() => console.log(products)}>print</Button>
+
     </div>
   );
 };

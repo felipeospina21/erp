@@ -1,7 +1,6 @@
 import React from "react";
 import { Box, Heading, Text } from "@chakra-ui/react";
 import { thousandSeparator } from "../utils";
-import GridContainer from "./GridContainer";
 
 const Card = ({ product }) => {
   return (
@@ -13,8 +12,6 @@ const Card = ({ product }) => {
         <Text>{`Precio: $${thousandSeparator(product.price, 0)}`}</Text>
         <Text>{`Stock: ${thousandSeparator(product.quantity, 0)}`}</Text>
       </Box>
-
-      {/* <GridContainer templateCol={`${header.length}, 1fr`} header={header} data={data} /> */}
     </Box>
   );
 };
