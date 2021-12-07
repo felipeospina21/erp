@@ -5,8 +5,8 @@ import { Heading } from "@chakra-ui/react";
 const costos = () => {
   return (
     <>
-      <Heading as='h1'>Costos</Heading>
-      <CardsContainer />
+      {/* <Heading as='h1'>Costos</Heading>
+      <CardsContainer /> */}
     </>
   );
 };

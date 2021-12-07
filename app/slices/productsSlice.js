@@ -17,16 +17,24 @@ export const getProducts = createAsyncThunk("products/getProducts", async db => 
 export const decreaseStock = createAsyncThunk(
   "products/updateProducts",
   async (paramsObj, { dispatch, getState }) => {
+    // console.log(paramsObj);
     const { products } = getState();
-    const { db, productId, quantity } = paramsObj;
+    const { db, rowsData } = paramsObj;
 
-    const product = products.list.filter(product => product.id === productId)[0];
+    // const product = products.list.filter(product => product.id === productId)[0];
+    const updatedObj = []
     const prodsRef = collection(db, "productos");
-    const prodRef = doc(prodsRef, productId);
+    rowsData.map(async row => {
+      const { itemId, q } = row;
+      const product = products.list.filter(product => product.id === itemId)[0];
 
-    await updateDoc(prodRef, { quantity: product.quantity + 1 });
+      const prodRef = doc(prodsRef, itemId);
+      updatedObj.push( { itemId, q });
+      await updateDoc(prodRef, { quantity: product.quantity - q });
 
-    return { productId, quantity };
+    });
+
+    return updatedObj
   }
 );
 
@@ -52,9 +60,12 @@ const productsSlice = createSlice({
       })
       .addCase(decreaseStock.fulfilled, (state, action) => {
         state.status = "idle";
-        state.list.map(product => {
-          if (product.id === action.payload.productId) {
-            product.quantity += action.payload.quantity;
+        // console.log(action.payload)
+        action.payload.map(row => {
+          const product = state.list.filter(product => product.id === row.itemId)[0];
+
+          if (row.itemId === product.id) {
+            product.quantity -= row.q;
           }
           return state.list;
         });

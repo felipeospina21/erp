@@ -7,13 +7,8 @@ import { TableStylesContext } from "../context/TableStylesContext";
 import { thousandSeparator } from "../utils";
 
 const TableRow = props => {
-  const [item, setItem] = useState("");
-  const [price, setPrice] = useState(0);
-  const [stock, setStock] = useState(0);
-  const [discount, setDiscount] = useState(0);
-  const [quantity, setQuantity] = useState(0);
-  const [subtotal, setSubtotal] = useState(0);
   const [cellStyles, setCellStyles] = useContext(TableStylesContext);
+  const [rowData, setRowData] = useState(props.rowData);
 
   const handleSelectChange = event => {
     let prodIndex = props.products
@@ -21,32 +16,41 @@ const TableRow = props => {
         return product.name;
       })
       .indexOf(event.target.value);
-    setItem(props.products[prodIndex].name);
-    setPrice(props.products[prodIndex].price);
-    setStock(props.products[prodIndex].quantity);
+
+    setRowData({
+      ...rowData,
+      itemId: props.products[prodIndex].id,
+      item: props.products[prodIndex].name,
+      price: props.products[prodIndex].price,
+      stock: props.products[prodIndex].quantity,
+    });
   };
 
   const handleInputChange = event => {
     const value = event.target.value;
     if (event.target.id === "quantity") {
-      setQuantity(parseInt(value));
+      setRowData({ ...rowData, quantity: parseInt(value) });
     } else if (event.target.id === "discount") {
-      setDiscount(parseFloat(value));
-      const netSubtotal = price * quantity;
+      const netSubtotal = rowData.price * rowData.quantity;
       const grossSubTotal = netSubtotal - netSubtotal * value;
       const newSubtotal = parseFloat(grossSubTotal);
-      setSubtotal(newSubtotal);
-      updateRowsData(newSubtotal);
+      const newDiscount = parseFloat(value);
+      setRowData({ ...rowData, discount: newDiscount, subtotal: newSubtotal });
+      updateRowsData(newDiscount, newSubtotal);
     }
   };
 
-  const updateRowsData = newSubtotal => {
+  const updateRowsData = (newDiscount, newSubtotal) => {
     const newRowsData = [...props.rowsData];
     newRowsData.forEach(row => {
       if (row["id"] === props.id) {
-        row["item"] = item;
-        row["q"] = quantity;
-        row["subtotal"] = newSubtotal;
+        (row.item = rowData.item),
+          (row.itemId = rowData.itemId),
+          (row.price = rowData.price),
+          (row.stock = rowData.stock),
+          (row.quantity = rowData.quantity),
+          (row.discount = newDiscount),
+          (row.subtotal = newSubtotal);
       }
     });
     props.setRowsData(newRowsData);
@@ -69,8 +73,8 @@ const TableRow = props => {
           })}
         </Select>
       </Td>
-      <TableCellBody>{stock}</TableCellBody>
-      <TableCellBody>{price}</TableCellBody>
+      <TableCellBody>{rowData.stock}</TableCellBody>
+      <TableCellBody>{rowData.price}</TableCellBody>
       <TableCellBody>
         <InputCell
           id='quantity'
@@ -85,7 +89,7 @@ const TableRow = props => {
           textAlign={cellStyles.textAlign}
         />
       </TableCellBody>
-      <TableCellBody>{thousandSeparator(subtotal)}</TableCellBody>
+      <TableCellBody>{thousandSeparator(rowData.subtotal)}</TableCellBody>
       <TableCellBody>
         {" "}
         <IconButton

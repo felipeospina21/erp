@@ -55,6 +55,7 @@ const TableContainer = ({products, setTotal, rowsData, setRowsData}) => {
                   removeRow={removeRow}
                   rowsData={rowsData}
                   setRowsData={setRowsData}
+                  rowData={row}
                 />
               );
             })}
