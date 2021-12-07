@@ -1,59 +1,48 @@
 import React, { useState, useContext } from "react";
-import { Tr, Td, Select, IconButton, Input } from "@chakra-ui/react";
+import { Tr, Td, Select, IconButton } from "@chakra-ui/react";
 import { BiTrash } from "react-icons/bi";
-import TableCellBody from "./TableCellBody";
-import InputCell from "./InputCell";
 import { TableStylesContext } from "../context/TableStylesContext";
 import { thousandSeparator } from "../utils";
+import TableCellBody from "./TableCellBody";
+import InputCell from "./InputCell";
 
 const TableRow = props => {
   const [cellStyles, setCellStyles] = useContext(TableStylesContext);
-  const [rowData, setRowData] = useState(props.rowData);
 
   const handleSelectChange = event => {
+    const newRowsData = [...props.rowsData];
     let prodIndex = props.products
       .map(product => {
         return product.name;
       })
       .indexOf(event.target.value);
 
-    setRowData({
-      ...rowData,
-      itemId: props.products[prodIndex].id,
-      item: props.products[prodIndex].name,
-      price: props.products[prodIndex].price,
-      stock: props.products[prodIndex].quantity,
+    newRowsData.map(row => {
+      if (row.id === props.id) {
+        (row.itemId = props.products[prodIndex].id),
+          (row.item = props.products[prodIndex].name),
+          (row.price = props.products[prodIndex].price),
+          (row.stock = props.products[prodIndex].quantity);
+      }
     });
+    props.setRowsData(newRowsData);
   };
 
   const handleInputChange = event => {
     const value = event.target.value;
-    if (event.target.id === "quantity") {
-      setRowData({ ...rowData, quantity: parseInt(value) });
-    } else if (event.target.id === "discount") {
-      const netSubtotal = rowData.price * rowData.quantity;
-      const grossSubTotal = netSubtotal - netSubtotal * value;
-      const newSubtotal = parseFloat(grossSubTotal);
-      const newDiscount = parseFloat(value);
-      setRowData({ ...rowData, discount: newDiscount, subtotal: newSubtotal });
-      updateRowsData(newDiscount, newSubtotal);
-    }
-  };
-
-  const updateRowsData = (newDiscount, newSubtotal) => {
     const newRowsData = [...props.rowsData];
-    newRowsData.forEach(row => {
-      if (row["id"] === props.id) {
-        (row.item = rowData.item),
-          (row.itemId = rowData.itemId),
-          (row.price = rowData.price),
-          (row.stock = rowData.stock),
-          (row.quantity = rowData.quantity),
-          (row.discount = newDiscount),
-          (row.subtotal = newSubtotal);
+
+    newRowsData.map(row => {
+      if (event.target.id === "quantity" && row.id === props.id) {
+        row.quantity = parseInt(value);
+      } else if (event.target.id === "discount" && row.id === props.id) {
+        const netSubtotal = row.price * row.quantity;
+        const grossSubTotal = netSubtotal - netSubtotal * value;
+        row.discount = parseFloat(value);
+        row.subtotal = parseFloat(grossSubTotal);
       }
+      props.setRowsData(newRowsData);
     });
-    props.setRowsData(newRowsData);
   };
 
   return (
@@ -73,8 +62,9 @@ const TableRow = props => {
           })}
         </Select>
       </Td>
-      <TableCellBody>{rowData.stock}</TableCellBody>
-      <TableCellBody>{rowData.price}</TableCellBody>
+
+      <TableCellBody>{props.rowData.stock}</TableCellBody>
+      <TableCellBody>{props.rowData.price}</TableCellBody>
       <TableCellBody>
         <InputCell
           id='quantity'
@@ -89,7 +79,7 @@ const TableRow = props => {
           textAlign={cellStyles.textAlign}
         />
       </TableCellBody>
-      <TableCellBody>{thousandSeparator(rowData.subtotal)}</TableCellBody>
+      <TableCellBody>{thousandSeparator(props.rowData.subtotal)}</TableCellBody>
       <TableCellBody>
         {" "}
         <IconButton
