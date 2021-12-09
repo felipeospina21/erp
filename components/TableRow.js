@@ -79,7 +79,7 @@ const TableRow = props => {
           textAlign={cellStyles.textAlign}
         />
       </TableCellBody>
-      <TableCellBody>{thousandSeparator(props.rowData.subtotal)}</TableCellBody>
+      <TableCellBody>{`$${thousandSeparator(props.rowData.subtotal)}`}</TableCellBody>
       <TableCellBody>
         {" "}
         <IconButton

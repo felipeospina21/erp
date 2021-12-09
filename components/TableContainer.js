@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Table, Thead, Tbody, Tr, Button, Box } from "@chakra-ui/react";
+import { Table, Thead, Tbody, Tr, Button, Box, Icon} from "@chakra-ui/react";
+import {FaPlusCircle } from 'react-icons/fa'
 import TableRow from "./TableRow";
 import TableCellHeader from "./TableCellHeader";
 import { TableStylesProvider } from "../context/TableStylesContext";
@@ -61,8 +62,8 @@ const TableContainer = ({products, setTotal, rowsData, setRowsData}) => {
             })}
           </Tbody>
         </Table>
-        <Button colorScheme='green' size='sm' my='1rem' onClick={addRow}>
-          Add Row
+        <Button colorScheme='teal' size='sm' my='1rem' leftIcon={<Icon as={FaPlusCircle}/>} onClick={addRow}>
+          Row
         </Button>
       </Box>
     </TableStylesProvider>
