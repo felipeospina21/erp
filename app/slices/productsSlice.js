@@ -22,19 +22,23 @@ export const decreaseStock = createAsyncThunk(
     const { db, rowsData } = paramsObj;
 
     // const product = products.list.filter(product => product.id === productId)[0];
-    const updatedObj = []
+    const updatedObj = [];
     const prodsRef = collection(db, "productos");
     rowsData.map(async row => {
-      const { itemId, q } = row;
+      const { itemId, quantity } = row;
       const product = products.list.filter(product => product.id === itemId)[0];
 
       const prodRef = doc(prodsRef, itemId);
-      updatedObj.push( { itemId, q });
-      await updateDoc(prodRef, { quantity: product.quantity - q });
+      updatedObj.push({ itemId, quantity });
 
+      if (quantity < product.quantity) {
+        await updateDoc(prodRef, { quantity: product.quantity - quantity });
+      } else {
+        console.log(`errorxx ${quantity} > ${product.quantity}`);
+      }
     });
 
-    return updatedObj
+    return updatedObj;
   }
 );
 
@@ -64,7 +68,7 @@ const productsSlice = createSlice({
         action.payload.map(row => {
           const product = state.list.filter(product => product.id === row.itemId)[0];
 
-          if (row.itemId === product.id) {
+          if (row.itemId === product.id && row.quantity <= product.quantity) {
             product.quantity -= row.q;
           }
           return state.list;
