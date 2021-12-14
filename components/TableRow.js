@@ -11,7 +11,7 @@ import InputCell from "./InputCell";
 const TableRow = props => {
   const [cellStyles, setCellStyles] = useContext(TableStylesContext);
   const products = useSelector(state => state.products.list);
-  const salesBtnDisabled = useSelector(state => state.salesBtn);
+  const salesBtn = useSelector(state => state.salesBtn);
   const dispatch = useDispatch();
   const toast = useToast();
 
@@ -57,10 +57,10 @@ const TableRow = props => {
         const grossSubTotal = netSubtotal - netSubtotal * value;
         row.discount = parseFloat(value);
         row.subtotal = parseFloat(grossSubTotal);
-        if (value !== "" && salesBtnDisabled) {
-          dispatch(toggle());
+        if (value !== "" && salesBtn.disabled) {
+          dispatch(toggle(false));
         } else if (value === "") {
-          dispatch(toggle());
+          dispatch(toggle(true));
         }
       }
       props.setRowsData(newRowsData);

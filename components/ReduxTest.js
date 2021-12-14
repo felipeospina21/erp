@@ -11,7 +11,7 @@ const ReduxTest = () => {
 
   return (
     <div>
-      <Button onClick={() => dispatch(toggle())}>load</Button>
+      <Button onClick={() => dispatch(toggle(false))}>toggle</Button>
       <Button
         onClick={() =>
           dispatch(decreaseStock({ db, productId: "4jdx08dPUYYbz6hDiuWa",quantity: 1 }))

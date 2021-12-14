@@ -14,7 +14,7 @@ const Ventasc = () => {
   const [rowsData, setRowsData] = useState([{ id: "1", subtotal: 0 }]);
   const [tax, setTax] = useState(0);
   const [total, setTotal] = useState(0);
-  const btnDisabled = useSelector(state => state.salesBtn);
+  const salesBtn = useSelector(state => state.salesBtn);
   const dispatch = useDispatch();
 
   const handleReset = () => {
@@ -38,14 +38,14 @@ const Ventasc = () => {
     <>
       <TableContainer setTotal={setTotal} rowsData={rowsData} setRowsData={setRowsData} />
       <Flex justify='flex-end' align='center'>
-        <Btn color='green' status={btnDisabled} onClick={handleClick}>
+        <Btn color='green' status={salesBtn.disabled} onClick={handleClick}>
           Vender
         </Btn>
 
         <Btn color='red' onClick={handleReset}>
           Borrar
         </Btn>
-        {/* <ReduxTest /> */}
+        <ReduxTest />
         <Box justifyItems='right' p='0 1rem'>
           <ValueContainer text='Subtotal: ' value={total} />
           <TaxPicker value={tax} setTax={setTax} />

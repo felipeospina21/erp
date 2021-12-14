@@ -1,13 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = true;
+const initialState = {disabled:true};
 
 const salesBtnSlice = createSlice({
   name: "salesBtn",
   initialState,
   reducers: {
-    // TODO: Cambio de estado explicito, pasarlo como argumento
-    toggle: state => !state,
+    toggle: (state, action) => {
+      state.disabled = action.payload
+    },
   },
 });
 

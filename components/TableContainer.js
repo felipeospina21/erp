@@ -19,7 +19,7 @@ const TableContainer = ({ setTotal, rowsData, setRowsData }) => {
   ]);
 
   const addRow = () => {
-    dispatch(toggle());
+    dispatch(toggle(true));
     const newRowId = rowsData.length + 1;
     setRowsData([...rowsData, { id: newRowId.toString(), subtotal: 0 }]);
   };
