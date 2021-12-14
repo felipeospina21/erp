@@ -15,6 +15,7 @@ const NavLinks = ({ onClose }) => {
 
 export default NavLinks;
 
+// MyButton allows closing menu when clicking link
 const MyButton = React.forwardRef(({ onClick, href, text }, ref) => {
   return (
     <a href={href} onClick={onClick} ref={ref}>
@@ -22,6 +23,7 @@ const MyButton = React.forwardRef(({ onClick, href, text }, ref) => {
     </a>
   );
 });
+MyButton.displayName = "MyButton";
 
 const StyledLink = props => (
   <ListItem>

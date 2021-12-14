@@ -43,6 +43,7 @@ const Ventasc = () => {
       dispatch(toggle(false));
     }
   }, [rowsData, dispatch, salesBtn.disabled]);
+  
   return (
     <>
       <TableContainer setTotal={setTotal} rowsData={rowsData} setRowsData={setRowsData} />
