@@ -1,6 +1,8 @@
-import React, { useState, useContext } from "react";
-import { Tr, Td, Select, IconButton } from "@chakra-ui/react";
+import React, { useContext } from "react";
+import { Tr, Td, Select, IconButton, useToast } from "@chakra-ui/react";
+import { useSelector, useDispatch } from "react-redux";
 import { BiTrash } from "react-icons/bi";
+import { toggle } from "../app/slices/salesBtnSlice";
 import { TableStylesContext } from "../context/TableStylesContext";
 import { thousandSeparator } from "../utils";
 import TableCellBody from "./TableCellBody";
@@ -8,10 +10,14 @@ import InputCell from "./InputCell";
 
 const TableRow = props => {
   const [cellStyles, setCellStyles] = useContext(TableStylesContext);
+  const products = useSelector(state => state.products.list);
+  const salesBtnDisabled = useSelector(state => state.salesBtn);
+  const dispatch = useDispatch();
+  const toast = useToast();
 
   const handleSelectChange = event => {
     const newRowsData = [...props.rowsData];
-    let prodIndex = props.products
+    let prodIndex = products
       .map(product => {
         return product.name;
       })
@@ -19,10 +25,10 @@ const TableRow = props => {
 
     newRowsData.map(row => {
       if (row.id === props.id) {
-        (row.itemId = props.products[prodIndex].id),
-          (row.item = props.products[prodIndex].name),
-          (row.price = props.products[prodIndex].price),
-          (row.stock = props.products[prodIndex].quantity);
+        (row.itemId = products[prodIndex].id),
+          (row.item = products[prodIndex].name),
+          (row.price = products[prodIndex].price),
+          (row.stock = products[prodIndex].stock);
       }
     });
     props.setRowsData(newRowsData);
@@ -33,13 +39,29 @@ const TableRow = props => {
     const newRowsData = [...props.rowsData];
 
     newRowsData.map(row => {
+      const product = products.filter(product => product.id === row.itemId)[0];
       if (event.target.id === "quantity" && row.id === props.id) {
         row.quantity = parseInt(value);
+        if (row.quantity > product.stock) {
+          toast({
+            title: "Inventario insuficiente",
+            description: `La cantidad a vender de ${product.name} supera el inventario`,
+            status: "error",
+            duration: 8000,
+            isClosable: true,
+          });
+        }
       } else if (event.target.id === "discount" && row.id === props.id) {
+        const value = event.target.value;
         const netSubtotal = row.price * row.quantity;
         const grossSubTotal = netSubtotal - netSubtotal * value;
         row.discount = parseFloat(value);
         row.subtotal = parseFloat(grossSubTotal);
+        if (value !== "" && salesBtnDisabled) {
+          dispatch(toggle());
+        } else if (value === "") {
+          dispatch(toggle());
+        }
       }
       props.setRowsData(newRowsData);
     });
@@ -53,7 +75,7 @@ const TableRow = props => {
           onChange={handleSelectChange}
           size='sm'
           fontSize={["sm", "md"]}>
-          {props.products.map(product => {
+          {products.map(product => {
             return (
               <option key={product.id} value={product.name}>
                 {product.name}

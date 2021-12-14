@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Table, Thead, Tbody, Tr, Button, Box, Icon} from "@chakra-ui/react";
-import {FaPlusCircle } from 'react-icons/fa'
+import { Table, Thead, Tbody, Tr, Button, Box, Icon } from "@chakra-ui/react";
+import { useDispatch } from "react-redux";
+import { FaPlusCircle } from "react-icons/fa";
+import { toggle } from "../app/slices/salesBtnSlice";
 import TableRow from "./TableRow";
 import TableCellHeader from "./TableCellHeader";
 import { TableStylesProvider } from "../context/TableStylesContext";
 
-const TableContainer = ({products, setTotal, rowsData, setRowsData}) => {
- 
+const TableContainer = ({ setTotal, rowsData, setRowsData }) => {
+  const dispatch = useDispatch();
   const [header, setHeader] = useState([
     "Producto",
     "Stock",
@@ -17,6 +19,7 @@ const TableContainer = ({products, setTotal, rowsData, setRowsData}) => {
   ]);
 
   const addRow = () => {
+    dispatch(toggle());
     const newRowId = rowsData.length + 1;
     setRowsData([...rowsData, { id: newRowId.toString(), subtotal: 0 }]);
   };
@@ -52,7 +55,6 @@ const TableContainer = ({products, setTotal, rowsData, setRowsData}) => {
                 <TableRow
                   key={row.id}
                   id={row.id}
-                  products={products}
                   removeRow={removeRow}
                   rowsData={rowsData}
                   setRowsData={setRowsData}
@@ -62,7 +64,12 @@ const TableContainer = ({products, setTotal, rowsData, setRowsData}) => {
             })}
           </Tbody>
         </Table>
-        <Button colorScheme='teal' size='sm' my='1rem' leftIcon={<Icon as={FaPlusCircle}/>} onClick={addRow}>
+        <Button
+          colorScheme='teal'
+          size='sm'
+          my='1rem'
+          leftIcon={<Icon as={FaPlusCircle} />}
+          onClick={addRow}>
           Row
         </Button>
       </Box>

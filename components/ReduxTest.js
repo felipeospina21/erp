@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { load, getProducts, decreaseStock } from "../app/slices/productsSlice";
+import {toggle} from '../app/slices/salesBtnSlice'
 import { Button } from "@chakra-ui/react";
 import db from "../firebase/clientApp";
 
@@ -10,7 +11,7 @@ const ReduxTest = () => {
 
   return (
     <div>
-      <Button onClick={() => dispatch(getProducts(db))}>get products</Button>
+      <Button onClick={() => dispatch(toggle())}>load</Button>
       <Button
         onClick={() =>
           dispatch(decreaseStock({ db, productId: "4jdx08dPUYYbz6hDiuWa",quantity: 1 }))

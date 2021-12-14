@@ -10,7 +10,8 @@ const Card = ({ product }) => {
       </Heading>
       <Box>
         <Text>{`Precio: $${thousandSeparator(product.price, 0)}`}</Text>
-        <Text>{`Stock: ${thousandSeparator(product.quantity, 0)}`}</Text>
+        <Text>{`Stock: ${thousandSeparator(product.stock, 0)}`}</Text>
+        {/* <Text>{`Stock: ${thousandSeparator(product.quantity, 0)}`}</Text> */}
       </Box>
     </Box>
   );

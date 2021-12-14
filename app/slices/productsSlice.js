@@ -1,6 +1,5 @@
-import { createSlice, createAsyncThunk, useSelector } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { collection, doc, getDocs, updateDoc } from "firebase/firestore/lite";
-// import { doc, updateDoc } from "firebase/firestore";
 
 const initialState = {
   list: [],
@@ -17,13 +16,11 @@ export const getProducts = createAsyncThunk("products/getProducts", async db => 
 export const decreaseStock = createAsyncThunk(
   "products/updateProducts",
   async (paramsObj, { dispatch, getState }) => {
-    // console.log(paramsObj);
     const { products } = getState();
     const { db, rowsData } = paramsObj;
-
-    // const product = products.list.filter(product => product.id === productId)[0];
     const updatedObj = [];
     const prodsRef = collection(db, "productos");
+
     rowsData.map(async row => {
       const { itemId, quantity } = row;
       const product = products.list.filter(product => product.id === itemId)[0];
@@ -31,10 +28,11 @@ export const decreaseStock = createAsyncThunk(
       const prodRef = doc(prodsRef, itemId);
       updatedObj.push({ itemId, quantity });
 
-      if (quantity < product.quantity) {
-        await updateDoc(prodRef, { quantity: product.quantity - quantity });
+      if (quantity <= product.stock) {
+        await updateDoc(prodRef, { stock: product.stock - quantity });
       } else {
-        console.log(`errorxx ${quantity} > ${product.quantity}`);
+        // console.log(`errorxx ${quantity} > ${product.stock}`);
+        return 'error'
       }
     });
 
@@ -64,12 +62,10 @@ const productsSlice = createSlice({
       })
       .addCase(decreaseStock.fulfilled, (state, action) => {
         state.status = "idle";
-        // console.log(action.payload)
-        action.payload.map(row => {
-          const product = state.list.filter(product => product.id === row.itemId)[0];
-
-          if (row.itemId === product.id && row.quantity <= product.quantity) {
-            product.quantity -= row.q;
+        action.payload.map(salesRow => {
+          const product = state.list.filter(product => product.id === salesRow.itemId)[0];
+          if (salesRow.itemId === product.id && salesRow.quantity <= product.stock) {
+            product.stock -= salesRow.quantity;
           }
           return state.list;
         });
