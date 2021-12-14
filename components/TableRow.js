@@ -1,8 +1,7 @@
 import React, { useContext } from "react";
 import { Tr, Td, Select, IconButton, useToast } from "@chakra-ui/react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { BiTrash } from "react-icons/bi";
-import { toggle } from "../app/slices/salesBtnSlice";
 import { TableStylesContext } from "../context/TableStylesContext";
 import { thousandSeparator } from "../utils";
 import TableCellBody from "./TableCellBody";
@@ -11,8 +10,6 @@ import InputCell from "./InputCell";
 const TableRow = props => {
   const [cellStyles, setCellStyles] = useContext(TableStylesContext);
   const products = useSelector(state => state.products.list);
-  const salesBtn = useSelector(state => state.salesBtn);
-  const dispatch = useDispatch();
   const toast = useToast();
 
   const handleSelectChange = event => {
@@ -57,11 +54,6 @@ const TableRow = props => {
         const grossSubTotal = netSubtotal - netSubtotal * value;
         row.discount = parseFloat(value);
         row.subtotal = parseFloat(grossSubTotal);
-        if (value !== "" && salesBtn.disabled) {
-          dispatch(toggle(false));
-        } else if (value === "") {
-          dispatch(toggle(true));
-        }
       }
       props.setRowsData(newRowsData);
     });

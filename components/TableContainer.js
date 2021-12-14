@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Table, Thead, Tbody, Tr, Button, Box, Icon } from "@chakra-ui/react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FaPlusCircle } from "react-icons/fa";
 import { toggle } from "../app/slices/salesBtnSlice";
 import TableRow from "./TableRow";
@@ -9,6 +9,7 @@ import { TableStylesProvider } from "../context/TableStylesContext";
 
 const TableContainer = ({ setTotal, rowsData, setRowsData }) => {
   const dispatch = useDispatch();
+  const salesBtn = useSelector(state => state.salesBtn);
   const [header, setHeader] = useState([
     "Producto",
     "Stock",
@@ -19,7 +20,7 @@ const TableContainer = ({ setTotal, rowsData, setRowsData }) => {
   ]);
 
   const addRow = () => {
-    dispatch(toggle(true));
+    salesBtn ? null : dispatch(toggle(true));
     const newRowId = rowsData.length + 1;
     setRowsData([...rowsData, { id: newRowId.toString(), subtotal: 0 }]);
   };
@@ -36,7 +37,7 @@ const TableContainer = ({ setTotal, rowsData, setRowsData }) => {
       newTotal = newTotal + row.subtotal;
     });
     setTotal(newTotal);
-  }, [rowsData]);
+  }, [rowsData, setTotal]);
 
   return (
     <TableStylesProvider>

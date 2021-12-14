@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Flex } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { decreaseStock } from "../app/slices/productsSlice";
@@ -31,9 +31,18 @@ const Ventasc = () => {
     handleReset();
   };
   //TODO: Agregar boton de venta, descontando inventario de la bd y almacenando la venta en la bd.
-  //TODO: Cambiar nombre en BD, quantity => stock y actualizar en componentes.
   //TODO: Agrupar componenetes en carpetas de funcionalidad
 
+  useEffect(() => {
+    const filteredRows = rowsData.filter(
+      row => row.quantity > row.stock || isNaN(row.discount) || isNaN(row.quantity)
+    );
+    if (filteredRows.length > 0 && !salesBtn.disabled) {
+      dispatch(toggle(true));
+    } else if (filteredRows.length === 0 && salesBtn.disabled) {
+      dispatch(toggle(false));
+    }
+  }, [rowsData, dispatch, salesBtn.disabled]);
   return (
     <>
       <TableContainer setTotal={setTotal} rowsData={rowsData} setRowsData={setRowsData} />
@@ -45,7 +54,7 @@ const Ventasc = () => {
         <Btn color='red' onClick={handleReset}>
           Borrar
         </Btn>
-        <ReduxTest />
+        {/* <ReduxTest /> */}
         <Box justifyItems='right' p='0 1rem'>
           <ValueContainer text='Subtotal: ' value={total} />
           <TaxPicker value={tax} setTax={setTax} />
