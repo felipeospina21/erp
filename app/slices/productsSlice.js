@@ -73,6 +73,6 @@ const productsSlice = createSlice({
   },
 });
 
-export const { load, sale, extraReducers } = productsSlice.actions;
+export const { load, extraReducers } = productsSlice.actions;
 
 export default productsSlice.reducer;

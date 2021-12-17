@@ -2,12 +2,12 @@ import React, { useState, useEffect, useContext } from "react";
 import { Table, Thead, Tbody, Tr, Button, Box, Icon } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { FaPlusCircle } from "react-icons/fa";
-import { toggle } from "../app/slices/salesBtnSlice";
+import { toggle } from "../../app/slices/salesBtnSlice";
 import TableRow from "./TableRow";
 import TableCellHeader from "./TableCellHeader";
-import { TableStylesProvider } from "../context/TableStylesContext";
+import { TableStylesProvider } from "../../context/TableStylesContext";
 
-const TableContainer = ({ setTotal, rowsData, setRowsData }) => {
+const TableContainer = ({ setCheckoutData,checkoutData, rowsData, setRowsData }) => {
   const dispatch = useDispatch();
   const salesBtn = useSelector(state => state.salesBtn);
   const [header, setHeader] = useState([
@@ -31,13 +31,14 @@ const TableContainer = ({ setTotal, rowsData, setRowsData }) => {
     setRowsData(newRows);
   };
 
-  useEffect(() => {
-    let newTotal = 0;
-    rowsData.forEach(row => {
-      newTotal = newTotal + row.subtotal;
-    });
-    setTotal(newTotal);
-  }, [rowsData, setTotal]);
+  // useEffect(() => {
+  //   let newSubtotal = 0;
+  //   rowsData.forEach(row => {
+  //     newSubtotal = newSubtotal + row.subtotal;
+  //   });
+  //   const newTotal = newSubtotal * (1 + checkoutData.tax / 100)
+  //   setCheckoutData({...checkoutData, subtotal: newSubtotal, total: newTotal});
+  // }, []); //rowsData, checkoutData, setCheckoutData
 
   return (
     <TableStylesProvider>

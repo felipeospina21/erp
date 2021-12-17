@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Heading, Text } from "@chakra-ui/react";
-import { thousandSeparator } from "../utils";
+import { thousandSeparator } from "../../utils";
 
 const Card = ({ product }) => {
   return (

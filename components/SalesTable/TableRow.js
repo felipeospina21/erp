@@ -2,8 +2,8 @@ import React, { useContext } from "react";
 import { Tr, Td, Select, IconButton, useToast } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import { BiTrash } from "react-icons/bi";
-import { TableStylesContext } from "../context/TableStylesContext";
-import { thousandSeparator } from "../utils";
+import { TableStylesContext } from "../../context/TableStylesContext";
+import { thousandSeparator } from "../../utils";
 import TableCellBody from "./TableCellBody";
 import InputCell from "./InputCell";
 

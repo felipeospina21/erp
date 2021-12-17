@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Td } from "@chakra-ui/react";
-import { TableStylesContext } from "../context/TableStylesContext";
+import { TableStylesContext } from "../../context/TableStylesContext";
 
 const TableCellBody = props => {
   const [cellStyles, setCellStyles] = useContext(TableStylesContext);

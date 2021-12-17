@@ -1,29 +1,25 @@
 import React from "react";
-import { Box, Input, SimpleGrid } from "@chakra-ui/react";
+import { Box, SimpleGrid } from "@chakra-ui/react";
+import SelectInput from "./Shared/SelectInput";
 
 const TaxPicker = props => {
   const handleChange = event => {
-    props.setTax(event.target.value);
+    const value = Number(event.target.value) / 100;
+    // const name = event.target.name;
+    props.setCheckoutData({ ...props.checkoutData, tax: value });
   };
   return (
     <SimpleGrid
       columns={2}
       spacing={1}
-      textAlign='right'
+      justifyItems='end'
       fontSize='1.5rem'
       mt='1.5rem'
       w='100%'>
       <Box textAlign='right' fontSize='1.5rem' w='100%'>
         IVA (%):
       </Box>
-      <Input
-        textAlign='center'
-        w='9rem'
-        size='xl'
-        variant='unstyled'
-        value={props.value}
-        onChange={handleChange}
-      />
+      <SelectInput options={[19, 16]} size='lg' m='0' onChangeFn={handleChange} />
     </SimpleGrid>
   );
 };

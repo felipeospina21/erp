@@ -1,6 +1,6 @@
-import React, {useContext} from "react";
+import React, { useContext } from "react";
 import { Th } from "@chakra-ui/react";
-import { TableStylesContext } from "../context/TableStylesContext";
+import { TableStylesContext } from "../../context/TableStylesContext";
 
 const TableCellHeader = ({ children }) => {
   const [cellStyles, setCellStyles] = useContext(TableStylesContext);
