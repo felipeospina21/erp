@@ -6,11 +6,12 @@ import SelectInput from "./Shared/SelectInput";
 
 const TaxPicker = props => {
   const salesData = useSelector(state => state.sales.data);
-
+  const dispatch = useDispatch()
+  
   const handleChange = event => {
     const value = Number(event.target.value) / 100;
     // const name = event.target.name;
-    dispatchEvent(updateSales({data:{...salesData,tax: value }}));
+    dispatch(updateSales({data:{...salesData,tax: value }}));
     // props.setCheckoutData({ ...props.checkoutData, tax: value });
   };
   return (

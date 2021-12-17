@@ -11,7 +11,7 @@ const ValueContainer = props => {
         {text}
       </Box>
       <Box textAlign='right' fontSize='1.5rem' mt='1.5rem' w='100%'>
-        {/* {`$${thousandSeparator(value, 2)}`} */}
+        {`$${thousandSeparator(value, 2)}`}
       </Box>
     </SimpleGrid>
   );

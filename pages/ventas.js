@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Flex, VStack } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { decreaseStock } from "../app/slices/productsSlice";
 import { toggle } from "../app/slices/salesBtnSlice";
@@ -15,11 +15,9 @@ import { saveSaleInfo, updateSales } from "../app/slices/salesSlice";
 
 const Ventasc = () => {
   const [rowsData, setRowsData] = useState([{ id: "1", subtotal: 0 }]);
-  const [checkoutData, setCheckoutData] = useState({ tax: 0, subtotal: 0, total: 0 });
-
   const salesBtn = useSelector(state => state.salesBtn);
   const salesData = useSelector(state => state.sales.data);
-  const clients = useSelector(state => state.clients.list)
+  const clients = useSelector(state => state.clients.list);
   const dispatch = useDispatch();
 
   const handleReset = () => {
@@ -28,21 +26,15 @@ const Ventasc = () => {
       select => (select.value = "")
     );
     setRowsData([{ id: 1, subtotal: 0 }]);
-    dispatch(updateSales({data:{ tax: 0, subtotal: 0, total: 0 }}))
-    // setCheckoutData({ tax: 0, subtotal: 0, total: 0 });
+    dispatch(updateSales({ data: { tax: 0, subtotal: 0, total: 0 } }));
   };
 
   const handleClick = () => {
     dispatch(decreaseStock({ db, rowsData }));
-    //TODO: replace data with state obj with sales data
-    dispatch(updateSales({data:{ orderedProducts:rowsData }}))
+    dispatch(updateSales({ data: { ...salesData, orderedProducts: rowsData } }));
     dispatch(saveSaleInfo({ db, rowsData }));
-    // saveSalesInfo({db, data});
     handleReset();
   };
-
-  //TODO: Agregar boton de venta, descontando inventario de la bd y almacenando la venta en la bd.
-  //TODO: Agrupar componenetes en carpetas de funcionalidad
 
   useEffect(() => {
     const filteredRows = rowsData.filter(
@@ -61,18 +53,16 @@ const Ventasc = () => {
     rowsData.forEach(row => {
       newSubtotal = newSubtotal + row.subtotal;
     });
-    const newTotal = newSubtotal * (1 + salesData.tax / 100)
-    dispatch(updateSales({data:{ orderedProducts:rowsData }}))
-    // setCheckoutData({...checkoutData, subtotal: newSubtotal, total: newTotal});
-  }, []); //rowsData, checkoutData.tax
+    const newTotal = newSubtotal * (1 + salesData.tax / 100);
+    dispatch(
+      updateSales({ data: { ...salesData, subtotal: newSubtotal, total: newTotal } })
+    );
+  }, [rowsData, salesData.tax]); //rowsData, checkoutData.tax
 
   return (
     <>
-      <ClientSelect options={clients} size='lg'/>
-      <TableContainer
-        rowsData={rowsData}
-        setRowsData={setRowsData}
-      />
+      <ClientSelect options={clients} size='lg' />
+      <TableContainer rowsData={rowsData} setRowsData={setRowsData} />
       <Flex justify='flex-end' align='center'>
         <Btn color='green' status={salesBtn.disabled} onClick={handleClick}>
           Vender
@@ -87,10 +77,15 @@ const Ventasc = () => {
         </Btn> */}
 
         {/* <ReduxTest /> */}
-        <Flex flexDir='column' justifyItems='center' alignItems='stretch' p='0 1rem' minW='400px'>
+        <Flex
+          flexDir='column'
+          justifyItems='center'
+          alignItems='stretch'
+          p='0 1rem'
+          minW='400px'>
           <ValueContainer name='subtotal' value={salesData.subtotal} />
           {/* <TaxPicker checkoutData={checkoutData} setCheckoutData={setCheckoutData} /> */}
-          <TaxPicker/>
+          <TaxPicker />
           <ValueContainer name='total' value={salesData.total} />
         </Flex>
       </Flex>
