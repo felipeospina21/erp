@@ -1,12 +1,17 @@
 import React from "react";
 import { Box, SimpleGrid } from "@chakra-ui/react";
+import { useDispatch, useSelector } from "react-redux";
+import { saveSaleInfo, updateSales } from "../app/slices/salesSlice";
 import SelectInput from "./Shared/SelectInput";
 
 const TaxPicker = props => {
+  const salesData = useSelector(state => state.sales.data);
+
   const handleChange = event => {
     const value = Number(event.target.value) / 100;
     // const name = event.target.name;
-    props.setCheckoutData({ ...props.checkoutData, tax: value });
+    dispatchEvent(updateSales({data:{...salesData,tax: value }}));
+    // props.setCheckoutData({ ...props.checkoutData, tax: value });
   };
   return (
     <SimpleGrid

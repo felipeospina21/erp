@@ -2,14 +2,15 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { collection, doc, setDoc, Timestamp } from "firebase/firestore/lite";
 
 const initialState = {
-  data: {},
+  data: {tax: 0, subtotal: 0, total: 0},
   status: null,
 };
 
 export const saveSaleInfo = createAsyncThunk(
   "sales/saveSaleInfo",
   async (paramsObj, { dispatch, getState }) => {
-    const { db, rowsData, checkoutData } = paramsObj;
+    const { db, rowsData } = paramsObj;
+    const {sales} = getState()
     // const updatedObj = [];
     const collectionRef = collection(db, "sales");
     const docRef = doc(collectionRef);
@@ -19,9 +20,9 @@ export const saveSaleInfo = createAsyncThunk(
       clientName: "test client",
       deliveryCity: "medellin",
       timestamp: Timestamp.fromDate(new Date()),
-      subtotal: checkoutData.subtotal,
-      tax: checkoutData.tax,
-      total: checkoutData.total,
+      subtotal: sales.subtotal,
+      tax: sales.tax,
+      total: sales.total,
       orderedProducts: rowsData
     }
       // const docData = {
@@ -55,7 +56,11 @@ export const saveSaleInfo = createAsyncThunk(
 const salesSlice = createSlice({
   name: "sales",
   initialState,
-  reducers: {},
+  reducers: {
+    updateSales: (state, action)=>{
+      return action.payload
+    }
+  },
   extraReducers: builder => {
     builder
       .addCase(saveSaleInfo.pending, state => {
@@ -67,5 +72,5 @@ const salesSlice = createSlice({
   },
 });
 
-export const { extraReducers } = salesSlice.actions;
+export const { updateSales, extraReducers } = salesSlice.actions;
 export default salesSlice.reducer;

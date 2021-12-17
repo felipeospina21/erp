@@ -11,12 +11,12 @@ import Btn from "../components/Shared/Btn";
 import ReduxTest from "../components/ReduxTest";
 import CardsContainer from "../components/ProductsCard/CardsContainer";
 import ClientSelect from "../components/Shared/ClientSelect";
-import { saveSaleInfo } from "../app/slices/salesSlice";
+import { saveSaleInfo, updateSales } from "../app/slices/salesSlice";
 
 const Ventasc = () => {
   const [rowsData, setRowsData] = useState([{ id: "1", subtotal: 0 }]);
   const [checkoutData, setCheckoutData] = useState({ tax: 0, subtotal: 0, total: 0 });
-  const [total, setTotal] = useState(0);
+
   const salesBtn = useSelector(state => state.salesBtn);
   const salesData = useSelector(state => state.sales.data);
   const clients = useSelector(state => state.clients.list)
@@ -28,13 +28,15 @@ const Ventasc = () => {
       select => (select.value = "")
     );
     setRowsData([{ id: 1, subtotal: 0 }]);
-    setCheckoutData({ tax: 0, subtotal: 0, total: 0 });
+    dispatch(updateSales({data:{ tax: 0, subtotal: 0, total: 0 }}))
+    // setCheckoutData({ tax: 0, subtotal: 0, total: 0 });
   };
 
   const handleClick = () => {
     dispatch(decreaseStock({ db, rowsData }));
     //TODO: replace data with state obj with sales data
-    dispatch(saveSaleInfo({ db,checkoutData, rowsData }));
+    dispatch(updateSales({data:{ orderedProducts:rowsData }}))
+    dispatch(saveSaleInfo({ db, rowsData }));
     // saveSalesInfo({db, data});
     handleReset();
   };
@@ -59,16 +61,15 @@ const Ventasc = () => {
     rowsData.forEach(row => {
       newSubtotal = newSubtotal + row.subtotal;
     });
-    const newTotal = newSubtotal * (1 + checkoutData.tax / 100)
-    setCheckoutData({...checkoutData, subtotal: newSubtotal, total: newTotal});
-  }, [rowsData, checkoutData.tax]); //rowsData, checkoutData, setCheckoutData
+    const newTotal = newSubtotal * (1 + salesData.tax / 100)
+    dispatch(updateSales({data:{ orderedProducts:rowsData }}))
+    // setCheckoutData({...checkoutData, subtotal: newSubtotal, total: newTotal});
+  }, []); //rowsData, checkoutData.tax
 
   return (
     <>
       <ClientSelect options={clients} size='lg'/>
       <TableContainer
-        setCheckoutData={setCheckoutData}
-        checkoutData={checkoutData}
         rowsData={rowsData}
         setRowsData={setRowsData}
       />
@@ -87,9 +88,10 @@ const Ventasc = () => {
 
         {/* <ReduxTest /> */}
         <Flex flexDir='column' justifyItems='center' alignItems='stretch' p='0 1rem' minW='400px'>
-          <ValueContainer name='subtotal' value={checkoutData.subtotal} />
-          <TaxPicker checkoutData={checkoutData} setCheckoutData={setCheckoutData} />
-          <ValueContainer name='total' value={checkoutData.total} />
+          <ValueContainer name='subtotal' value={salesData.subtotal} />
+          {/* <TaxPicker checkoutData={checkoutData} setCheckoutData={setCheckoutData} /> */}
+          <TaxPicker/>
+          <ValueContainer name='total' value={salesData.total} />
         </Flex>
       </Flex>
       {/* <CardsContainer /> */}

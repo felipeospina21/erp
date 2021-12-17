@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState } from "react";
 import { Table, Thead, Tbody, Tr, Button, Box, Icon } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { FaPlusCircle } from "react-icons/fa";
@@ -7,7 +7,7 @@ import TableRow from "./TableRow";
 import TableCellHeader from "./TableCellHeader";
 import { TableStylesProvider } from "../../context/TableStylesContext";
 
-const TableContainer = ({ setCheckoutData,checkoutData, rowsData, setRowsData }) => {
+const TableContainer = ({ rowsData, setRowsData }) => {
   const dispatch = useDispatch();
   const salesBtn = useSelector(state => state.salesBtn);
   const [header, setHeader] = useState([
@@ -30,15 +30,6 @@ const TableContainer = ({ setCheckoutData,checkoutData, rowsData, setRowsData })
     const newRows = rowsData.filter(row => row.id !== rowId);
     setRowsData(newRows);
   };
-
-  // useEffect(() => {
-  //   let newSubtotal = 0;
-  //   rowsData.forEach(row => {
-  //     newSubtotal = newSubtotal + row.subtotal;
-  //   });
-  //   const newTotal = newSubtotal * (1 + checkoutData.tax / 100)
-  //   setCheckoutData({...checkoutData, subtotal: newSubtotal, total: newTotal});
-  // }, []); //rowsData, checkoutData, setCheckoutData
 
   return (
     <TableStylesProvider>

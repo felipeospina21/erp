@@ -22,13 +22,16 @@ const TableRow = props => {
 
     newRowsData.map(row => {
       if (row.id === props.id) {
-        (row.itemId = products[prodIndex].id),
-          (row.item = products[prodIndex].name),
-          (row.price = products[prodIndex].price),
-          (row.stock = products[prodIndex].stock);
+        row.itemId = products[prodIndex].id,
+
+        console.log(products[prodIndex].id)
+        // (row.itemId = products[prodIndex].id),
+          // (row.item = products[prodIndex].name),
+          // (row.price = products[prodIndex].price),
+          // (row.stock = products[prodIndex].stock);
       }
     });
-    props.setRowsData(newRowsData);
+    // props.setRowsData(newRowsData);
   };
 
   const handleInputChange = event => {
