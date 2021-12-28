@@ -8,16 +8,19 @@ const initialState = {
 
 export const saveSaleInfo = createAsyncThunk(
   "sales/saveSaleInfo",
-  async (paramsObj, { dispatch, getState }) => {
+  async (paramsObj, { getState }) => {
     const { db, rowsData } = paramsObj;
-    const { sales } = getState();
+    const { sales, clients } = getState();
+    const clientId = clients.list.filter(
+      client => client.name === sales.data.clientName
+    )[0].nit;
     const collectionRef = collection(db, "sales");
     const docRef = doc(collectionRef);
     const docData = {
-      chanel: "directo",
-      clientId: "123456",
-      clientName: "test client",
-      deliveryCity: "medellin",
+      clientId: clientId,
+      clientName: sales.data.clientName,
+      deliveryCity: sales.data.deliveryCity,
+      chanel: sales.data.chanel,
       timestamp: Timestamp.fromDate(new Date()),
       subtotal: sales.data.subtotal,
       tax: sales.data.tax,

@@ -15,7 +15,7 @@ const Layout = ({ children }) => {
   return (
     <>
       <SideNav />
-      <Box as='main' p='1rem'>
+      <Box as='main' m='1rem 2rem'>
         {children}
       </Box>
     </>

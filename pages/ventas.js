@@ -3,16 +3,14 @@ import { Flex, Wrap, WrapItem } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { decreaseStock } from "../app/slices/productsSlice";
 import { toggle } from "../app/slices/salesBtnSlice";
+import { saveSaleInfo, updateSales } from "../app/slices/salesSlice";
 import db from "../firebase/clientApp";
 import TableContainer from "../components/SalesTable/TableContainer";
 import ValueContainer from "../components/ValueContainer";
 import TaxPicker from "../components/TaxPicker";
 import Btn from "../components/Shared/Btn";
-import ReduxTest from "../components/ReduxTest";
-import CardsContainer from "../components/ProductsCard/CardsContainer";
-import ClientSelect from "../components/Shared/ClientSelect";
-import { saveSaleInfo, updateSales } from "../app/slices/salesSlice";
-import SelectInput from "../components/Shared/SelectInput";
+import ObjSelectInput from "../components/Shared/ObjSelectInput";
+import ArrSelectInput from "../components/Shared/ArrSelectInput";
 
 const Ventasc = () => {
   const [rowsData, setRowsData] = useState([{ id: "1", subtotal: 0 }]);
@@ -32,7 +30,6 @@ const Ventasc = () => {
 
   const handleClick = () => {
     dispatch(decreaseStock({ db, rowsData }));
-    // dispatch(updateSales({ data: { ...salesData, orderedProducts: rowsData } }));
     dispatch(
       updateSales({
         ...salesData,
@@ -41,6 +38,17 @@ const Ventasc = () => {
     );
     dispatch(saveSaleInfo({ db, rowsData }));
     handleReset();
+  };
+
+  const handleSelect = event => {
+    const name = event.target.name;
+    const value = event.target.value;
+    dispatch(
+      updateSales({
+        ...salesData,
+        data: { ...salesData.data, [name]: value },
+      })
+    );
   };
 
   useEffect(() => {
@@ -61,7 +69,6 @@ const Ventasc = () => {
       newSubtotal = newSubtotal + row.subtotal;
     });
     const newTotal = newSubtotal * (1 + salesData.data.tax);
-    console.log(newTotal, salesData.data);
     dispatch(
       updateSales({
         ...salesData,
@@ -72,15 +79,36 @@ const Ventasc = () => {
 
   return (
     <>
-    <Wrap spacing='30px'>
-      <WrapItem w='20rem'>
-        <SelectInput options={[1,2,3]} size='xl'/>
-      </WrapItem>
-      <WrapItem>
-        <SelectInput options={[1,2,3]} size='xl'/>
-      </WrapItem>
-    </Wrap>
-      <ClientSelect options={clients} size='lg' />
+      <Wrap spacing='30px' m='2rem auto' justify='space-evenly'>
+        <WrapItem w='20rem'>
+          <ArrSelectInput
+            name='deliveryCity'
+            title='Ciudad'
+            options={["Medellin", "Bogotá"]}
+            size='lg'
+            onChangeFn={handleSelect}
+          />
+        </WrapItem>
+        <WrapItem w='20rem'>
+          <ArrSelectInput
+            name='chanel'
+            title='Canal'
+            options={["Directo", "Tercero"]}
+            size='lg'
+            onChangeFn={handleSelect}
+          />
+        </WrapItem>
+        <WrapItem w='20rem'>
+          <ObjSelectInput
+            name='clientName'
+            title='Cliente'
+            options={clients}
+            size='lg'
+            onChangeFn={handleSelect}
+          />
+        </WrapItem>
+      </Wrap>
+
       <TableContainer rowsData={rowsData} setRowsData={setRowsData} />
       <Flex justify='flex-end' align='center'>
         <Btn color='green' status={salesBtn.disabled} onClick={handleClick}>
@@ -91,24 +119,18 @@ const Ventasc = () => {
           Borrar
         </Btn>
 
-        {/* <Btn color='green'  onClick={saveSalesInfo}>
-          test
-        </Btn> */}
-
-        {/* <ReduxTest /> */}
         <Flex
           flexDir='column'
           justifyItems='center'
           alignItems='stretch'
           p='0 1rem'
+          m='1rem 2rem'
           minW='400px'>
           <ValueContainer name='subtotal' value={salesData.data.subtotal} />
-          {/* <TaxPicker checkoutData={checkoutData} setCheckoutData={setCheckoutData} /> */}
           <TaxPicker />
           <ValueContainer name='total' value={salesData.data.total} />
         </Flex>
       </Flex>
-      {/* <CardsContainer /> */}
     </>
   );
 };
