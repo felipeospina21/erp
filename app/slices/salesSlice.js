@@ -13,7 +13,7 @@ export const saveSaleInfo = createAsyncThunk(
     const { sales, clients } = getState();
     const clientId = clients.list.filter(
       client => client.name === sales.data.clientName
-    )[0].nit;
+    )[0].idNumber;
     const collectionRef = collection(db, "sales");
     const docRef = doc(collectionRef);
     const docData = {

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { collection, doc, getDocs, updateDoc } from "firebase/firestore/lite";
+import { collection, doc, getDocs, updateDoc, addDoc } from "firebase/firestore/lite";
 
 const initialState = {
   list: [],
@@ -13,6 +13,23 @@ export const getClients = createAsyncThunk("clients/getClients", async db => {
     .then(clients => clients);
 });
 
+export const createClient = createAsyncThunk(
+  "clients/createClient",
+  async (paramsObj, { getState }) => {
+    const { clients } = getState();
+    const newClientsList = [...clients.list];
+    const { db, clientObj } = paramsObj;
+    const clientsColl = collection(db, "clients");
+    try {
+      const newDoc = await addDoc(clientsColl, clientObj);
+      newClientsList.push({ ...clientObj, id: newDoc.id });
+      return newClientsList;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
 const clientsSlice = createSlice({
   name: "clients",
   initialState,
@@ -23,6 +40,13 @@ const clientsSlice = createSlice({
         state.status = "loading";
       })
       .addCase(getClients.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.list = action.payload;
+      })
+      .addCase(createClient.pending, state => {
+        state.status = "loading";
+      })
+      .addCase(createClient.fulfilled, (state, action) => {
         state.status = "idle";
         state.list = action.payload;
       });

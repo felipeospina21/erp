@@ -7,6 +7,7 @@ const NavLinks = ({ onClose }) => {
     <List spacing={3}>
       <StyledLink href='/' text='Home' onClose={onClose} />
       <StyledLink href='/ventas' text='Ventas' onClose={onClose} />
+      <StyledLink href='/clientes' text='Clientes' onClose={onClose} />
       <StyledLink href='/costos' text='Costos' onClose={onClose} />
       <StyledLink href='/mp' text='Materias Primas' onClose={onClose} />
     </List>
