@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { collection, doc, setDoc, Timestamp } from "firebase/firestore/lite";
 
-//TODO: Validar que se mantenga el estado status cuando se llaman los reducers.
 const initialState = {
   data: { tax: 0, subtotal: 0, total: 0 },
   status: null,
