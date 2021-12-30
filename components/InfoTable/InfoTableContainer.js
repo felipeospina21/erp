@@ -9,7 +9,7 @@ const InfoTableContainer = props => {
         <Thead fontSize={["sm", "md"]}>
           <Tr>
             {props.headerList.map(header => {
-              return <Th key={header.fieldName}>{header.title}</Th>;
+              return <Th key={header.name}>{header.label}</Th>;
             })}
           </Tr>
         </Thead>

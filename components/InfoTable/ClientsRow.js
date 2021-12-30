@@ -11,7 +11,7 @@ const ClientsRow = props => {
       <Td>{props.data.addres2}</Td>
       <Td>{props.data.city}</Td>
       <Td>{props.data.department}</Td>
-      <Td>{`${props.data.discount * 100}%`}</Td>
+      <Td>{`${props.data.discount}%`}</Td>
     </Tr>
   );
 };

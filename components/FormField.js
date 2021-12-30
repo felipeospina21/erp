@@ -1,5 +1,4 @@
 import React from "react";
-import { Field } from "formik";
 import {
   FormControl,
   FormLabel,
@@ -8,19 +7,17 @@ import {
   Input,
 } from "@chakra-ui/react";
 
-const FormField = ({ validationFn, data }) => {
+const FormField = ({ field, form, ...props }) => {
   return (
-    <Field name='name' validate={validationFn}>
-      {({ field, form }) => {
-        return (
-          <FormControl isInvalid={form.errors.name && form.touched.name}>
-            <FormLabel htmlFor={data.id}>{data.label}</FormLabel>
-            <Input {...field} id={data.id} placeholder={data.placeholder} />
-            <FormErrorMessage>{form.errors.name}</FormErrorMessage>
-          </FormControl>
-        );
-      }}
-    </Field>
+    <FormControl
+      isRequired
+      isInvalid={form.errors[field.name] && form.touched[field.name]}
+      m='1rem 0'>
+      <FormLabel htmlFor={props.name}>{props.label}</FormLabel>
+      <Input {...field} {...props} />
+      <FormErrorMessage>{form.errors[field.name]}</FormErrorMessage>
+      <FormHelperText ml='0.5rem'>texto de ayuda del input</FormHelperText>
+    </FormControl>
   );
 };
 

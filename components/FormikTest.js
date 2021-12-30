@@ -1,21 +1,15 @@
 import React from "react";
 import { Form, Formik, Field } from "formik";
-import {
-  FormControl,
-  FormLabel,
-  FormErrorMessage,
-  FormHelperText,
-  Input,
-  Button,
-  Stack,
-  InputGroup,
-  InputLeftElement,
-  Container,
-} from "@chakra-ui/react";
+import { Button, Container } from "@chakra-ui/react";
+import { useDispatch, useSelector } from "react-redux";
 import Btn from "./Shared/Btn";
 import FormField from "./FormField";
+import { createNewClient } from "../app/slices/clientsSlice";
 
-function FormikTest() {
+function FormikTest({ fieldsData, dispatchFn, hideForm, stateObj, setStateObj }) {
+  const clients = useSelector(state => state.clients);
+  const dispatch = useDispatch();
+
   function validateName(value) {
     let error;
     if (!value) {
@@ -25,49 +19,68 @@ function FormikTest() {
     }
     return error;
   }
-
+  async function onSubmit(values) {
+    const promiseFn = new Promise((resolve, reject) => {
+      resolve(dispatchFn());
+      if (clients.status === "rejected") {
+        reject(console.log(`Error al crear usuario' ${JSON.stringify(values, null, 2)}`));
+      }
+    });
+    await promiseFn;
+    hideForm(false);
+  }
+  function handleChange(event) {
+    const name = event.target.name;
+    const type = event.target.type;
+    const value = type === "number" ? Number(event.target.value) : event.target.value;
+    dispatch(createNewClient({ [name]: value }));
+  }
   return (
-    <Formik
-      initialValues={{ name: "Sasuke" }}
-      onSubmit={(values, actions) => {
-        setTimeout(() => {
-          alert(JSON.stringify(values, null, 2));
-          actions.setSubmitting(false);
-        }, 1000);
-      }}>
-      {props => (
-        <Form>
-          <FormField data={{id: 'name', placeholder: 'nombre', label: ' Nombre'} } validationFn={validateName}/>
-          <FormField data={{id: 'apellido', placeholder: 'apellido', label: ' Apellido'}} validationFn={validateName}/>
-          <FormField data={{id: 'correo', placeholder: 'correo', label: ' Correo'}} validationFn={validateName}/>
-
-          {/* <Field name='name' validate={validateName}>
-            {({ field, form }) => {
-              console.log(form.errors)
+    <Container>
+      <Formik
+        initialValues={{
+          name: "",
+          idType: "",
+          idNumber: "",
+          addres1: "",
+          addres2: "",
+          city: "",
+          department: "",
+          discount: "",
+        }}
+        onSubmit={onSubmit}>
+        {props => (
+          <Form>
+            {fieldsData.map(formField => {
               return (
-                <FormControl isInvalid={form.errors.name && form.touched.name}>
-                  <FormLabel htmlFor='name'>First name</FormLabel>
-                  <Input {...field} id='name' placeholder='name' />
-                  <FormErrorMessage>{form.errors.name}</FormErrorMessage>
-                </FormControl>
+                <Field
+                  key={formField.name}
+                  value={
+                    clients.newClient[formField.name]
+                      ? clients.newClient[formField.name]
+                      : ""
+                  }
+                  name={formField.name}
+                  type={formField.type}
+                  label={formField.label}
+                  placeholder={formField.placeholder}
+                  onChange={handleChange}
+                  // validate={validateName}
+                  component={FormField}
+                />
               );
-            }}
-          </Field> */}
-          {/* <Field name='lastname' validate={validateName}>
-            {({ field, form }) => (
-              <FormControl isInvalid={form.errors.name && form.touched.name}>
-                <FormLabel htmlFor='name'>last name</FormLabel>
-                <Input {...field} id='name' placeholder='name' />
-                <FormErrorMessage>{form.errors.name}</FormErrorMessage>
-              </FormControl>
-            )}
-          </Field> */}
-          <Button mt={4} colorScheme='teal' isLoading={props.isSubmitting} type='submit'>
-            Submit
-          </Button>
-        </Form>
-      )}
-    </Formik>
+            })}
+            <Button
+              mt={4}
+              colorScheme='teal'
+              isLoading={props.isSubmitting}
+              type='submit'>
+              Submit
+            </Button>
+          </Form>
+        )}
+      </Formik>
+    </Container>
   );
 }
 
