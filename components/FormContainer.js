@@ -4,11 +4,22 @@ import { Button, Container } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import Btn from "./Shared/Btn";
 import FormField from "./FormField";
-import { newClientData } from "../app/slices/clientsSlice";
+import { newClientData, resetNewClientData } from "../app/slices/clientsSlice";
 
-function FormContainer({ fieldsData, dispatchFn, hideForm }) {
+function FormContainer({ fieldsData, dispatchFn }) {
   const clients = useSelector(state => state.clients);
   const dispatch = useDispatch();
+
+  const initialValues = {
+    name: "",
+    idType: "",
+    idNumber: "",
+    addres1: "",
+    addres2: "",
+    city: "",
+    department: "",
+    discount: "",
+  };
 
   function validateName(value) {
     let error;
@@ -19,7 +30,7 @@ function FormContainer({ fieldsData, dispatchFn, hideForm }) {
     }
     return error;
   }
-  async function onSubmit(values) {
+  async function onSubmit(values, actions) {
     const promiseFn = new Promise((resolve, reject) => {
       resolve(dispatchFn());
       if (clients.status === "rejected") {
@@ -27,7 +38,8 @@ function FormContainer({ fieldsData, dispatchFn, hideForm }) {
       }
     });
     await promiseFn;
-    hideForm(false);
+    dispatch(resetNewClientData());
+    onClose();
   }
   function handleChange(event) {
     const name = event.target.name;
@@ -37,18 +49,7 @@ function FormContainer({ fieldsData, dispatchFn, hideForm }) {
   }
   return (
     <Container>
-      <Formik
-        initialValues={{
-          name: "",
-          idType: "",
-          idNumber: "",
-          addres1: "",
-          addres2: "",
-          city: "",
-          department: "",
-          discount: "",
-        }}
-        onSubmit={onSubmit}>
+      <Formik initialValues={initialValues} onSubmit={onSubmit}>
         {props => (
           <Form>
             {fieldsData.map(formField => {
@@ -60,6 +61,7 @@ function FormContainer({ fieldsData, dispatchFn, hideForm }) {
                       ? clients.newClient[formField.name]
                       : ""
                   }
+                  required={formField.required}
                   name={formField.name}
                   type={formField.type}
                   label={formField.label}

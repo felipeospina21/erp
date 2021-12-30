@@ -46,16 +46,16 @@ export const updateClient = createAsyncThunk(
     const clientsColl = collection(db, "clients");
     const docRef = doc(clientsColl, clientId);
     try {
-     await updateDoc(docRef, updatedClientData)
-      const updatedDoc = clients.list.filter(doc => doc.id === clientId)[0]
-      const updatedClientList = clients.list.map(client =>{
-        if(client.id === updatedDoc.id){
-          client = {...client, ...updatedClientData}
-          return client
+      await updateDoc(docRef, updatedClientData);
+      const updatedDoc = clients.list.filter(doc => doc.id === clientId)[0];
+      const updatedClientList = clients.list.map(client => {
+        if (client.id === updatedDoc.id) {
+          client = { ...client, ...updatedClientData };
+          return client;
         }
-        return client
-      })
-      return updatedClientList
+        return client;
+      });
+      return updatedClientList;
     } catch (error) {
       console.log(error);
     }
@@ -90,6 +90,12 @@ const clientsSlice = createSlice({
       return {
         ...state,
         newClient: { ...state.newClient, ...action.payload },
+      };
+    },
+    resetNewClientData: (state, action) => {
+      return {
+        ...state,
+        newClient: {},
       };
     },
   },
@@ -135,5 +141,5 @@ const clientsSlice = createSlice({
   },
 });
 
-export const { extraReducers, newClientData } = clientsSlice.actions;
+export const { extraReducers, newClientData, resetNewClientData } = clientsSlice.actions;
 export default clientsSlice.reducer;

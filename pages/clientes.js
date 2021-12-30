@@ -14,52 +14,70 @@ const Clientes = () => {
   const clients = useSelector(state => state.clients);
   const newClientData = useSelector(state => state.clients.newClient);
   const dispatch = useDispatch();
-  const [createForm, setCreateForm] = useState(false);
   const fields = [
-    { name: "name", type: "text", placeholder: "cliente", label: "Cliente" },
-    { name: "idType", type: "text", placeholder: "tipo doc", label: "Tipo Doc" },
-    { name: "idNumber", type: "text", placeholder: "doc", label: "doc" },
-    { name: "addres1", type: "text", placeholder: "dirección 1", label: "dirección 1" },
-    { name: "addres2", type: "text", placeholder: "dirección 2", label: "dirección 2" },
-    { name: "city", type: "text", placeholder: "ciudad", label: "ciudad" },
+    {
+      name: "name",
+      type: "text",
+      placeholder: "cliente",
+      label: "Cliente",
+      required: true,
+    },
+    {
+      name: "idType",
+      type: "text",
+      placeholder: "tipo doc",
+      label: "Tipo Doc",
+      required: true,
+    },
+    { name: "idNumber", type: "text", placeholder: "doc", label: "doc", required: true },
+    {
+      name: "addres1",
+      type: "text",
+      placeholder: "dirección 1",
+      label: "dirección 1",
+      required: true,
+    },
+    {
+      name: "addres2",
+      type: "text",
+      placeholder: "dirección 2",
+      label: "dirección 2",
+      required: false,
+    },
+    {
+      name: "city",
+      type: "text",
+      placeholder: "ciudad",
+      label: "ciudad",
+      required: true,
+    },
     {
       name: "department",
       type: "text",
       placeholder: "departamento",
       label: "departamento",
+      required: true,
     },
-    { name: "discount", type: "number", placeholder: "descuento", label: "descuento" },
+    {
+      name: "discount",
+      type: "number",
+      placeholder: "descuento",
+      label: "descuento",
+      required: true,
+    },
   ];
 
   return (
     <>
       <InfoTableContainer headerList={fields} data={clients.list} />
-      <Btn color='teal' size='sm' my='1rem' onClick={() => setCreateForm(!createForm)}>
-        Crear Cliente
-      </Btn>
-      <ModalContainer title='Crear Cliente' >
+   
+      <ModalContainer title='Crear Cliente'>
         <FormContainer
           fieldsData={fields}
-          hideForm={setCreateForm}
           dispatchFn={() => dispatch(createClient({ db, newClientData }))}
         />
       </ModalContainer>
-      {createForm ? (
-        <FormContainer
-          fieldsData={fields}
-          hideForm={setCreateForm}
-          dispatchFn={() => dispatch(createClient({ db, newClientData }))}
-        />
-      ) : null}
-      {/* {createForm ? (
-        <CreateForm
-          fields={fields}
-          stateObj={clientObj}
-          setStateObj={setClientObj}
-          hideForm={setCreateForm}
-          dispatchFn={() => dispatch(createClient({ db, clientObj }))}
-        />
-      ) : null} */}
+  
     </>
   );
 };
