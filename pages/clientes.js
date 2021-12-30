@@ -7,7 +7,8 @@ import db from "../firebase/clientApp";
 import CreateForm from "../components/InfoTable/CreateForm";
 import InfoTableContainer from "../components/InfoTable/InfoTableContainer";
 import Btn from "../components/Shared/Btn";
-import FormikTest from "../components/FormikTest";
+import FormContainer from "../components/FormContainer";
+import ModalContainer from "../components/ModalContainer";
 
 const Clientes = () => {
   const clients = useSelector(state => state.clients);
@@ -36,8 +37,15 @@ const Clientes = () => {
       <Btn color='teal' size='sm' my='1rem' onClick={() => setCreateForm(!createForm)}>
         Crear Cliente
       </Btn>
+      <ModalContainer title='Crear Cliente' >
+        <FormContainer
+          fieldsData={fields}
+          hideForm={setCreateForm}
+          dispatchFn={() => dispatch(createClient({ db, newClientData }))}
+        />
+      </ModalContainer>
       {createForm ? (
-        <FormikTest
+        <FormContainer
           fieldsData={fields}
           hideForm={setCreateForm}
           dispatchFn={() => dispatch(createClient({ db, newClientData }))}

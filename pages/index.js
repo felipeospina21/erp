@@ -1,5 +1,5 @@
 import React from "react";
-import FormikTest from "../components/FormikTest";
+import FormContainer from "../components/FormContainer";
 import CardsContainer from "../components/ProductsCard/CardsContainer";
 
 export default function Home() {

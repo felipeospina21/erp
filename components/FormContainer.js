@@ -4,9 +4,9 @@ import { Button, Container } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import Btn from "./Shared/Btn";
 import FormField from "./FormField";
-import { createNewClient } from "../app/slices/clientsSlice";
+import { newClientData } from "../app/slices/clientsSlice";
 
-function FormikTest({ fieldsData, dispatchFn, hideForm, stateObj, setStateObj }) {
+function FormContainer({ fieldsData, dispatchFn, hideForm }) {
   const clients = useSelector(state => state.clients);
   const dispatch = useDispatch();
 
@@ -33,7 +33,7 @@ function FormikTest({ fieldsData, dispatchFn, hideForm, stateObj, setStateObj })
     const name = event.target.name;
     const type = event.target.type;
     const value = type === "number" ? Number(event.target.value) : event.target.value;
-    dispatch(createNewClient({ [name]: value }));
+    dispatch(newClientData({ [name]: value }));
   }
   return (
     <Container>
@@ -84,4 +84,4 @@ function FormikTest({ fieldsData, dispatchFn, hideForm, stateObj, setStateObj })
   );
 }
 
-export default FormikTest;
+export default FormContainer;
