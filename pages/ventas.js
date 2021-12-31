@@ -3,7 +3,8 @@ import { Flex, Wrap, WrapItem } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { decreaseStock } from "../app/slices/productsSlice";
 import { toggle } from "../app/slices/salesBtnSlice";
-import { saveSaleInfo, updateSales } from "../app/slices/salesSlice";
+import { saveSaleInfo, updateSalesData, resetState } from "../app/slices/salesSlice";
+import { createPdf } from "../utils";
 import db from "../firebase/clientApp";
 import TableContainer from "../components/SalesTable/TableContainer";
 import ValueContainer from "../components/ValueContainer";
@@ -12,6 +13,7 @@ import Btn from "../components/Shared/Btn";
 import ObjSelectInput from "../components/Shared/ObjSelectInput";
 import ArrSelectInput from "../components/Shared/ArrSelectInput";
 
+//BUG: useEffect in line 74 is updating tha data in a buggy way
 const Ventasc = () => {
   const [rowsData, setRowsData] = useState([{ id: "1", subtotal: 0 }]);
   const salesBtn = useSelector(state => state.salesBtn);
@@ -25,30 +27,31 @@ const Ventasc = () => {
       select => (select.value = "")
     );
     setRowsData([{ id: 1, subtotal: 0 }]);
-    dispatch(updateSales({ status: null, data: { tax: 0, subtotal: 0, total: 0 } }));
+    dispatch(resetState())
   };
 
-  const handleClick = () => {
-    dispatch(decreaseStock({ db, rowsData }));
-    dispatch(
-      updateSales({
-        ...salesData,
-        data: { ...salesData.data, orderedProducts: rowsData },
-      })
-    );
-    dispatch(saveSaleInfo({ db, rowsData }));
-    handleReset();
+  const handleClick = async () => {
+    //TODO: Check option to creat a custom hook to wrap async functions into promises
+    const decreaseStockPromise = new Promise((resolve, reject) => {
+      resolve(dispatch(decreaseStock({ db, rowsData })));
+    });
+    const saveSalesInfoPromise = new Promise((resolve, reject) => {
+      resolve(dispatch(saveSaleInfo({ db, rowsData })));
+    });
+    const createPdfPromise = new Promise((resolve, reject) => {
+      resolve(createPdf(salesData.data));
+    });
+
+    await decreaseStockPromise;
+    await saveSalesInfoPromise;
+    await createPdfPromise;
+    // handleReset();
   };
 
   const handleSelect = event => {
     const name = event.target.name;
     const value = event.target.value;
-    dispatch(
-      updateSales({
-        ...salesData,
-        data: { ...salesData.data, [name]: value },
-      })
-    );
+    dispatch(updateSalesData({[name]: value}));
   };
 
   useEffect(() => {
@@ -68,15 +71,26 @@ const Ventasc = () => {
     rowsData.forEach(row => {
       newSubtotal = newSubtotal + row.subtotal;
     });
-    const newTotal = newSubtotal * (1 + salesData.data.tax);
+    // const newTotal = newSubtotal * (1 + salesData.data.tax);
     dispatch(
-      updateSales({
-        ...salesData,
-        data: { ...salesData.data, subtotal: newSubtotal, total: newTotal },
+      updateSalesData({
+        subtotal: newSubtotal,
       })
     );
-  }, [rowsData, salesData.data.tax]); //rowsData, checkoutData.tax
+  }, [rowsData]); //rowsData, checkoutData.tax
 
+  useEffect(() => {
+    // let newSubtotal = 0;
+    // rowsData.forEach(row => {
+    //   newSubtotal = newSubtotal + row.subtotal;
+    // });
+    const newTotal = salesData.data.subtotal * (1 + salesData.data.tax);
+    dispatch(
+      updateSalesData({
+        total: newTotal,
+      })
+    );
+  }, [salesData.data.subtotal, salesData.data.tax]);
   return (
     <>
       <Wrap spacing='30px' m='2rem auto' justify='space-evenly'>

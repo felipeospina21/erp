@@ -14,7 +14,7 @@ export const getProducts = createAsyncThunk("products/getProducts", async db => 
 });
 
 export const decreaseStock = createAsyncThunk(
-  "products/updateProducts",
+  "products/decreaseStock",
   async (paramsObj, { dispatch, getState }) => {
     const { products } = getState();
     const { db, rowsData } = paramsObj;
