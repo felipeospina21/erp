@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { collection, doc, setDoc, Timestamp } from "firebase/firestore/lite";
+import { createPdf } from "../../utils";
 
 const initialState = {
   data: { tax: 0, subtotal: 0, total: 0 },
@@ -56,6 +57,7 @@ const salesSlice = createSlice({
       .addCase(saveSaleInfo.fulfilled, (state, action) => {
         state.status = "idle";
         state.data = action.payload;
+        createPdf(state.data);
         // return { ...state, data: { ...action.payload } };
       });
   },
