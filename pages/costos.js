@@ -2,10 +2,11 @@ import React from "react";
 import { Heading } from "@chakra-ui/react";
 import { createPdf } from "../utils";
 import { Button } from "@chakra-ui/react";
+import { salesData } from "../mocks/salesData";
 
 const costos = () => {
   function handleClick() {
-    createPdf();
+    createPdf(salesData);
   }
   return (
     <>

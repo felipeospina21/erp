@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { decreaseStock } from "../app/slices/productsSlice";
 import { toggle } from "../app/slices/salesBtnSlice";
 import { saveSaleInfo, updateSalesData, resetState } from "../app/slices/salesSlice";
-import { createPdf } from "../utils";
 import db from "../firebase/clientApp";
 import TableContainer from "../components/SalesTable/TableContainer";
 import ValueContainer from "../components/ValueContainer";
@@ -27,7 +26,7 @@ const Ventasc = () => {
       select => (select.value = "")
     );
     setRowsData([{ id: 1, subtotal: 0 }]);
-    dispatch(resetState())
+    dispatch(resetState());
   };
 
   const handleClick = async () => {
@@ -38,20 +37,15 @@ const Ventasc = () => {
     const saveSalesInfoPromise = new Promise((resolve, reject) => {
       resolve(dispatch(saveSaleInfo({ db, rowsData })));
     });
-    const createPdfPromise = new Promise((resolve, reject) => {
-      resolve(createPdf(salesData.data));
-    });
-
     await decreaseStockPromise;
     await saveSalesInfoPromise;
-    await createPdfPromise;
-    // handleReset();
+    handleReset();
   };
 
   const handleSelect = event => {
     const name = event.target.name;
     const value = event.target.value;
-    dispatch(updateSalesData({[name]: value}));
+    dispatch(updateSalesData({ [name]: value }));
   };
 
   useEffect(() => {
@@ -71,19 +65,14 @@ const Ventasc = () => {
     rowsData.forEach(row => {
       newSubtotal = newSubtotal + row.subtotal;
     });
-    // const newTotal = newSubtotal * (1 + salesData.data.tax);
     dispatch(
       updateSalesData({
         subtotal: newSubtotal,
       })
     );
-  }, [rowsData]); //rowsData, checkoutData.tax
+  }, [rowsData]);
 
   useEffect(() => {
-    // let newSubtotal = 0;
-    // rowsData.forEach(row => {
-    //   newSubtotal = newSubtotal + row.subtotal;
-    // });
     const newTotal = salesData.data.subtotal * (1 + salesData.data.tax);
     dispatch(
       updateSalesData({
@@ -91,6 +80,7 @@ const Ventasc = () => {
       })
     );
   }, [salesData.data.subtotal, salesData.data.tax]);
+
   return (
     <>
       <Wrap spacing='30px' m='2rem auto' justify='space-evenly'>
