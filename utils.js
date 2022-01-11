@@ -1,12 +1,24 @@
 import { PDFDocument, StandardFonts, rgb, degrees, grayscale } from "pdf-lib";
 import download from "downloadjs";
+import { collection, getDocs,  } from "firebase/firestore/lite";
+import db from "./firebase/clientApp";
+
 
 export function thousandSeparator(num, decimals) {
   const formatedNum = num.toFixed(decimals);
   return formatedNum.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
 }
 
+export function formatDate(date, locale, options){
+  return new Intl.DateTimeFormat(locale, options).format(date)
+}
+
+
 export async function createPdf(data) {
+  const snapshot = await getDocs(collection(db, "invoiceCount"))
+  const invoiceCountArr = snapshot.docs.map((doc) => doc.data());
+  const invoiceCount = invoiceCountArr[0].count
+
   const pdfDoc = await PDFDocument.create();
   const page = pdfDoc.addPage();
   const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
@@ -41,12 +53,14 @@ export async function createPdf(data) {
 
   function addInvoiceData() {
     //TODO: Modify for dynamic data
-    page.drawText("Cuenta de cobro N° 90", {
+    const invoiceDate = formatDate(new Date(), 'es')
+    console.log(invoiceDate + 30)
+    page.drawText(`Cuenta de cobro N° ${invoiceCount}`, {
       ...fontStyles,
       x: rightColX,
       y: height - 20,
     });
-    page.drawText("fecha: ", { ...fontStyles, x: rightColX, y: height - 35 });
+    page.drawText(`fecha: ${invoiceDate}`, { ...fontStyles, x: rightColX, y: height - 35 });
     page.drawText("Vence: ", { ...fontStyles, x: rightColX, y: height - 50 });
   }
 
