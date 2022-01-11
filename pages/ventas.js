@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Flex, Wrap, WrapItem } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { decreaseStock } from "../app/slices/productsSlice";
-import { toggle } from "../app/slices/salesBtnSlice";
 import { saveSaleInfo, updateSalesData, resetState } from "../app/slices/salesSlice";
 import db from "../firebase/clientApp";
 import TableContainer from "../components/SalesTable/TableContainer";
@@ -15,7 +14,7 @@ import ArrSelectInput from "../components/Shared/ArrSelectInput";
 //BUG: useEffect in line 74 is updating tha data in a buggy way
 const Ventasc = () => {
   const [rowsData, setRowsData] = useState([{ id: "1", subtotal: 0 }]);
-  const salesBtn = useSelector(state => state.salesBtn);
+  const [salesBtnDisabled, setSalesBtnDisabled] = useState(true);
   const salesData = useSelector(state => state.sales);
   const clients = useSelector(state => state.clients.list);
   const dispatch = useDispatch();
@@ -52,13 +51,13 @@ const Ventasc = () => {
     const filteredRows = rowsData.filter(
       row => row.quantity > row.stock || isNaN(row.discount) || isNaN(row.quantity)
     );
-    if (filteredRows.length > 0 && !salesBtn.disabled) {
-      dispatch(toggle(true));
-    } else if (filteredRows.length === 0 && salesBtn.disabled) {
-      dispatch(toggle(false));
+    if (filteredRows.length > 0 && !salesBtnDisabled) {
+      setSalesBtnDisabled(true);
+    } else if (filteredRows.length === 0 && salesBtnDisabled) {
+      setSalesBtnDisabled(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowsData, salesBtn.disabled]);
+  }, [rowsData, salesBtnDisabled]);
 
   useEffect(() => {
     let newSubtotal = 0;
@@ -113,9 +112,14 @@ const Ventasc = () => {
         </WrapItem>
       </Wrap>
 
-      <TableContainer rowsData={rowsData} setRowsData={setRowsData} />
+      <TableContainer
+        rowsData={rowsData}
+        setRowsData={setRowsData}
+        salesBtnDisabled={salesBtnDisabled}
+        setSalesBtnDisabled={setSalesBtnDisabled}
+      />
       <Flex justify='flex-end' align='center'>
-        <Btn color='green' status={salesBtn.disabled} onClick={handleClick}>
+        <Btn color='green' status={salesBtnDisabled} onClick={handleClick}>
           Vender
         </Btn>
 

@@ -1,6 +1,6 @@
 import React from "react";
-import Link from "next/link";
-import { List, ListItem, Link as ChakraLink } from "@chakra-ui/react";
+import NextLink from "next/link";
+import { List, ListItem, Box } from "@chakra-ui/react";
 
 const NavLinks = ({ onClose }) => {
   return (
@@ -27,10 +27,10 @@ MyButton.displayName = "MyButton";
 
 const StyledLink = props => (
   <ListItem>
-    <ChakraLink color='teal'>
-      <Link href={props.href} passHref>
+    <NextLink href={props.href} passHref>
+      <Box color='teal' as='button' _hover={{ textDecor: "underline" }}>
         <MyButton text={props.text} onClick={props.onClose} />
-      </Link>
-    </ChakraLink>
+      </Box>
+    </NextLink>
   </ListItem>
 );

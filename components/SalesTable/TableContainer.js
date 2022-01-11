@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import { Table, Thead, Tbody, Tr, Button, Box, Icon } from "@chakra-ui/react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { FaPlusCircle } from "react-icons/fa";
-import { toggle } from "../../app/slices/salesBtnSlice";
 import TableRow from "./TableRow";
 import TableCellHeader from "./TableCellHeader";
 import { TableStylesProvider } from "../../context/TableStylesContext";
 
-const TableContainer = ({ rowsData, setRowsData }) => {
-  const dispatch = useDispatch();
-  const salesBtn = useSelector(state => state.salesBtn);
+const TableContainer = ({
+  rowsData,
+  setRowsData,
+  salesBtnDisabled,
+  setSalesBtnDisabled,
+}) => {
   const [header, setHeader] = useState([
     "Producto",
     "Stock",
@@ -20,7 +22,7 @@ const TableContainer = ({ rowsData, setRowsData }) => {
   ]);
 
   const addRow = () => {
-    salesBtn ? null : dispatch(toggle(true));
+    salesBtnDisabled ? null : setSalesBtnDisabled(true);
     const newRowId = rowsData.length + 1;
     setRowsData([...rowsData, { id: newRowId.toString(), subtotal: 0 }]);
   };
