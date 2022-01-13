@@ -1,23 +1,21 @@
 import { PDFDocument, StandardFonts, rgb, degrees, grayscale } from "pdf-lib";
 import download from "downloadjs";
-import { collection, getDocs,  } from "firebase/firestore/lite";
+import { collection, getDocs } from "firebase/firestore/lite";
 import db from "./firebase/clientApp";
-
 
 export function thousandSeparator(num, decimals) {
   const formatedNum = num.toFixed(decimals);
   return formatedNum.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
 }
 
-export function formatDate(date, locale, options){
-  return new Intl.DateTimeFormat(locale, options).format(date)
+export function formatDate(date, locale, options) {
+  return new Intl.DateTimeFormat(locale, options).format(date);
 }
 
-
 export async function createPdf(data) {
-  const snapshot = await getDocs(collection(db, "invoiceCount"))
-  const invoiceCountArr = snapshot.docs.map((doc) => doc.data());
-  const invoiceCount = invoiceCountArr[0].count
+  const snapshot = await getDocs(collection(db, "invoiceCount"));
+  const invoiceCountArr = snapshot.docs.map(doc => doc.data());
+  const invoiceCount = invoiceCountArr[0].count;
 
   const pdfDoc = await PDFDocument.create();
   const page = pdfDoc.addPage();
@@ -48,20 +46,30 @@ export async function createPdf(data) {
   const fontStyles = {
     size: 11,
     font: timesRomanFont,
-    color: rgb(0, 0.53, 0.71),
+    // color: rgb(0, 0.53, 0.71),
   };
 
   function addInvoiceData() {
-    //TODO: Modify for dynamic data
-    const invoiceDate = formatDate(new Date(), 'es')
-    console.log(invoiceDate + 30)
+    const invoiceDate = new Date();
+    const dueDate = new Date();
+    dueDate.setDate(invoiceDate.getDate() + 30);
+    const formatedInvoiceDate = formatDate(invoiceDate, "es");
+    const formatedDueDate = formatDate(dueDate, "es");
     page.drawText(`Cuenta de cobro N° ${invoiceCount}`, {
       ...fontStyles,
       x: rightColX,
       y: height - 20,
     });
-    page.drawText(`fecha: ${invoiceDate}`, { ...fontStyles, x: rightColX, y: height - 35 });
-    page.drawText("Vence: ", { ...fontStyles, x: rightColX, y: height - 50 });
+    page.drawText(`Fecha: ${formatedInvoiceDate}`, {
+      ...fontStyles,
+      x: rightColX,
+      y: height - 35,
+    });
+    page.drawText(`Vence: ${formatedDueDate}`, {
+      ...fontStyles,
+      x: rightColX,
+      y: height - 50,
+    });
   }
 
   function addLeftHeader() {
@@ -111,11 +119,11 @@ export async function createPdf(data) {
         ...props,
         x: tablePositionX.col2,
       });
-      page.drawText(String(discountedPrice), {
+      page.drawText(`$${thousandSeparator(discountedPrice, 0)}`, {
         ...props,
         x: tablePositionX.col3,
       });
-      page.drawText(String(product.subtotal), {
+      page.drawText(`$${thousandSeparator(product.subtotal, 0)}`, {
         ...props,
         x: tablePositionX.col4,
       });

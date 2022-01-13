@@ -8,13 +8,12 @@ const costos = () => {
     createPdf(salesData);
   }
 
-
   return (
     <>
       {/* <Heading as='h1'>Costos</Heading>
       <CardsContainer /> */}
       <Button onClick={handleClick}>PDF</Button>
-    </> 
+    </>
   );
 };
 
