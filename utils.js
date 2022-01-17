@@ -1,4 +1,4 @@
-import { PDFDocument, StandardFonts, rgb, degrees, grayscale } from "pdf-lib";
+import { PDFDocument, StandardFonts, grayscale } from "pdf-lib";
 import download from "downloadjs";
 import { collection, getDocs } from "firebase/firestore/lite";
 import db from "./firebase/clientApp";
@@ -31,22 +31,24 @@ export async function createPdf(data) {
     orderedProducts,
   } = data;
   const pageConfig = {
-    width: 595,
-    height: 420,
-    leftColX: 15,
-    rightColX: 280,
+    width: 545,
+    height: 400,
+    leftColX: 40,
+    rightColX: 335,
+    lineHeight: 15,
   };
-  const { width, height, leftColX, rightColX } = pageConfig;
+
+  const { width, height, leftColX, rightColX, lineHeight } = pageConfig;
   const tablePositionX = {
     col1: leftColX + 5,
     col2: leftColX + 130,
     col3: leftColX + 235,
     col4: leftColX + 335,
   };
+
   const fontStyles = {
     size: 11,
     font: timesRomanFont,
-    // color: rgb(0, 0.53, 0.71),
   };
 
   function addInvoiceData() {
@@ -97,19 +99,19 @@ export async function createPdf(data) {
   }
 
   function addTableHeader() {
-    page.drawText("PRODUCTO", { ...fontStyles, x: tablePositionX.col1, y: height - 200 });
-    page.drawText("CANTIDAD", { ...fontStyles, x: tablePositionX.col2, y: height - 200 });
-    page.drawText("PRECIO", { ...fontStyles, x: tablePositionX.col3, y: height - 200 });
-    page.drawText("TOTAL", { ...fontStyles, x: tablePositionX.col4, y: height - 200 });
+    page.drawText("PRODUCTO", { ...fontStyles, x: tablePositionX.col1, y: height - 180 });
+    page.drawText("CANTIDAD", { ...fontStyles, x: tablePositionX.col2, y: height - 180 });
+    page.drawText("PRECIO", { ...fontStyles, x: tablePositionX.col3, y: height - 180 });
+    page.drawText("TOTAL", { ...fontStyles, x: tablePositionX.col4, y: height - 180 });
   }
+  let newLineY = 180;
 
   function addProducts() {
     addTableHeader();
-    let newLineY = 200;
     const props = { ...fontStyles, y: height - newLineY };
     orderedProducts.forEach(product => {
       const discountedPrice = product.price - product.price * product.discount;
-      newLineY += 20;
+      newLineY += lineHeight;
       props.y = height - newLineY;
       page.drawText(product.item, {
         ...props,
@@ -131,11 +133,11 @@ export async function createPdf(data) {
   }
 
   function addFooter() {
-    page.drawText("Observaciones", { ...fontStyles, x: leftColX, y: 80 });
-    page.drawText("Recibido Por:", { ...fontStyles, x: rightColX, y: 80 });
+    page.drawText("Observaciones:", { ...fontStyles, x: leftColX, y: newLineY - orderedProducts.length * 30 });
+    page.drawText("Recibido Por:", { ...fontStyles, x: rightColX, y: newLineY - orderedProducts.length * 30});
     page.drawText(
       "DE LA TIERRA - Cll 6 sur # 50 - 30. Medellín - Cel. 304 4070005 - WP 305 4806327",
-      { ...fontStyles, size: 9, x: leftColX * 2, y: 10 }
+      { ...fontStyles, size: 9, x: leftColX * 2, y: 30 }
     );
   }
 
@@ -147,9 +149,9 @@ export async function createPdf(data) {
   addFooter();
   page.drawRectangle({
     x: leftColX,
-    y: 210 - orderedProducts.length * 20,
-    width: width - 200,
-    height: 25 + orderedProducts.length * 20,
+    y: 210 - orderedProducts.length * 15,
+    width: width - 150,
+    height: 25 + orderedProducts.length * 15,
     borderWidth: 1,
     borderColor: grayscale(0.5),
     opacity: 0.5,
