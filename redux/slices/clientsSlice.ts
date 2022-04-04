@@ -8,9 +8,33 @@ import {
   addDoc,
 } from "firebase/firestore/lite";
 
-const initialState = {
+export interface Client {
+  addres1: string;
+  addres2?: string;
+  city: string;
+  department: string;
+  discount: number | undefined;
+  idNumber: string;
+  idType: string;
+  name: string;
+}
+export interface ClientState {
+  list: Client[];
+  newClient: Client;
+  status: null | string;
+}
+const initialState: ClientState = {
   list: [],
-  newClient: {},
+  newClient: {
+    addres1: "",
+    addres2: undefined,
+    city: "",
+    department: "",
+    discount: undefined,
+    idNumber: "",
+    idType: "",
+    name: "",
+  },
   status: null,
 };
 
@@ -92,7 +116,7 @@ const clientsSlice = createSlice({
         newClient: { ...state.newClient, ...action.payload },
       };
     },
-    resetNewClientData: (state, action) => {
+    resetNewClientData: state => {
       return {
         ...state,
         newClient: {},

@@ -1,7 +1,7 @@
 import React from "react";
 import { Tr, Td, Button } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
-import { deleteClient, updateClient } from "../../app/slices/clientsSlice";
+import { deleteClient, updateClient } from "../../redux/slices/clientsSlice";
 import db from "../../firebase/clientApp";
 import ModalContainer from "../ModalContainer";
 

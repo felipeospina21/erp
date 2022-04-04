@@ -1,16 +1,35 @@
 import React from "react";
 import { Form, Formik, Field } from "formik";
 import { Button, Container } from "@chakra-ui/react";
-import { useDispatch, useSelector } from "react-redux";
-import Btn from "./Shared/Btn";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import FormField from "./FormField";
-import { newClientData, resetNewClientData } from "../app/slices/clientsSlice";
+import { newClientData, resetNewClientData } from "../redux/slices/clientsSlice";
 
-function FormContainer({ fieldsData, dispatchFn }) {
-  const clients = useSelector(state => state.clients);
-  const dispatch = useDispatch();
+export interface FormValues {
+  name: string;
+  idType: string;
+  idNumber: string;
+  addres1: string;
+  addres2: string;
+  city: string;
+  department: string;
+  discount: string;
+}
+export interface FormContainerProps {
+  fieldsData: {
+    name: string;
+    type: string;
+    placeholder: string;
+    label: string;
+    required: boolean;
+  }[];
+  dispatchFn: () => void;
+}
+function FormContainer({ fieldsData, dispatchFn }: FormContainerProps): JSX.Element {
+  const clients = useAppSelector(state => state.clients);
+  const dispatch = useAppDispatch();
 
-  const initialValues = {
+  const initialValues:FormValues = {
     name: "",
     idType: "",
     idNumber: "",
@@ -21,16 +40,16 @@ function FormContainer({ fieldsData, dispatchFn }) {
     discount: "",
   };
 
-  function validateName(value) {
-    let error;
-    if (!value) {
-      error = "Name is required";
-    } else if (value.toLowerCase() !== "naruto") {
-      error = "Jeez! You're not a fan 😱";
-    }
-    return error;
-  }
-  async function onSubmit(values, actions) {
+  // function validateName(value) {
+  //   let error;
+  //   if (!value) {
+  //     error = "Name is required";
+  //   } else if (value.toLowerCase() !== "naruto") {
+  //     error = "Jeez! You're not a fan 😱";
+  //   }
+  //   return error;
+  // }
+  async function onSubmit(values:FormValues): Promise<any> {
     const promiseFn = new Promise((resolve, reject) => {
       resolve(dispatchFn());
       if (clients.status === "rejected") {
@@ -39,7 +58,7 @@ function FormContainer({ fieldsData, dispatchFn }) {
     });
     await promiseFn;
     dispatch(resetNewClientData());
-    onClose();
+    // onClose();
   }
   function handleChange(event) {
     const name = event.target.name;
@@ -50,7 +69,7 @@ function FormContainer({ fieldsData, dispatchFn }) {
   return (
     <Container>
       <Formik initialValues={initialValues} onSubmit={onSubmit}>
-        {props => (
+        {(props): JSX.Element => (
           <Form>
             {fieldsData.map(formField => {
               return (

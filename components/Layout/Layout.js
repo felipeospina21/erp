@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { Box } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
-import { getProducts } from "../../app/slices/productsSlice";
-import { getClients } from "../../app/slices/clientsSlice";
+import { getProducts } from "../../redux/slices/productsSlice";
+import { getClients } from "../../redux/slices/clientsSlice";
 import db from "../../firebase/clientApp";
 import SideNav from "./SideNav";
 

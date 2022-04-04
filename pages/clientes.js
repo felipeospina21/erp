@@ -2,7 +2,7 @@ import React, { useState } from "react";
 // import { Icon } from "@chakra-ui/react";
 // import { FaPlusCircle } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { createClient } from "../app/slices/clientsSlice";
+import { createClient } from "../redux/slices/clientsSlice";
 import db from "../firebase/clientApp";
 import CreateForm from "../components/InfoTable/CreateForm";
 import InfoTableContainer from "../components/InfoTable/InfoTableContainer";
@@ -70,14 +70,13 @@ const Clientes = () => {
   return (
     <>
       <InfoTableContainer headerList={fields} data={clients.list} />
-   
+
       <ModalContainer title='Crear Cliente'>
         <FormContainer
           fieldsData={fields}
           dispatchFn={() => dispatch(createClient({ db, newClientData }))}
         />
       </ModalContainer>
-  
     </>
   );
 };
