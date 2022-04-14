@@ -1,20 +1,31 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { collection, doc, setDoc, Timestamp } from "firebase/firestore/lite";
 import { createPdf } from "../../utils";
+import { RootState } from "../store";
+import { DecreaseStockParams } from "./productsSlice";
+
+export interface Sale {
+  tax: number;
+  subtotal: number;
+  total: number;
+}
+
+export interface SalesState {
+  data: Sale;
+  status: string | undefined;
+}
 
 const initialState = {
   data: { tax: 0, subtotal: 0, total: 0 },
-  status: null,
+  status: "",
 };
 
-export const saveSaleInfo = createAsyncThunk(
+export const saveSaleInfo = createAsyncThunk<any, DecreaseStockParams, { state: RootState }>(
   "sales/saveSaleInfo",
   async (paramsObj, { getState }) => {
     const { db, rowsData } = paramsObj;
     const { sales, clients } = getState();
-    const clientData = clients.list.filter(
-      client => client.name === sales.data.clientName
-    )[0];
+    const clientData = clients.list.filter((client) => client.name === sales.data.clientName)[0];
     const collectionRef = collection(db, "sales");
     const docRef = doc(collectionRef);
     const docData = {
@@ -49,19 +60,19 @@ const salesSlice = createSlice({
       };
     },
   },
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
-      .addCase(saveSaleInfo.pending, state => {
+      .addCase(saveSaleInfo.pending, (state) => {
         state.status = "loading";
       })
       .addCase(saveSaleInfo.fulfilled, (state, action) => {
         state.status = "idle";
         state.data = action.payload;
         createPdf(state.data);
-        // return { ...state, data: { ...action.payload } };
       });
   },
 });
 
-export const { updateSalesData, resetState, extraReducers } = salesSlice.actions;
+export const { updateSalesData, resetState } = salesSlice.actions;
+export const selectSales = (state: RootState): SalesState => state.sales;
 export default salesSlice.reducer;

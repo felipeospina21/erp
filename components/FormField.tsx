@@ -7,10 +7,19 @@ import {
   Input,
 } from "@chakra-ui/react";
 
-const FormField = ({ field, form, ...props }) => {
+export interface FormFieldProps {
+  field: any;
+  form: any;
+  required: boolean;
+  name: string;
+  label:string;
+  placeholder:string;
+  onChange: (event:React.ChangeEvent<HTMLInputElement>)=>void
+}
+const FormField = ({ field, form, ...props }:FormFieldProps):JSX.Element => {
   return (
     <FormControl
-      isRequired = {props.required}
+      isRequired={props.required}
       isInvalid={form.errors[field.name] && form.touched[field.name]}
       m='1rem 0'>
       <FormLabel htmlFor={props.name}>{props.label}</FormLabel>

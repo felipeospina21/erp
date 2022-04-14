@@ -1,14 +1,20 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import {
-  collection,
-  doc,
-  getDocs,
-  deleteDoc,
-  updateDoc,
-  addDoc,
-} from "firebase/firestore/lite";
+import { collection, doc, getDocs, deleteDoc, updateDoc, addDoc } from "firebase/firestore/lite";
+// import type { Firestore } from "firebase/firestore";
+import { RootState } from "../store";
 
+export interface CreateClientParams {
+  db: any;
+  newClientData: Client;
+}
+
+export interface UpdateClientParams {
+  db: any;
+  clientId: string;
+  updatedClientData?: any;
+}
 export interface Client {
+  id?: string;
   addres1: string;
   addres2?: string;
   city: string;
@@ -18,14 +24,15 @@ export interface Client {
   idType: string;
   name: string;
 }
-export interface ClientState {
+export interface ClientsState {
   list: Client[];
   newClient: Client;
   status: null | string;
 }
-const initialState: ClientState = {
+const initialState: ClientsState = {
   list: [],
   newClient: {
+    id: "",
     addres1: "",
     addres2: undefined,
     city: "",
@@ -38,14 +45,17 @@ const initialState: ClientState = {
   status: null,
 };
 
-export const getClients = createAsyncThunk("clients/getClients", async db => {
-  const clientsColl = collection(db, "clients");
-  return getDocs(clientsColl)
-    .then(snapshot => snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })))
-    .then(clients => clients);
-});
+export const getClients = createAsyncThunk<any[] , any, { state: RootState }>(
+  "clients/getClients",
+  async (db) => {
+    const clientsColl = collection(db, "clients");
+    return getDocs(clientsColl)
+      .then((snapshot) => snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+      .then((clients) => clients);
+  }
+);
 
-export const createClient = createAsyncThunk(
+export const createClient = createAsyncThunk<Client[] | undefined, CreateClientParams, { state: RootState }>(
   "clients/createClient",
   async (paramsObj, { getState }) => {
     const { db, newClientData } = paramsObj;
@@ -62,7 +72,7 @@ export const createClient = createAsyncThunk(
   }
 );
 
-export const updateClient = createAsyncThunk(
+export const updateClient = createAsyncThunk<Client[] | undefined, UpdateClientParams, { state: RootState }>(
   "clients/updateClient",
   async (paramsObj, { getState }) => {
     const { db, clientId, updatedClientData } = paramsObj;
@@ -71,8 +81,8 @@ export const updateClient = createAsyncThunk(
     const docRef = doc(clientsColl, clientId);
     try {
       await updateDoc(docRef, updatedClientData);
-      const updatedDoc = clients.list.filter(doc => doc.id === clientId)[0];
-      const updatedClientList = clients.list.map(client => {
+      const updatedDoc = clients.list.filter((doc) => doc.id === clientId)[0];
+      const updatedClientList = clients.list.map((client) => {
         if (client.id === updatedDoc.id) {
           client = { ...client, ...updatedClientData };
           return client;
@@ -86,7 +96,7 @@ export const updateClient = createAsyncThunk(
   }
 );
 
-export const deleteClient = createAsyncThunk(
+export const deleteClient = createAsyncThunk<Client[] | undefined, UpdateClientParams, { state: RootState }>(
   "clients/deleteClient",
   async (paramsObj, { getState }) => {
     const { db, clientId } = paramsObj;
@@ -96,7 +106,7 @@ export const deleteClient = createAsyncThunk(
     const docRef = doc(clientsColl, clientId);
     try {
       await deleteDoc(docRef);
-      const clientIdx = newClientsList.findIndex(element => element.id === clientId);
+      const clientIdx = newClientsList.findIndex((element) => element.id === clientId);
       newClientsList.splice(clientIdx, 1);
       return newClientsList;
     } catch (error) {
@@ -116,54 +126,55 @@ const clientsSlice = createSlice({
         newClient: { ...state.newClient, ...action.payload },
       };
     },
-    resetNewClientData: state => {
+    resetNewClientData: (state) => {
       return {
         ...state,
         newClient: {},
       };
     },
   },
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
-      .addCase(getClients.pending, state => {
+      .addCase(getClients.pending, (state) => {
         state.status = "loading";
       })
       .addCase(getClients.fulfilled, (state, action) => {
         state.status = "idle";
         state.list = action.payload;
       })
-      .addCase(createClient.pending, state => {
+      .addCase(createClient.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(createClient.rejected, state => {
+      .addCase(createClient.rejected, (state) => {
         state.status = "rejected";
       })
       .addCase(createClient.fulfilled, (state, action) => {
         state.status = "idle";
-        state.list = action.payload;
+        state.list = action.payload ?? [];
       })
-      .addCase(deleteClient.pending, state => {
+      .addCase(deleteClient.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(deleteClient.rejected, state => {
+      .addCase(deleteClient.rejected, (state) => {
         state.status = "rejected";
       })
       .addCase(deleteClient.fulfilled, (state, action) => {
         state.status = "idle";
-        state.list = action.payload;
+        state.list = action.payload ?? [];
       })
-      .addCase(updateClient.pending, state => {
+      .addCase(updateClient.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(updateClient.rejected, state => {
+      .addCase(updateClient.rejected, (state) => {
         state.status = "rejected";
       })
       .addCase(updateClient.fulfilled, (state, action) => {
         state.status = "idle";
-        state.list = action.payload;
+        state.list = action.payload ?? [];
       });
   },
 });
 
-export const { extraReducers, newClientData, resetNewClientData } = clientsSlice.actions;
+export const { newClientData, resetNewClientData } = clientsSlice.actions;
+export const selectClients = (state: RootState): ClientsState => state.clients;
 export default clientsSlice.reducer;

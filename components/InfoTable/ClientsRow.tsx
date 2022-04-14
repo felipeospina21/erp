@@ -1,20 +1,23 @@
 import React from "react";
 import { Tr, Td, Button } from "@chakra-ui/react";
-import { useDispatch } from "react-redux";
-import { deleteClient, updateClient } from "../../redux/slices/clientsSlice";
+import { useAppDispatch } from "../../redux/hooks";
+import { Client, deleteClient } from "../../redux/slices/clientsSlice";
 import db from "../../firebase/clientApp";
 import ModalContainer from "../ModalContainer";
 
-const ClientsRow = props => {
-  const dispatch = useDispatch();
+export interface ClientsRowProps {
+  data: Client;
+}
+const ClientsRow = (props: ClientsRowProps): JSX.Element => {
+  const dispatch = useAppDispatch();
 
-  function handleDelete(clientId) {
+  function handleDelete(clientId: string): void {
     dispatch(deleteClient({ db, clientId }));
   }
-  function handleUpdate(clientId) {
-    const updatedClientData = { name: "test" };
-    dispatch(updateClient({ db, clientId, updatedClientData }));
-  }
+  // function handleUpdate(clientId:string):void {
+  //   const updatedClientData = { name: "test" };
+  //   dispatch(updateClient({ db, clientId, updatedClientData }));
+  // }
   return (
     <Tr>
       <Td>{props.data.name}</Td>
@@ -26,7 +29,7 @@ const ClientsRow = props => {
       <Td>{props.data.department}</Td>
       <Td>{`${props.data.discount}%`}</Td>
       <Td>
-        <Button onClick={() => handleDelete(props.data.id)}>eliminar</Button>
+        <Button onClick={(): void => {handleDelete(props.data.id ?? "")}}>eliminar</Button>
       </Td>
       <Td>
         {/* <Button onClick={() => handleUpdate(props.data.id)}>actualizar</Button> */}

@@ -1,16 +1,24 @@
 import React, { useEffect } from "react";
 import { Box } from "@chakra-ui/react";
-import { useDispatch } from "react-redux";
 import { getProducts } from "../../redux/slices/productsSlice";
 import { getClients } from "../../redux/slices/clientsSlice";
 import db from "../../firebase/clientApp";
 import SideNav from "./SideNav";
+import { useAppDispatch } from "../../redux/hooks";
 
-const Layout = ({ children }) => {
-  const dispatch = useDispatch();
+export interface LayoutProps {
+  children: JSX.Element;
+}
 
-  useEffect(() => dispatch(getProducts(db)), []);
-  useEffect(() => dispatch(getClients(db)), []);
+const Layout = ({ children }: LayoutProps): JSX.Element => {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getProducts(db));
+  }, []);
+  useEffect(() => {
+    dispatch(getClients(db));
+  }, []);
 
   return (
     <>

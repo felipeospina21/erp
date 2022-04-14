@@ -3,8 +3,8 @@ import { Button } from "@chakra-ui/react";
 import { createPdf } from "../utils";
 import { salesData } from "../mocks/salesData";
 
-const costos = () => {
-  function handleClick() {
+const costos = ():JSX.Element => {
+  function handleClick():void {
     createPdf(salesData);
   }
 

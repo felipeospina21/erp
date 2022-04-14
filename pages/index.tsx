@@ -1,8 +1,7 @@
 import React from "react";
-import FormContainer from "../components/FormContainer";
 import CardsContainer from "../components/ProductsCard/CardsContainer";
 
-export default function Home() {
+export default function Home(): JSX.Element {
   return (
     <div>
       <CardsContainer />

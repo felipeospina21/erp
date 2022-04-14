@@ -26,10 +26,10 @@ export interface FormContainerProps {
   dispatchFn: () => void;
 }
 function FormContainer({ fieldsData, dispatchFn }: FormContainerProps): JSX.Element {
-  const clients = useAppSelector(state => state.clients);
+  const clients = useAppSelector((state) => state.clients);
   const dispatch = useAppDispatch();
 
-  const initialValues:FormValues = {
+  const initialValues: FormValues = {
     name: "",
     idType: "",
     idNumber: "",
@@ -40,29 +40,19 @@ function FormContainer({ fieldsData, dispatchFn }: FormContainerProps): JSX.Elem
     discount: "",
   };
 
-  // function validateName(value) {
-  //   let error;
-  //   if (!value) {
-  //     error = "Name is required";
-  //   } else if (value.toLowerCase() !== "naruto") {
-  //     error = "Jeez! You're not a fan 😱";
-  //   }
-  //   return error;
-  // }
-  async function onSubmit(values:FormValues): Promise<any> {
+  async function onSubmit(values: FormValues): Promise<any> {
     const promiseFn = new Promise((resolve, reject) => {
       resolve(dispatchFn());
       if (clients.status === "rejected") {
-        reject(console.log(`Error al crear usuario' ${JSON.stringify(values, null, 2)}`));
+        reject(`Error al crear usuario' ${JSON.stringify(values, null, 2)}`);
       }
     });
     await promiseFn;
     dispatch(resetNewClientData());
-    // onClose();
   }
-  function handleChange(event) {
-    const name = event.target.name;
-    const type = event.target.type;
+
+  function handleChange(event:React.ChangeEvent<HTMLInputElement>):void {
+    const {name,type} = event.target;
     const value = type === "number" ? Number(event.target.value) : event.target.value;
     dispatch(newClientData({ [name]: value }));
   }
@@ -71,7 +61,7 @@ function FormContainer({ fieldsData, dispatchFn }: FormContainerProps): JSX.Elem
       <Formik initialValues={initialValues} onSubmit={onSubmit}>
         {(props): JSX.Element => (
           <Form>
-            {fieldsData.map(formField => {
+            {fieldsData.map((formField) => {
               return (
                 <Field
                   key={formField.name}

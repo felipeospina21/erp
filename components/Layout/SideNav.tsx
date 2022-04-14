@@ -14,9 +14,9 @@ import {
 } from "@chakra-ui/react";
 import NavLinks from "./NavLinks";
 
-const SideNav = () => {
+const SideNav = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const btnRef = React.useRef();
+  const btnRef = React.useRef<HTMLButtonElement>(null);
 
   return (
     <Box m='1rem'>
@@ -30,7 +30,7 @@ const SideNav = () => {
           <DrawerHeader>Módulos</DrawerHeader>
 
           <DrawerBody display='flex' flexDir='column'>
-            <NavLinks onClose={onClose}/>
+            <NavLinks onClose={onClose} />
           </DrawerBody>
         </DrawerContent>
       </Drawer>

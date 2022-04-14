@@ -2,8 +2,11 @@ import React, { useContext } from "react";
 import { Td } from "@chakra-ui/react";
 import { TableStylesContext } from "../../context/TableStylesContext";
 
-const TableCellBody = props => {
-  const [cellStyles, setCellStyles] = useContext(TableStylesContext);
+export interface TableCellBodyProps {
+  children: string | number | undefined | JSX.Element
+};
+const TableCellBody = (props:TableCellBodyProps) : JSX.Element=> {
+  const [cellStyles] = useContext(TableStylesContext);
   return (
     <Td border={cellStyles.border} textAlign={cellStyles.textAlign}>
       {props.children}

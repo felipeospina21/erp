@@ -1,7 +1,14 @@
 import React from "react";
 import { Button } from "@chakra-ui/react";
 
-const Btn = props => {
+export interface BtnProps {
+  status: boolean;
+  color: string;
+  children: string;
+  onClick: () => void;
+}
+
+const Btn = (props: BtnProps): JSX.Element => {
   return (
     <Button
       isDisabled={props.status}

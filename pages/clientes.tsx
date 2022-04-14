@@ -1,19 +1,15 @@
-import React, { useState } from "react";
-// import { Icon } from "@chakra-ui/react";
-// import { FaPlusCircle } from "react-icons/fa";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { createClient } from "../redux/slices/clientsSlice";
 import db from "../firebase/clientApp";
-import CreateForm from "../components/InfoTable/CreateForm";
 import InfoTableContainer from "../components/InfoTable/InfoTableContainer";
-import Btn from "../components/Shared/Btn";
 import FormContainer from "../components/FormContainer";
 import ModalContainer from "../components/ModalContainer";
 
-const Clientes = () => {
-  const clients = useSelector(state => state.clients);
-  const newClientData = useSelector(state => state.clients.newClient);
-  const dispatch = useDispatch();
+const Clientes = (): JSX.Element => {
+  const clients = useAppSelector((state) => state.clients);
+  const newClientData = useAppSelector((state) => state.clients.newClient);
+  const dispatch = useAppDispatch();
   const fields = [
     {
       name: "name",
@@ -74,7 +70,9 @@ const Clientes = () => {
       <ModalContainer title='Crear Cliente'>
         <FormContainer
           fieldsData={fields}
-          dispatchFn={() => dispatch(createClient({ db, newClientData }))}
+          dispatchFn={(): void => {
+            dispatch(createClient({ db, newClientData }));
+          }}
         />
       </ModalContainer>
     </>
