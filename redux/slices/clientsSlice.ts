@@ -27,7 +27,7 @@ export interface Client {
 export interface ClientsState {
   list: Client[];
   newClient: Client;
-  status: null | string;
+  status: string;
 }
 const initialState: ClientsState = {
   list: [],
@@ -42,18 +42,15 @@ const initialState: ClientsState = {
     idType: "",
     name: "",
   },
-  status: null,
+  status: "",
 };
 
-export const getClients = createAsyncThunk<any[] , any, { state: RootState }>(
-  "clients/getClients",
-  async (db) => {
-    const clientsColl = collection(db, "clients");
-    return getDocs(clientsColl)
-      .then((snapshot) => snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
-      .then((clients) => clients);
-  }
-);
+export const getClients = createAsyncThunk<any[], any, { state: RootState }>("clients/getClients", async (db) => {
+  const clientsColl = collection(db, "clients");
+  return getDocs(clientsColl)
+    .then((snapshot) => snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+    .then((clients) => clients);
+});
 
 export const createClient = createAsyncThunk<Client[] | undefined, CreateClientParams, { state: RootState }>(
   "clients/createClient",
