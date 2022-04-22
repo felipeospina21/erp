@@ -43,7 +43,7 @@ function FormContainer({ fieldsData, dispatchFn }: FormContainerProps): JSX.Elem
   async function onSubmit(values: FormValues): Promise<any> {
     const promiseFn = new Promise((resolve, reject) => {
       resolve(dispatchFn());
-      if (clients.status === "rejected") {
+      if (clients?.status === "rejected") {
         reject(`Error al crear usuario' ${JSON.stringify(values, null, 2)}`);
       }
     });
@@ -51,8 +51,8 @@ function FormContainer({ fieldsData, dispatchFn }: FormContainerProps): JSX.Elem
     dispatch(resetNewClientData());
   }
 
-  function handleChange(event:React.ChangeEvent<HTMLInputElement>):void {
-    const {name,type} = event.target;
+  function handleChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    const { name, type } = event.target;
     const value = type === "number" ? Number(event.target.value) : event.target.value;
     dispatch(newClientData({ [name]: value }));
   }
@@ -65,11 +65,7 @@ function FormContainer({ fieldsData, dispatchFn }: FormContainerProps): JSX.Elem
               return (
                 <Field
                   key={formField.name}
-                  value={
-                    clients.newClient[formField.name]
-                      ? clients.newClient[formField.name]
-                      : ""
-                  }
+                  value={clients?.newClient[formField.name] ? clients.newClient[formField.name] : ""}
                   required={formField.required}
                   name={formField.name}
                   type={formField.type}
@@ -81,11 +77,7 @@ function FormContainer({ fieldsData, dispatchFn }: FormContainerProps): JSX.Elem
                 />
               );
             })}
-            <Button
-              mt={4}
-              colorScheme='teal'
-              isLoading={props.isSubmitting}
-              type='submit'>
+            <Button mt={4} colorScheme='teal' isLoading={props.isSubmitting} type='submit'>
               Submit
             </Button>
           </Form>
