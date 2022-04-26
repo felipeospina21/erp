@@ -4,11 +4,12 @@ import { FaPlusCircle } from "react-icons/fa";
 import TableRow from "./TableRow";
 import TableCellHeader from "./TableCellHeader";
 import { TableStylesProvider } from "../../context/TableStylesContext";
-import { Product } from "../../redux/slices/productsSlice";
+// import type { Product } from "../../redux/services";
+import { RowData } from "../../pages/ventas";
 
 export interface TableContainerProps {
-  rowsData: Product[];
-  setRowsData: (rowsData: Product[]) => void;
+  rowsData: RowData[];
+  setRowsData: (rowsData: RowData[]) => void;
   salesBtnDisabled: boolean;
   setSalesBtnDisabled: (salesBtnDisabled: boolean) => void;
 }
@@ -24,7 +25,7 @@ const TableContainer = ({
   const addRow = (): void => {
     salesBtnDisabled ? null : setSalesBtnDisabled(true);
     const newRowId = rowsData.length + 1;
-    setRowsData([...rowsData, { id: newRowId, subtotal: 0, quantity: 0, stock: 0 }]);
+    setRowsData([...rowsData, { id: newRowId, subtotal: 0, quantity: 0, stock: 0, productId:'', discount: 0 }]);
   };
 
   const removeRow = (id: number): void => {

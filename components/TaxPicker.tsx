@@ -23,7 +23,7 @@ const TaxPicker = ():JSX.Element => {
       <Box textAlign='right' fontSize='1.5rem' w='100%'>
         IVA (%):
       </Box>
-      <SelectInput options={[19, 16]} size='lg' m='0' onChangeFn={handleChange} />
+      <SelectInput options={['19', '16']} size='lg' m='0' onChangeFn={handleChange} />
     </SimpleGrid>
   );
 };

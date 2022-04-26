@@ -2,17 +2,18 @@ import { PDFDocument, StandardFonts, grayscale } from "pdf-lib";
 import download from "downloadjs";
 import { collection, getDocs } from "firebase/firestore/lite";
 import db from "./firebase/clientApp";
+import {  SaleResponse } from "./redux/services";
 
-export function thousandSeparator(num, decimals) {
-  const formatedNum = num.toFixed(decimals);
+export function thousandSeparator(num: number, decimals?: number): string {
+  const formatedNum = num.toFixed(decimals ?? 0);
   return formatedNum.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
 }
 
-export function formatDate(date, locale, options) {
+export function formatDate(date: number | Date | undefined, locale? : string | string[] | undefined, options?: Intl.DateTimeFormatOptions | undefined): string {
   return new Intl.DateTimeFormat(locale, options).format(date);
 }
 
-export async function createPdf(data) {
+export async function createPdf(data: SaleResponse): Promise<void> {
   const snapshot = await getDocs(collection(db, "invoiceCount"));
   const invoiceCountArr = snapshot.docs.map(doc => doc.data());
   const invoiceCount = invoiceCountArr[0].count;
@@ -21,13 +22,15 @@ export async function createPdf(data) {
   const page = pdfDoc.addPage();
   const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
   const {
-    clientName,
-    idType,
-    idNumber,
-    addres1,
-    addres2,
-    city,
-    department,
+    clientInfo:{
+      name : clientName,
+      idType,
+      idNumber,
+      addres1,
+      addres2,
+      city,
+      department,
+    },
     orderedProducts,
   } = data;
   const pageConfig = {
@@ -51,7 +54,7 @@ export async function createPdf(data) {
     font: timesRomanFont,
   };
 
-  function addInvoiceData() {
+  function addInvoiceData() : void {
     const invoiceDate = new Date();
     const dueDate = new Date();
     dueDate.setDate(invoiceDate.getDate() + 30);
@@ -74,7 +77,7 @@ export async function createPdf(data) {
     });
   }
 
-  function addLeftHeader() {
+  function addLeftHeader(): void {
     const props = {
       x: leftColX,
       ...fontStyles,
@@ -86,7 +89,7 @@ export async function createPdf(data) {
     page.drawText(`${city}, ${department}`, { ...props, y: height - 155 });
   }
 
-  function addRightHeader() {
+  function addRightHeader(): void {
     const props = {
       x: rightColX,
       ...fontStyles,
@@ -98,7 +101,7 @@ export async function createPdf(data) {
     page.drawText("N°693 657 886 85", { ...props, y: height - 155 });
   }
 
-  function addTableHeader() {
+  function addTableHeader() : void{
     page.drawText("PRODUCTO", { ...fontStyles, x: tablePositionX.col1, y: height - 180 });
     page.drawText("CANTIDAD", { ...fontStyles, x: tablePositionX.col2, y: height - 180 });
     page.drawText("PRECIO", { ...fontStyles, x: tablePositionX.col3, y: height - 180 });
@@ -106,14 +109,14 @@ export async function createPdf(data) {
   }
   let newLineY = 180;
 
-  function addProducts() {
+  function addProducts():void {
     addTableHeader();
     const props = { ...fontStyles, y: height - newLineY };
     orderedProducts.forEach(product => {
-      const discountedPrice = product.price - product.price * product.discount;
+      const discountedPrice = product.item.price - product.item.price * product.discount;
       newLineY += lineHeight;
       props.y = height - newLineY;
-      page.drawText(product.item, {
+      page.drawText(product.item.name, {
         ...props,
         x: tablePositionX.col1,
       });
@@ -132,7 +135,7 @@ export async function createPdf(data) {
     });
   }
 
-  function addFooter() {
+  function addFooter():void {
     page.drawText("Observaciones:", { ...fontStyles, x: leftColX, y: newLineY - orderedProducts.length * 30 });
     page.drawText("Recibido Por:", { ...fontStyles, x: rightColX, y: newLineY - orderedProducts.length * 30});
     page.drawText(

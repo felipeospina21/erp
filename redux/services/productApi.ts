@@ -9,6 +9,15 @@ export interface Product extends DocumentId {
   subtotal?: number;
 }
 
+export interface UpdateProduct extends DocumentId {
+  update: {
+    alias?: string;
+    name?: string;
+    price?: number;
+    stock?: number;
+  };
+}
+
 export const productApi = createApi({
   reducerPath: 'productApi',
   baseQuery: fetchBaseQuery({
@@ -20,7 +29,15 @@ export const productApi = createApi({
       query: () => '/',
       providesTags: [{ type: 'Product' }],
     }),
+    updateProduct: build.mutation<Product, UpdateProduct>({
+      query: (body) => ({
+        url: '/',
+        method: 'PUT',
+        body,
+      }),
+      invalidatesTags: [{ type: 'Product' }],
+    }),
   }),
 });
 
-export const { useGetProductsQuery } = productApi;
+export const { useGetProductsQuery, useUpdateProductMutation } = productApi;

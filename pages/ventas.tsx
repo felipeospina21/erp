@@ -1,48 +1,60 @@
 import React, { useState, useEffect } from 'react';
 import { Flex, Wrap, WrapItem } from '@chakra-ui/react';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { saveSaleInfo, updateSalesData, resetState } from '../redux/slices/salesSlice/salesSlice';
-import db from '../firebase/clientApp';
+import {  updateSalesData, resetState } from '../redux/slices/salesSlice/salesSlice';
 import TableContainer from '../components/SalesTable/TableContainer';
 import ValueContainer from '../components/ValueContainer';
 import TaxPicker from '../components/TaxPicker';
 import Btn from '../components/Shared/Btn';
 import ObjSelectInput from '../components/Shared/ObjSelectInput';
 import ArrSelectInput from '../components/Shared/ArrSelectInput';
-import { useGetClientsQuery } from '../redux/services';
+import {
+  // useGetClientByIdQuery,
+  useGetClientsQuery,
+  useSaveSaleMutation,
+  useUpdateProductMutation,
+} from '../redux/services';
 
 export interface RowData {
   id: number;
   subtotal: number;
   stock: number;
   quantity: number;
+  discount: number;
+  productId: string;
 }
 
 const Ventasc = (): JSX.Element => {
-  const [rowsData, setRowsData] = useState<RowData[]>([{ id: 1, subtotal: 0, stock: 0, quantity: 0 }]);
+  const initialRowSate: RowData = { id: 1, subtotal: 0, stock: 0, quantity: 0, productId: '', discount: 0 };
+  const [rowsData, setRowsData] = useState<RowData[]>([initialRowSate]);
   const [salesBtnDisabled, setSalesBtnDisabled] = useState(true);
   const salesData = useAppSelector((state) => state.sales);
-  const clients = useGetClientsQuery();
+  const { data: clients } = useGetClientsQuery();
+  // const { data: client } = useGetClientByIdQuery(sales);
   const dispatch = useAppDispatch();
+  const [updateProduct] = useUpdateProductMutation();
+  const [saveSale] = useSaveSaleMutation();
 
   const handleReset = (): void => {
     Array.from(document.querySelectorAll('input')).forEach((input) => (input.value = ''));
     Array.from(document.querySelectorAll('select')).forEach((select) => (select.value = ''));
-    setRowsData([{ id: 1, subtotal: 0, stock: 0, quantity: 0 }]);
+    setRowsData([initialRowSate]);
     dispatch(resetState());
   };
 
-  const handleClick = async (): Promise<void> => {
-    //TODO: Check option to creat a custom hook to wrap async functions into promises
+  const handleNewSale = (): void => {
     // Decrease Stock
-
-    const saveSalesInfoPromise = new Promise((resolve) => {
-      resolve(dispatch(saveSaleInfo({ db, rowsData })));
+    // TODO: create api for updating multiple items
+    rowsData.forEach((row) => {
+      const newStock = row.stock - row.quantity;
+      updateProduct({ _id: row.productId, update: { stock: newStock } });
     });
 
-    await saveSalesInfoPromise;
+    saveSale(salesData.data);
     handleReset();
   };
+
+
 
   const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>): void => {
     const name = event.target.name;
@@ -106,7 +118,13 @@ const Ventasc = (): JSX.Element => {
           />
         </WrapItem>
         <WrapItem w='20rem'>
-          <ObjSelectInput name='clientName' title='Cliente' options={clients} size='lg' onChangeFn={handleSelect} />
+          <ObjSelectInput
+            name='clientName'
+            title='Cliente'
+            options={clients?.map(client => ({id: client._id, name:client.name}))}
+            size='lg'
+            onChangeFn={handleSelect}
+          />
         </WrapItem>
       </Wrap>
 
@@ -117,7 +135,7 @@ const Ventasc = (): JSX.Element => {
         setSalesBtnDisabled={setSalesBtnDisabled}
       />
       <Flex justify='flex-end' align='center'>
-        <Btn color='green' status={salesBtnDisabled} onClick={handleClick}>
+        <Btn color='green' status={salesBtnDisabled} onClick={handleNewSale}>
           Vender
         </Btn>
 

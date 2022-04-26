@@ -4,7 +4,7 @@ import { thousandSeparator } from "../utils";
 
 export interface ValueContainerProps {
   name: string;
-  value: string;
+  value: number;
 };
 
 const ValueContainer = ({name, value}:ValueContainerProps):JSX.Element => {

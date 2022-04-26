@@ -1,21 +1,19 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 // import { createPdf } from "../../../utils";
-import { RootState } from "../../store";
+import { RootState } from '../../store';
+import type { NewSale } from '../../services';
 
-export interface Sale {
-  tax: number;
-  subtotal: number;
-  total: number;
+export interface SalesData extends Partial<NewSale> {
+  id?: string;
 }
-
 export interface SalesState {
-  data: Sale;
+  data: SalesData;
   status: string | undefined;
 }
 
 const initialState = {
   data: { tax: 0, subtotal: 0, total: 0 },
-  status: "",
+  status: '',
 };
 
 // export const saveSaleInfo = createAsyncThunk<any, DecreaseStockParams, { state: RootState }>(
@@ -44,17 +42,14 @@ const initialState = {
 // );
 
 const salesSlice = createSlice({
-  name: "sales",
+  name: 'sales',
   initialState,
   reducers: {
     resetState: () => {
       return initialState;
     },
-    updateSalesData: (state, action) => {
-      return {
-        ...state,
-        data: { ...state.data, ...action.payload },
-      };
+    updateSalesData: (state, action: PayloadAction<SalesData>) => {
+      state.data = { ...state.data, ...action.payload };
     },
   },
 });

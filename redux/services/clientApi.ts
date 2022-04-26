@@ -12,7 +12,7 @@ export interface Client {
   email?: string;
   idNumber: string;
   idType: string;
-  name?: string;
+  name: string;
 }
 export interface NewClientResponse extends Client, DocumentId {}
 
