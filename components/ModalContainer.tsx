@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -8,19 +8,25 @@ import {
   ModalCloseButton,
   Button,
   useDisclosure,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 
 export interface ModalContainerProps {
-  title:string;
+  title: string;
   children: JSX.Element | JSX.Element[];
-};
-const ModalContainer = ({title, children}:ModalContainerProps):JSX.Element => {
+  isDisplayed?: boolean;
+  setDisplayModal?: Dispatch<SetStateAction<boolean>>;
+}
+const ModalContainer = ({ title, children, isDisplayed, setDisplayModal }: ModalContainerProps): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  function handleDisplay(): void {
+    setDisplayModal(!isDisplayed);
+  }
   return (
     <>
-      <Button onClick={onOpen}>{title}</Button>
+      <Button onClick={setDisplayModal ? handleDisplay : onOpen}>{title}</Button>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isDisplayed ?? isOpen} onClose={setDisplayModal ? handleDisplay : onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{title}</ModalHeader>

@@ -1,14 +1,17 @@
-import React from "react";
-import { useAppSelector } from "../../redux/hooks";
-import { Flex } from "@chakra-ui/react";
-import Card from "./Card";
+import React from 'react';
+import { Flex } from '@chakra-ui/react';
+import Card from './Card';
+import { Product } from '../../redux/services';
 
-export default function CardsContainer(): JSX.Element {
-  const products = useAppSelector(state => state.products.list);
+export interface CardsContainerProps {
+  data: Product[];
+}
+
+export default function CardsContainer({ data }: CardsContainerProps): JSX.Element {
   return (
     <Flex m='1rem' w='100%' wrap='wrap'>
-      {products.map(product => (
-        <Card key={product.id} product={product} />
+      {data?.map((product) => (
+        <Card key={product._id} product={product} />
       ))}
     </Flex>
   );

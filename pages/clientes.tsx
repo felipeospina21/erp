@@ -1,15 +1,12 @@
-import React from "react";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { createClient } from "../redux/slices/clientsSlice";
-import db from "../firebase/clientApp";
+import React, {useState} from "react";
 import InfoTableContainer from "../components/InfoTable/InfoTableContainer";
 import FormContainer from "../components/FormContainer";
 import ModalContainer from "../components/ModalContainer";
+import {  useGetClientsQuery } from "../redux/services";
 
 const Clientes = (): JSX.Element => {
-  const clients = useAppSelector((state) => state.clients);
-  const newClientData = useAppSelector((state) => state.clients.newClient);
-  const dispatch = useAppDispatch();
+  const { data: clients} = useGetClientsQuery()
+  const [displayModal, setDisplayModal] = useState(false)
   const fields = [
     {
       name: "name",
@@ -55,6 +52,13 @@ const Clientes = (): JSX.Element => {
       required: true,
     },
     {
+      name: "email",
+      type: "text",
+      placeholder: "email",
+      label: "email",
+      required: false,
+    },
+    {
       name: "discount",
       type: "number",
       placeholder: "descuento",
@@ -65,16 +69,14 @@ const Clientes = (): JSX.Element => {
 
   return (
     <>
-      <InfoTableContainer headerList={fields} data={clients.list} />
+      <InfoTableContainer headerList={fields} data={clients} />
 
-      <ModalContainer title='Crear Cliente'>
+      <ModalContainer title='Crear Cliente' isDisplayed={displayModal} setDisplayModal = {setDisplayModal}>
         <FormContainer
           fieldsData={fields}
-          dispatchFn={(): void => {
-            dispatch(createClient({ db, newClientData }));
-          }}
+          setDisplayModal = {setDisplayModal}
         />
-      </ModalContainer>
+      </ModalContainer >
     </>
   );
 };

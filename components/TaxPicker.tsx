@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, SimpleGrid } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
-import {  updateSalesData } from "../redux/slices/salesSlice";
+import {  updateSalesData } from "../redux/slices/salesSlice/salesSlice";
 import SelectInput from "./Shared/SelectInput";
 
 const TaxPicker = ():JSX.Element => {

@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Heading, Text } from "@chakra-ui/react";
 import { thousandSeparator } from "../../utils";
-import { Product } from "../../redux/slices/productsSlice";
+import type { Product } from "../../redux/services";
 
 export interface CardProps {
   product: Product;

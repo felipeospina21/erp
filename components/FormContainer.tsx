@@ -1,20 +1,11 @@
-import React from "react";
-import { Form, Formik, Field } from "formik";
-import { Button, Container } from "@chakra-ui/react";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import FormField from "./FormField";
-import { newClientData, resetNewClientData } from "../redux/slices/clientsSlice";
-
-export interface FormValues {
-  name: string;
-  idType: string;
-  idNumber: string;
-  addres1: string;
-  addres2: string;
-  city: string;
-  department: string;
-  discount: string;
-}
+import React, {Dispatch, SetStateAction} from 'react';
+import { Form, Formik, Field } from 'formik';
+import { Button, Container } from '@chakra-ui/react';
+import { useAppDispatch, useAppSelector, } from '../redux/hooks';
+import FormField from './FormField';
+import { newClientData, resetNewClientData } from '../redux/slices/clientsSlice/clientsSlice';
+import { useCreateClientMutation } from '../redux/services';
+import type { Client } from '../redux/services';
 export interface FormContainerProps {
   fieldsData: {
     name: string;
@@ -23,49 +14,46 @@ export interface FormContainerProps {
     label: string;
     required: boolean;
   }[];
-  dispatchFn: () => void;
+  setDisplayModal: Dispatch<SetStateAction<boolean>>;
 }
-function FormContainer({ fieldsData, dispatchFn }: FormContainerProps): JSX.Element {
+function FormContainer({ fieldsData, setDisplayModal }: FormContainerProps): JSX.Element {
+  const [createClient, { isLoading }] = useCreateClientMutation();
   const clients = useAppSelector((state) => state.clients);
   const dispatch = useAppDispatch();
 
-  const initialValues: FormValues = {
-    name: "",
-    idType: "",
-    idNumber: "",
-    addres1: "",
-    addres2: "",
-    city: "",
-    department: "",
-    discount: "",
+  const initialValues: Client = {
+    name: '',
+    idType: '',
+    idNumber: '',
+    addres1: '',
+    addres2: '',
+    city: '',
+    department: '',
+    discount: 0,
+    email: '',
   };
 
-  async function onSubmit(values: FormValues): Promise<any> {
-    const promiseFn = new Promise((resolve, reject) => {
-      resolve(dispatchFn());
-      if (clients?.status === "rejected") {
-        reject(`Error al crear usuario' ${JSON.stringify(values, null, 2)}`);
-      }
-    });
-    await promiseFn;
+  function onSubmit(): void {
+    createClient(clients.newClient);
     dispatch(resetNewClientData());
+    setDisplayModal(false)
   }
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>): void {
     const { name, type } = event.target;
-    const value = type === "number" ? Number(event.target.value) : event.target.value;
-    dispatch(newClientData({ [name]: value }));
+    const value = type === 'number' ? Number(event.target.value) : event.target.value;
+    dispatch(newClientData({ field: name, value }));
   }
   return (
     <Container>
       <Formik initialValues={initialValues} onSubmit={onSubmit}>
-        {(props): JSX.Element => (
+        {(): JSX.Element => (
           <Form>
             {fieldsData.map((formField) => {
               return (
                 <Field
                   key={formField.name}
-                  value={clients?.newClient[formField.name] ? clients.newClient[formField.name] : ""}
+                  value={clients?.newClient[formField.name] ? clients.newClient[formField.name] : ''}
                   required={formField.required}
                   name={formField.name}
                   type={formField.type}
@@ -77,7 +65,7 @@ function FormContainer({ fieldsData, dispatchFn }: FormContainerProps): JSX.Elem
                 />
               );
             })}
-            <Button mt={4} colorScheme='teal' isLoading={props.isSubmitting} type='submit'>
+            <Button mt={4} colorScheme='teal' isLoading={isLoading} type='submit'>
               Submit
             </Button>
           </Form>

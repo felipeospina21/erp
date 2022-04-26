@@ -1,45 +1,50 @@
-import React, { useState, useEffect } from "react";
-import { Flex, Wrap, WrapItem } from "@chakra-ui/react";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { decreaseStock, Product } from "../redux/slices/productsSlice";
-import { saveSaleInfo, updateSalesData, resetState } from "../redux/slices/salesSlice";
-import db from "../firebase/clientApp";
-import TableContainer from "../components/SalesTable/TableContainer";
-import ValueContainer from "../components/ValueContainer";
-import TaxPicker from "../components/TaxPicker";
-import Btn from "../components/Shared/Btn";
-import ObjSelectInput from "../components/Shared/ObjSelectInput";
-import ArrSelectInput from "../components/Shared/ArrSelectInput";
+import React, { useState, useEffect } from 'react';
+import { Flex, Wrap, WrapItem } from '@chakra-ui/react';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { saveSaleInfo, updateSalesData, resetState } from '../redux/slices/salesSlice/salesSlice';
+import db from '../firebase/clientApp';
+import TableContainer from '../components/SalesTable/TableContainer';
+import ValueContainer from '../components/ValueContainer';
+import TaxPicker from '../components/TaxPicker';
+import Btn from '../components/Shared/Btn';
+import ObjSelectInput from '../components/Shared/ObjSelectInput';
+import ArrSelectInput from '../components/Shared/ArrSelectInput';
+import { useGetClientsQuery } from '../redux/services';
 
-//BUG: useEffect in line 74 is updating tha data in a buggy way
-const Ventasc = () => {
-  const [rowsData, setRowsData] = useState<Product[]>([{ id: 1, subtotal: 0, stock: 0, quantity: 0 }]);
+export interface RowData {
+  id: number;
+  subtotal: number;
+  stock: number;
+  quantity: number;
+}
+
+const Ventasc = (): JSX.Element => {
+  const [rowsData, setRowsData] = useState<RowData[]>([{ id: 1, subtotal: 0, stock: 0, quantity: 0 }]);
   const [salesBtnDisabled, setSalesBtnDisabled] = useState(true);
   const salesData = useAppSelector((state) => state.sales);
-  const clients = useAppSelector((state) => state.clients.list);
+  const clients = useGetClientsQuery();
   const dispatch = useAppDispatch();
 
   const handleReset = (): void => {
-    Array.from(document.querySelectorAll("input")).forEach((input) => (input.value = ""));
-    Array.from(document.querySelectorAll("select")).forEach((select) => (select.value = ""));
+    Array.from(document.querySelectorAll('input')).forEach((input) => (input.value = ''));
+    Array.from(document.querySelectorAll('select')).forEach((select) => (select.value = ''));
     setRowsData([{ id: 1, subtotal: 0, stock: 0, quantity: 0 }]);
     dispatch(resetState());
   };
 
   const handleClick = async (): Promise<void> => {
     //TODO: Check option to creat a custom hook to wrap async functions into promises
-    const decreaseStockPromise = new Promise((resolve) => {
-      resolve(dispatch(decreaseStock({ db, rowsData })));
-    });
+    // Decrease Stock
+
     const saveSalesInfoPromise = new Promise((resolve) => {
       resolve(dispatch(saveSaleInfo({ db, rowsData })));
     });
-    await decreaseStockPromise;
+
     await saveSalesInfoPromise;
     handleReset();
   };
 
-  const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>):void => {
+  const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>): void => {
     const name = event.target.name;
     const value = event.target.value;
     dispatch(updateSalesData({ [name]: value }));
@@ -86,7 +91,7 @@ const Ventasc = () => {
           <ArrSelectInput
             name='deliveryCity'
             title='Ciudad'
-            options={["Medellin", "Bogotá"]}
+            options={['Medellin', 'Bogotá']}
             size='lg'
             onChangeFn={handleSelect}
           />
@@ -95,7 +100,7 @@ const Ventasc = () => {
           <ArrSelectInput
             name='chanel'
             title='Canal'
-            options={["Directo", "Tercero"]}
+            options={['Directo', 'Tercero']}
             size='lg'
             onChangeFn={handleSelect}
           />

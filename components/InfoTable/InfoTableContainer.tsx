@@ -1,13 +1,14 @@
 import React from "react";
 import { Table, Thead, Tbody, Tr, Th, Box } from "@chakra-ui/react";
 import ClientsRow from "./ClientsRow";
+import { NewClientResponse } from "../../redux/services";
 
 export interface InfoTableContainerProps {
   headerList: {
     name:string;
     label:string;
   }[];
-  data: any[];
+  data: NewClientResponse[];
 };
 const InfoTableContainer = ({headerList, data}:InfoTableContainerProps): JSX.Element => {
   return (
@@ -21,8 +22,8 @@ const InfoTableContainer = ({headerList, data}:InfoTableContainerProps): JSX.Ele
           </Tr>
         </Thead>
         <Tbody fontSize={["sm", "md"]}>
-          {data.map((dataRow) => {
-            return <ClientsRow key={dataRow.id} data={dataRow} />;
+          {data?.map((dataRow) => {
+            return <ClientsRow key={dataRow._id} client={dataRow} />;
           })}
         </Tbody>
       </Table>
