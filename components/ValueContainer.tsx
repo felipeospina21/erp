@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, SimpleGrid } from "@chakra-ui/react";
-import { thousandSeparator } from "../utils";
+import { thousandSeparator } from "../utils/utils";
 
 export interface ValueContainerProps {
   name: string;

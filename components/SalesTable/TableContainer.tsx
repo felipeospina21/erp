@@ -1,13 +1,17 @@
-import React, { useState } from "react";
-import { Table, Thead, Tbody, Tr, Button, Box, Icon } from "@chakra-ui/react";
-import { FaPlusCircle } from "react-icons/fa";
-import TableRow from "./TableRow";
-import TableCellHeader from "./TableCellHeader";
-import { TableStylesProvider } from "../../context/TableStylesContext";
+import React from 'react';
+import { Table, Thead, Tbody, Tr, Button, Box, Icon } from '@chakra-ui/react';
+import { FaPlusCircle } from 'react-icons/fa';
+import TableRow from './TableRow';
+import TableCellHeader from './TableCellHeader';
+import { TableStylesProvider } from '../../context/TableStylesContext';
 // import type { Product } from "../../redux/services";
-import { RowData } from "../../pages/ventas";
+import { RowData } from '../../pages/ventas';
 
 export interface TableContainerProps {
+  header: {
+    title: string;
+    id: string;
+  }[];
   rowsData: RowData[];
   setRowsData: (rowsData: RowData[]) => void;
   salesBtnDisabled: boolean;
@@ -15,17 +19,19 @@ export interface TableContainerProps {
 }
 
 const TableContainer = ({
+  header,
   rowsData,
   setRowsData,
   salesBtnDisabled,
   setSalesBtnDisabled,
 }: TableContainerProps): JSX.Element => {
-  const [header] = useState(["Producto", "Stock", "Precio", "Cantidad", "Descuento", "Total"]);
-
   const addRow = (): void => {
     salesBtnDisabled ? null : setSalesBtnDisabled(true);
     const newRowId = rowsData.length + 1;
-    setRowsData([...rowsData, { id: newRowId, subtotal: 0, quantity: 0, stock: 0, productId:'', discount: 0 }]);
+    setRowsData([
+      ...rowsData,
+      { id: newRowId, item: '', subtotal: 0, quantity: 0, stock: 0, productId: '', price: 0, discount: 0 },
+    ]);
   };
 
   const removeRow = (id: number): void => {
@@ -37,15 +43,15 @@ const TableContainer = ({
   return (
     <TableStylesProvider>
       <Box overflow='auto' mb='1rem'>
-        <Table variant='simple' maxW='1300px' m={["auto"]}>
-          <Thead fontSize={["sm", "md"]}>
+        <Table variant='simple' maxW='1300px' m={['auto']}>
+          <Thead fontSize={['sm', 'md']}>
             <Tr>
-              {header.map((text) => {
-                return <TableCellHeader key={text}>{text}</TableCellHeader>;
+              {header.map(({ title, id }) => {
+                return <TableCellHeader key={id}>{title}</TableCellHeader>;
               })}
             </Tr>
           </Thead>
-          <Tbody fontSize={["sm", "md"]}>
+          <Tbody fontSize={['sm', 'md']}>
             {rowsData.map((row) => {
               return (
                 <TableRow
@@ -60,7 +66,12 @@ const TableContainer = ({
             })}
           </Tbody>
         </Table>
-        <Button colorScheme='teal' size='sm' my='1rem' leftIcon={<Icon as={FaPlusCircle} />} onClick={addRow}>
+        <Button
+          colorScheme='teal'
+          size='sm'
+          my='1rem'
+          leftIcon={<Icon as={FaPlusCircle} />}
+          onClick={addRow}>
           Row
         </Button>
       </Box>

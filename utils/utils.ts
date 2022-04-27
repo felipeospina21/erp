@@ -1,8 +1,6 @@
 import { PDFDocument, StandardFonts, grayscale } from "pdf-lib";
 import download from "downloadjs";
-import { collection, getDocs } from "firebase/firestore/lite";
-import db from "./firebase/clientApp";
-import {  SaleResponse } from "./redux/services";
+import {  SaleResponse } from "../redux/services";
 
 export function thousandSeparator(num: number, decimals?: number): string {
   const formatedNum = num.toFixed(decimals ?? 0);
@@ -14,9 +12,9 @@ export function formatDate(date: number | Date | undefined, locale? : string | s
 }
 
 export async function createPdf(data: SaleResponse): Promise<void> {
-  const snapshot = await getDocs(collection(db, "invoiceCount"));
-  const invoiceCountArr = snapshot.docs.map(doc => doc.data());
-  const invoiceCount = invoiceCountArr[0].count;
+  // const snapshot = await getDocs(collection(db, "invoiceCount"));
+  // const invoiceCountArr = snapshot.docs.map(doc => doc.data());
+  // const invoiceCount = invoiceCountArr[0].count;
 
   const pdfDoc = await PDFDocument.create();
   const page = pdfDoc.addPage();

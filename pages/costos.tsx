@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@chakra-ui/react";
-import { createPdf } from "../utils";
+import { createPdf } from "../utils/utils";
 import { salesData } from "../mocks/salesData";
 
 const costos = ():JSX.Element => {

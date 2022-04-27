@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Flex, Wrap, WrapItem } from '@chakra-ui/react';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import {  updateSalesData, resetState } from '../redux/slices/salesSlice/salesSlice';
@@ -17,15 +17,17 @@ import {
 
 export interface RowData {
   id: number;
+  item: string;
   subtotal: number;
   stock: number;
   quantity: number;
   discount: number;
+  price: number;
   productId: string;
 }
 
-const Ventasc = (): JSX.Element => {
-  const initialRowSate: RowData = { id: 1, subtotal: 0, stock: 0, quantity: 0, productId: '', discount: 0 };
+const Ventas = (): JSX.Element => {
+  const initialRowSate: RowData = { id: 1, item: '', subtotal: 0, stock: 0, quantity: 0, productId: '', price: 0, discount: 0 };
   const [rowsData, setRowsData] = useState<RowData[]>([initialRowSate]);
   const [salesBtnDisabled, setSalesBtnDisabled] = useState(true);
   const salesData = useAppSelector((state) => state.sales);
@@ -34,6 +36,33 @@ const Ventasc = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const [updateProduct] = useUpdateProductMutation();
   const [saveSale] = useSaveSaleMutation();
+
+  const header = useMemo(()=> [
+    {
+      title: 'Producto',
+      id: 'product'
+    },
+    {
+      title: 'Stock',
+      id: 'stock'
+    },
+    {
+      title: 'Precio',
+      id: 'price'
+    },
+    {
+      title: 'Cantidad',
+      id: 'quantity'
+    },
+    {
+      title: 'Descuento',
+      id: 'discount'
+    },
+    {
+      title: 'Total',
+      id: 'total'
+    },
+  ],[])
 
   const handleReset = (): void => {
     Array.from(document.querySelectorAll('input')).forEach((input) => (input.value = ''));
@@ -129,6 +158,7 @@ const Ventasc = (): JSX.Element => {
       </Wrap>
 
       <TableContainer
+        header={header}
         rowsData={rowsData}
         setRowsData={setRowsData}
         salesBtnDisabled={salesBtnDisabled}
@@ -153,4 +183,4 @@ const Ventasc = (): JSX.Element => {
   );
 };
 
-export default Ventasc;
+export default Ventas;
