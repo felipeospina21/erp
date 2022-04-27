@@ -58,7 +58,8 @@ export async function createPdf(data: SaleResponse): Promise<void> {
     dueDate.setDate(invoiceDate.getDate() + 30);
     const formatedInvoiceDate = formatDate(invoiceDate, "es");
     const formatedDueDate = formatDate(dueDate, "es");
-    page.drawText(`Cuenta de cobro N° ${invoiceCount}`, {
+    // page.drawText(`Cuenta de cobro N° ${invoiceCount}`, {
+    page.drawText(`Cuenta de cobro N° ${0}`, {
       ...fontStyles,
       x: rightColX,
       y: height - 20,

@@ -8,7 +8,7 @@ export interface InfoTableContainerProps {
     name:string;
     label:string;
   }[];
-  data: NewClientResponse[];
+  data: NewClientResponse[] | [];
 };
 const InfoTableContainer = ({headerList, data}:InfoTableContainerProps): JSX.Element => {
   return (

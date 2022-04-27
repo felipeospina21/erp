@@ -7,7 +7,7 @@ export default function Home(): JSX.Element {
   return (
     <div>
       <h1>Products</h1>
-      <CardsContainer data={products}/>
+      <CardsContainer data={products ?? []}/>
       {/* <FormikTest/> */}
     </div>
   );

@@ -16,10 +16,16 @@ export interface ModalContainerProps {
   isDisplayed?: boolean;
   setDisplayModal?: Dispatch<SetStateAction<boolean>>;
 }
-const ModalContainer = ({ title, children, isDisplayed, setDisplayModal }: ModalContainerProps): JSX.Element => {
+const ModalContainer = ({
+  title,
+  children,
+  isDisplayed,
+  setDisplayModal,
+}: ModalContainerProps): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   function handleDisplay(): void {
+    if (!setDisplayModal) return;
     setDisplayModal(!isDisplayed);
   }
   return (

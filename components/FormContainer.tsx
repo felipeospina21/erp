@@ -1,7 +1,7 @@
-import React, {Dispatch, SetStateAction} from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { Form, Formik, Field } from 'formik';
 import { Button, Container } from '@chakra-ui/react';
-import { useAppDispatch, useAppSelector, } from '../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import FormField from './FormField';
 import { newClientData, resetNewClientData } from '../redux/slices/clientsSlice/clientsSlice';
 import { useCreateClientMutation } from '../redux/services';
@@ -36,7 +36,7 @@ function FormContainer({ fieldsData, setDisplayModal }: FormContainerProps): JSX
   function onSubmit(): void {
     createClient(clients.newClient);
     dispatch(resetNewClientData());
-    setDisplayModal(false)
+    setDisplayModal(false);
   }
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>): void {
@@ -53,7 +53,11 @@ function FormContainer({ fieldsData, setDisplayModal }: FormContainerProps): JSX
               return (
                 <Field
                   key={formField.name}
-                  value={clients?.newClient[formField.name] ? clients.newClient[formField.name] : ''}
+                  value={
+                    clients?.newClient[formField.name as keyof Client]
+                      ? clients.newClient[formField.name as keyof Client]
+                      : ''
+                  }
                   required={formField.required}
                   name={formField.name}
                   type={formField.type}

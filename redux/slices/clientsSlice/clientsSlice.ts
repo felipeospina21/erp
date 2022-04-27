@@ -15,12 +15,11 @@ export interface NewClientPayload {
 const initialState: ClientsState = {
   status: undefined,
   newClient: {
+    name: '',
     addres1: '',
-
     city: '',
     department: '',
     discount: 0,
-
     idNumber: '',
     idType: '',
   },
