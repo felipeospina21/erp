@@ -1,29 +1,37 @@
-import React from "react";
-import { Box, SimpleGrid } from "@chakra-ui/react";
-import { useDispatch } from "react-redux";
-import {  updateSalesData } from "../redux/slices/salesSlice/salesSlice";
-import SelectInput from "./Shared/SelectInput";
+import React, { useState } from 'react';
+import { Box, SimpleGrid } from '@chakra-ui/react';
+import { useDispatch } from 'react-redux';
+import { updateSalesData } from '../redux/slices/salesSlice/salesSlice';
+import { CustomSelect } from './Shared';
+import { nanoid } from '@reduxjs/toolkit';
 
-const TaxPicker = ():JSX.Element => {
+const TaxPicker = (): JSX.Element => {
+  const [selectedValue, setSelectedValue] = useState('')
   const dispatch = useDispatch();
 
-  const handleChange = (event:React.ChangeEvent<HTMLSelectElement>): void => {
-    const value = Number(event.target.value) / 100;
-    dispatch(updateSalesData({ tax: value }));
-
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
+    const { value } = event.target
+    setSelectedValue(value)
+    const formatedValue = Number(value) / 100;
+    dispatch(updateSalesData({ tax: formatedValue }));
   };
   return (
-    <SimpleGrid
-      columns={2}
-      spacing={1}
-      justifyItems='end'
-      fontSize='1.5rem'
-      mt='1.5rem'
-      w='100%'>
+    <SimpleGrid columns={2} spacing={1} justifyItems='end' fontSize='1.5rem' mt='1.5rem' w='100%'>
       <Box textAlign='right' fontSize='1.5rem' w='100%'>
         IVA (%):
       </Box>
-      <SelectInput options={['19', '16']} size='lg' m='0' onChangeFn={handleChange} />
+      <CustomSelect
+        options={[
+          { id: nanoid(), name: '19' },
+          { id: nanoid(), name: '16' },
+        ]}
+        size='lg'
+        margin='0'
+        maxW='10rem'
+        placeholder='select'
+        onChangeFn={handleChange}
+        value={selectedValue}
+      />
     </SimpleGrid>
   );
 };

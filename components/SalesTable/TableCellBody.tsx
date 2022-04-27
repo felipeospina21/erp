@@ -8,7 +8,7 @@ export interface TableCellBodyProps {
 const TableCellBody = (props:TableCellBodyProps) : JSX.Element=> {
   const [cellStyles] = useContext(TableStylesContext);
   return (
-    <Td border={cellStyles.border} textAlign={cellStyles.textAlign}>
+    <Td  textAlign={cellStyles.textAlign}>
       {props.children}
     </Td>
   );

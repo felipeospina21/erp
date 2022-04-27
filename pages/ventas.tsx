@@ -1,19 +1,17 @@
-import React, { useState, useEffect, useMemo } from 'react';
 import { Flex, Wrap, WrapItem } from '@chakra-ui/react';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import {  updateSalesData, resetState } from '../redux/slices/salesSlice/salesSlice';
+import { nanoid } from '@reduxjs/toolkit';
+import React, { useEffect, useMemo, useState } from 'react';
 import TableContainer from '../components/SalesTable/TableContainer';
-import ValueContainer from '../components/ValueContainer';
+import { CustomSelect, CustomButton, FormContainer } from "../components/Shared";
 import TaxPicker from '../components/TaxPicker';
-import Btn from '../components/Shared/Btn';
-import ObjSelectInput from '../components/Shared/ObjSelectInput';
-import ArrSelectInput from '../components/Shared/ArrSelectInput';
+import ValueContainer from '../components/ValueContainer';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import {
-  // useGetClientByIdQuery,
   useGetClientsQuery,
   useSaveSaleMutation,
-  useUpdateProductMutation,
+  useUpdateProductMutation
 } from '../redux/services';
+import { resetState, updateSalesData } from '../redux/slices/salesSlice/salesSlice';
 
 export interface RowData {
   id: number;
@@ -27,8 +25,18 @@ export interface RowData {
 }
 
 const Ventas = (): JSX.Element => {
-  const initialRowSate: RowData = { id: 1, item: '', subtotal: 0, stock: 0, quantity: 0, productId: '', price: 0, discount: 0 };
+  const initialRowSate: RowData = {
+    id: 1,
+    item: '',
+    subtotal: 0,
+    stock: 0,
+    quantity: 0,
+    productId: '',
+    price: 0,
+    discount: 0,
+  };
   const [rowsData, setRowsData] = useState<RowData[]>([initialRowSate]);
+  const [ selectedValue, setSelectedValue] = useState({deliveryCity:'', channel: '', clientName: ''})
   const [salesBtnDisabled, setSalesBtnDisabled] = useState(true);
   const salesData = useAppSelector((state) => state.sales);
   const { data: clients } = useGetClientsQuery();
@@ -37,32 +45,35 @@ const Ventas = (): JSX.Element => {
   const [updateProduct] = useUpdateProductMutation();
   const [saveSale] = useSaveSaleMutation();
 
-  const header = useMemo(()=> [
-    {
-      title: 'Producto',
-      id: 'product'
-    },
-    {
-      title: 'Stock',
-      id: 'stock'
-    },
-    {
-      title: 'Precio',
-      id: 'price'
-    },
-    {
-      title: 'Cantidad',
-      id: 'quantity'
-    },
-    {
-      title: 'Descuento',
-      id: 'discount'
-    },
-    {
-      title: 'Total',
-      id: 'total'
-    },
-  ],[])
+  const header = useMemo(
+    () => [
+      {
+        title: 'Producto',
+        id: 'product',
+      },
+      {
+        title: 'Stock',
+        id: 'stock',
+      },
+      {
+        title: 'Precio',
+        id: 'price',
+      },
+      {
+        title: 'Cantidad',
+        id: 'quantity',
+      },
+      {
+        title: 'Descuento',
+        id: 'discount',
+      },
+      {
+        title: 'Total',
+        id: 'total',
+      },
+    ],
+    []
+  );
 
   const handleReset = (): void => {
     Array.from(document.querySelectorAll('input')).forEach((input) => (input.value = ''));
@@ -83,11 +94,9 @@ const Ventas = (): JSX.Element => {
     handleReset();
   };
 
-
-
   const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>): void => {
-    const name = event.target.name;
-    const value = event.target.value;
+    const {name, value} = event.target;
+    setSelectedValue({...selectedValue, [name]:value})
     dispatch(updateSalesData({ [name]: value }));
   };
 
@@ -129,31 +138,40 @@ const Ventas = (): JSX.Element => {
     <>
       <Wrap spacing='30px' m='2rem auto' justify='space-evenly'>
         <WrapItem w='20rem'>
-          <ArrSelectInput
-            name='deliveryCity'
-            title='Ciudad'
-            options={['Medellin', 'Bogotá']}
-            size='lg'
-            onChangeFn={handleSelect}
-          />
+          <FormContainer label='Ciudad' id='ciudad'>
+            <CustomSelect
+              name='deliveryCity'
+              placeholder='Ciudad'
+              options={[{id:nanoid(), name:'Medellín'}, {id:nanoid(), name:'Bogota'}]}
+              size='lg'
+              onChangeFn={handleSelect}
+              value={selectedValue.deliveryCity}
+            />
+          </FormContainer>
         </WrapItem>
         <WrapItem w='20rem'>
-          <ArrSelectInput
-            name='chanel'
-            title='Canal'
-            options={['Directo', 'Tercero']}
-            size='lg'
-            onChangeFn={handleSelect}
-          />
+          <FormContainer label='Canal' id='channel'>
+            <CustomSelect
+              name='channel'
+              placeholder='Canal'
+              options={[{id:nanoid(), name:'Directo'}, {id:nanoid(), name:'Tercero'}]}
+              size='lg'
+              onChangeFn={handleSelect}
+              value={selectedValue.channel}
+            />
+          </FormContainer>
         </WrapItem>
         <WrapItem w='20rem'>
-          <ObjSelectInput
-            name='clientName'
-            title='Cliente'
-            options={clients?.map(client => ({id: client._id, name:client.name}))}
-            size='lg'
-            onChangeFn={handleSelect}
-          />
+          <FormContainer label='Cliente' id='client'>
+            <CustomSelect
+              name='clientName'
+              placeholder='Cliente'
+              options={clients?.map((client) => ({ id: client._id, name: client.name }))}
+              size='lg'
+              onChangeFn={handleSelect}
+              value={selectedValue.clientName}
+            />
+          </FormContainer>
         </WrapItem>
       </Wrap>
 
@@ -165,15 +183,21 @@ const Ventas = (): JSX.Element => {
         setSalesBtnDisabled={setSalesBtnDisabled}
       />
       <Flex justify='flex-end' align='center'>
-        <Btn color='green' status={salesBtnDisabled} onClick={handleNewSale}>
+        <CustomButton color='green' status={salesBtnDisabled} onClick={handleNewSale}>
           Vender
-        </Btn>
+        </CustomButton>
 
-        <Btn color='red' onClick={handleReset}>
+        <CustomButton color='red' onClick={handleReset}>
           Borrar
-        </Btn>
+        </CustomButton>
 
-        <Flex flexDir='column' justifyItems='center' alignItems='stretch' p='0 1rem' m='1rem 2rem' minW='400px'>
+        <Flex
+          flexDir='column'
+          justifyItems='center'
+          alignItems='stretch'
+          p='0 1rem'
+          m='1rem 2rem'
+          minW='400px'>
           <ValueContainer name='subtotal' value={salesData.data.subtotal} />
           <TaxPicker />
           <ValueContainer name='total' value={salesData.data.total} />

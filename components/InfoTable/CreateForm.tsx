@@ -1,6 +1,6 @@
 import React from "react";
 import { Input, Stack, InputGroup, Container } from "@chakra-ui/react";
-import Btn from "../Shared/Btn";
+import CustomButton from "../Shared/CustomButton/CustomButton";
 
 export interface CreateFormProps {
   stateObj: any;
@@ -37,9 +37,9 @@ const CreateForm = (props: CreateFormProps): JSX.Element => {
             </InputGroup>
           );
         })}
-        <Btn color='green' onClick={handleClick}>
+        <CustomButton color='green' onClick={handleClick}>
           Guardar
-        </Btn>
+        </CustomButton>
       </Stack>
     </Container>
   );

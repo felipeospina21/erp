@@ -4,12 +4,13 @@ import Layout from '../components/Layout/Layout';
 import { store } from '../redux/store';
 import { Provider } from 'react-redux';
 import '../styles/globals.css';
+import theme from '../styles/theme';
 import type { AppProps } from 'next/app';
 
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   return (
     <Provider store={store}>
-      <ChakraProvider>
+      <ChakraProvider theme={theme}>
         <Layout>
           <Component {...pageProps} />
         </Layout>

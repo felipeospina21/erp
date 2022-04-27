@@ -70,7 +70,7 @@ const TableRow = ({id, rowsData, rowData, setRowsData, removeRow}: TableRowProps
 
   return (
     <Tr>
-      <Td p='0' w={['170px', 'auto']} maxW='300px' border={cellStyles.border}>
+      <Td p='0' w={['170px', 'auto']} maxW='300px' >
         <Select
           placeholder='Select option'
           onChange={handleSelectChange}

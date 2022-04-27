@@ -9,7 +9,7 @@ const TableCellHeader = ({ children }: TableCellHeaderProps): JSX.Element => {
   const [cellStyles] = useContext(TableStylesContext);
 
   return (
-    <Th textAlign={cellStyles.textAlign} border={cellStyles.border}>
+    <Th textAlign={cellStyles.textAlign} >
       {children}
     </Th>
   );

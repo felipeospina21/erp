@@ -1,5 +1,14 @@
 import React from 'react';
-import { Table, Thead, Tbody, Tr, Button, Box, Icon } from '@chakra-ui/react';
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Button,
+  Box,
+  Icon,
+  TableContainer as Wrapper,
+} from '@chakra-ui/react';
 import { FaPlusCircle } from 'react-icons/fa';
 import TableRow from './TableRow';
 import TableCellHeader from './TableCellHeader';
@@ -30,7 +39,16 @@ const TableContainer = ({
     const newRowId = rowsData.length + 1;
     setRowsData([
       ...rowsData,
-      { id: newRowId, item: '', subtotal: 0, quantity: 0, stock: 0, productId: '', price: 0, discount: 0 },
+      {
+        id: newRowId,
+        item: '',
+        subtotal: 0,
+        quantity: 0,
+        stock: 0,
+        productId: '',
+        price: 0,
+        discount: 0,
+      },
     ]);
   };
 
@@ -43,29 +61,31 @@ const TableContainer = ({
   return (
     <TableStylesProvider>
       <Box overflow='auto' mb='1rem'>
-        <Table variant='simple' maxW='1300px' m={['auto']}>
-          <Thead fontSize={['sm', 'md']}>
-            <Tr>
-              {header.map(({ title, id }) => {
-                return <TableCellHeader key={id}>{title}</TableCellHeader>;
+        <Wrapper border='1px solid' borderColor='brand.grey.100' borderRadius='md' p='2rem 0.5rem'>
+          <Table variant='simple' maxW='1300px' m={['auto']}>
+            <Thead fontSize={['sm', 'md']}>
+              <Tr>
+                {header.map(({ title, id }) => {
+                  return <TableCellHeader key={id}>{title}</TableCellHeader>;
+                })}
+              </Tr>
+            </Thead>
+            <Tbody fontSize={['sm', 'md']}>
+              {rowsData.map((row) => {
+                return (
+                  <TableRow
+                    key={row.id}
+                    id={row.id ?? 0}
+                    removeRow={removeRow}
+                    rowsData={rowsData}
+                    setRowsData={setRowsData}
+                    rowData={row}
+                  />
+                );
               })}
-            </Tr>
-          </Thead>
-          <Tbody fontSize={['sm', 'md']}>
-            {rowsData.map((row) => {
-              return (
-                <TableRow
-                  key={row.id}
-                  id={row.id ?? 0}
-                  removeRow={removeRow}
-                  rowsData={rowsData}
-                  setRowsData={setRowsData}
-                  rowData={row}
-                />
-              );
-            })}
-          </Tbody>
-        </Table>
+            </Tbody>
+          </Table>
+        </Wrapper>
         <Button
           colorScheme='teal'
           size='sm'
