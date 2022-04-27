@@ -1,2 +1,2 @@
 export { default } from './clientsSlice';
-export * from '../clientsSlice';
+export * from '.';
