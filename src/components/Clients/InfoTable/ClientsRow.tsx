@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tr, Td, Button } from '@chakra-ui/react';
-import CustomModal from '../../Shared/CustomModal/CustomModal';
+import { CustomModal } from '../../Shared';
 import { NewClientResponse, useDeleteClientMutation } from '../../../redux/services';
 
 export interface ClientsRowProps {
