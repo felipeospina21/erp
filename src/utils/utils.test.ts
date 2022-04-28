@@ -1,4 +1,4 @@
-import * as utils from '@/utils/index';
+import * as utils from './utils';
 // @ponicode
 describe('utils.numberToCurrency', () => {
   test('convert 1', () => {
