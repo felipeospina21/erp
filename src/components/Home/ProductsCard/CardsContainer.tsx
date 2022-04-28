@@ -1,7 +1,7 @@
 import React from 'react';
 import { Flex } from '@chakra-ui/react';
 import Card from './Card';
-import { Product } from '../../../redux/services';
+import { Product } from '@/redux/services';
 
 export interface CardsContainerProps {
   data: Product[];
@@ -17,4 +17,4 @@ export function CardsContainer({ data }: CardsContainerProps): JSX.Element {
   );
 }
 
-export default CardsContainer
+export default CardsContainer;

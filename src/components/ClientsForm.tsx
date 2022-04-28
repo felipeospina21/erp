@@ -1,11 +1,11 @@
-import React, { Dispatch, SetStateAction } from 'react';
-import { Form, Formik, Field } from 'formik';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import type { Client } from '@/redux/services';
+import { useCreateClientMutation } from '@/redux/services';
+import { newClientData, resetNewClientData } from '@/redux/slices/clientsSlice/clientsSlice';
 import { Button, Container } from '@chakra-ui/react';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { Field, Form, Formik } from 'formik';
+import React, { Dispatch, SetStateAction } from 'react';
 import ClientsFormField from './ClientsFormField';
-import { newClientData, resetNewClientData } from '../redux/slices/clientsSlice/clientsSlice';
-import { useCreateClientMutation } from '../redux/services';
-import type { Client } from '../redux/services';
 
 export interface ClientsFormProps {
   fieldsData: {

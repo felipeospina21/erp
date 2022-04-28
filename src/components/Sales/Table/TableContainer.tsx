@@ -4,7 +4,7 @@ import {
 import { FaPlusCircle } from 'react-icons/fa';
 import { TableStylesProvider } from '../../../context/TableStylesContext';
 import { TableCellHeader, TableRow } from './';
-import { RowData } from '../../../pages/ventas';
+import { RowData } from '@/pages/ventas';
 
 export interface TableContainerProps {
   header: {

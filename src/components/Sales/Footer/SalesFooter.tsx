@@ -1,12 +1,12 @@
+import { CustomButton } from '@/components/Shared';
+import TaxPicker from '@/components/TaxPicker';
+import ValueContainer from '@/components/ValueContainer';
+import { RowData } from '@/pages/ventas';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { useSaveSaleMutation, useUpdateProductMutation } from '@/redux/services';
+import { resetState } from '@/redux/slices/salesSlice';
+import { Box, Flex } from '@chakra-ui/react';
 import React from 'react';
-import { Flex, Box } from '@chakra-ui/react';
-import { CustomButton } from '../../Shared';
-import TaxPicker from '../../TaxPicker';
-import ValueContainer from '../../ValueContainer';
-import { resetState } from '../../../redux/slices/salesSlice';
-import { useSaveSaleMutation, useUpdateProductMutation } from '../../../redux/services';
-import { RowData } from '../../../pages/ventas';
-import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 
 export interface SalesFooterProps {
   initialRowSate: RowData;

@@ -2,9 +2,9 @@ import { IconButton, Select, Td, Tr, useToast } from '@chakra-ui/react';
 import React, { useContext } from 'react';
 import { BiTrash } from 'react-icons/bi';
 import { TableStylesContext } from '../../../context/TableStylesContext';
-import type { RowData } from '../../../pages/ventas';
-import { useGetProductsQuery } from '../../../redux/services';
-import { numberToCurrency } from '../../../utils/utils';
+import type { RowData } from '@/pages/ventas';
+import { useGetProductsQuery } from '@/redux/services';
+import { numberToCurrency } from '@/utils/index';
 import { InputCell, TableCellBody } from './';
 
 export interface TableRowProps {

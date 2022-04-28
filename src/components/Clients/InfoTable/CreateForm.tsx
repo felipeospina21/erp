@@ -1,6 +1,6 @@
 import React from 'react';
 import { Input, Stack, InputGroup, Container } from '@chakra-ui/react';
-import { CustomButton } from '../../Shared';
+import { CustomButton } from '@/components/Shared';
 
 export interface CreateFormProps {
   stateObj: any;

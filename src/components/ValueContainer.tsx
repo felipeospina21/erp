@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, SimpleGrid } from '@chakra-ui/react';
-import { numberToCurrency } from '../utils/utils';
+import { numberToCurrency } from '@/utils/index';
 
 export interface ValueContainerProps {
   name: string;

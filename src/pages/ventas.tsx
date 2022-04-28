@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { SalesFooter, SalesHeader, TableContainer } from '../components/Sales';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { updateSalesData } from '../redux/slices/salesSlice';
+import { SalesFooter, SalesHeader, TableContainer } from '@/components/Sales';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { updateSalesData } from '@/redux/slices/salesSlice';
 
 export interface RowData {
   id: number;

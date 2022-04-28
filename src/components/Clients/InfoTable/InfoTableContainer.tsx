@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table, Thead, Tbody, Tr, Th, Box } from '@chakra-ui/react';
 import ClientsRow from './ClientsRow';
-import { NewClientResponse } from '../../../redux/services';
+import { NewClientResponse } from '@/redux/services';
 
 export interface InfoTableContainerProps {
   headerList: {

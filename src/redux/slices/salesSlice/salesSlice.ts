@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 // import { createPdf } from "../../../utils";
-import { RootState } from '../../store';
-import type { NewSale } from '../../services';
+import { RootState } from '@/redux/store';
+import type { NewSale } from '@/redux/services';
 
 export interface SalesData extends Partial<NewSale> {
   id?: string;

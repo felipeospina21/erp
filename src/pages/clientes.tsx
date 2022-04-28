@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { InfoTableContainer } from '../components/Clients';
-import ClientsForm from '../components/ClientsForm';
-import { CustomModal } from '../components/Shared';
-import { useGetClientsQuery } from '../redux/services';
+import { InfoTableContainer } from '@/components/Clients';
+import ClientsForm from '@/components/ClientsForm';
+import { CustomModal } from '@/components/Shared';
+import { useGetClientsQuery } from '@/redux/services';
 
 const Clientes = (): JSX.Element => {
   const { data: clients } = useGetClientsQuery();

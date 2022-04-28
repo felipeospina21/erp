@@ -1,7 +1,7 @@
 import React from 'react';
 import { Heading, Flex } from '@chakra-ui/react';
-import { CardsContainer } from '../components/Home';
-import { useGetProductsQuery } from '../redux/services';
+import { CardsContainer } from '@/components/Home';
+import { useGetProductsQuery } from '@/redux/services';
 
 export default function Home(): JSX.Element {
   const { data: products } = useGetProductsQuery();

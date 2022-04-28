@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { nanoid } from '@reduxjs/toolkit';
 import { Wrap, WrapItem } from '@chakra-ui/react';
-import { CustomSelect, FormContainer } from '../../Shared';
-import { useAppDispatch } from '../../../redux/hooks';
-import { updateSalesData } from '../../../redux/slices/salesSlice';
-import { useGetClientsQuery } from '../../../redux/services';
+import { CustomSelect, FormContainer } from '@/components/Shared';
+import { useAppDispatch } from '@/redux/hooks';
+import { updateSalesData } from '@/redux/slices/salesSlice';
+import { useGetClientsQuery } from '@/redux/services';
 
 export function SalesHeader(): JSX.Element {
   const [selectedValue, setSelectedValue] = useState({

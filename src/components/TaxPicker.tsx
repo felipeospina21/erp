@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, SimpleGrid } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
-import { updateSalesData } from '../redux/slices/salesSlice/salesSlice';
+import { updateSalesData } from '@/redux/slices/salesSlice';
 import { CustomSelect } from './Shared';
 import { nanoid } from '@reduxjs/toolkit';
 

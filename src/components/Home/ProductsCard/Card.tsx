@@ -1,7 +1,7 @@
 import React from 'react';
 import { Heading, Text, Flex } from '@chakra-ui/react';
-import { numberToCurrency } from '../../../utils/utils';
-import type { Product } from '../../../redux/services';
+import { numberToCurrency } from '@/utils/index';
+import type { Product } from '@/redux/services';
 
 export interface CardProps {
   product: Product;

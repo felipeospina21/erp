@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Client } from '../../services';
-import { RootState } from '../../store';
+import { Client } from '@/redux/services';
+import { RootState } from '@/redux/store';
 
 export interface ClientsState {
   newClient: Client;
