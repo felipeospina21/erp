@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Tr, Td, Button } from '@chakra-ui/react';
 import { CustomModal } from '@/components/Shared';
 import { NewClientResponse, useDeleteClientMutation } from '@/redux/services';
+import ClientForm from '../../ClientForm';
 
-export interface ClientsRowProps {
+export interface ClientRowProps {
   client: NewClientResponse;
 }
-export function ClientsRow({ client }: ClientsRowProps): JSX.Element {
+export function ClientRow({ client }: ClientRowProps): JSX.Element {
+  const [displayModal, setDisplayModal] = useState(false);
   const [deleteClient] = useDeleteClientMutation();
 
   function handleDelete(clientId: string): void {
@@ -32,12 +34,15 @@ export function ClientsRow({ client }: ClientsRowProps): JSX.Element {
         </Button>
       </Td>
       <Td>
-        <CustomModal title='Actualizar Cliente'>
-          <p>text test</p>
+        <CustomModal
+          title='Actualizar Cliente'
+          isDisplayed={displayModal}
+          setDisplayModal={setDisplayModal}>
+          <ClientForm action='update' setDisplayModal={setDisplayModal} clientId={client._id}/>
         </CustomModal>
       </Td>
     </Tr>
   );
 }
 
-export default ClientsRow;
+export default ClientRow;

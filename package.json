@@ -17,7 +17,6 @@
     "@emotion/styled": "^11.3.0",
     "@reduxjs/toolkit": "^1.6.2",
     "downloadjs": "^1.4.7",
-    "formik": "^2.2.9",
     "framer-motion": "^4.1.17",
     "next": "^12.1.5",
     "pdf-lib": "^1.17.1",
