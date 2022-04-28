@@ -33,7 +33,10 @@ export interface MyButtonProps extends LinkProps {
 }
 
 const MyButton = React.forwardRef(
-  ({ onClick, href, text }: MyButtonProps, ref: any): JSX.Element => {
+  (
+    { onClick, href, text }: MyButtonProps,
+    ref: React.LegacyRef<HTMLAnchorElement> | undefined
+  ): JSX.Element => {
     return (
       <a href={href} onClick={onClick} ref={ref}>
         {text}
@@ -46,7 +49,7 @@ MyButton.displayName = 'MyButton';
 const StyledLink = ({ href, text, onClose }: StyledLinkProps): JSX.Element => (
   <ListItem>
     <NextLink href={href ?? ''} passHref>
-      <Box color='teal' as='button' _hover={{ textDecor: 'underline' }}>
+      <Box color='brand.grey.800' as='button' _hover={{ textDecor: 'underline' }}>
         <MyButton text={text} onClick={onClose} />
       </Box>
     </NextLink>

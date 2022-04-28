@@ -4,7 +4,7 @@ import { BiTrash } from 'react-icons/bi';
 import { TableStylesContext } from '../../../context/TableStylesContext';
 import type { RowData } from '../../../pages/ventas';
 import { useGetProductsQuery } from '../../../redux/services';
-import { thousandSeparator } from '../../../utils/utils';
+import { numberToCurrency } from '../../../utils/utils';
 import { InputCell, TableCellBody } from './';
 
 export interface TableRowProps {
@@ -109,7 +109,7 @@ export function TableRow({
           textAlign={cellStyles.textAlign}
         />
       </TableCellBody>
-      <TableCellBody>{`$${thousandSeparator(rowData.subtotal)}`}</TableCellBody>
+      <TableCellBody>{numberToCurrency(rowData.subtotal)}</TableCellBody>
       <TableCellBody>
         <IconButton
           onClick={(): void => {

@@ -2,7 +2,7 @@ import { extendTheme } from '@chakra-ui/react';
 
 export const theme = extendTheme({
   colors: {
-    brand:{
+    brand: {
       grey: {
         50: '#ecf2fe',
         100: '#d3d8e1',
@@ -27,11 +27,99 @@ export const theme = extendTheme({
         800: '#00304c',
         900: '#00101c',
       },
-    }
+      green: {
+        50: '#e2fbf0',
+        100: '#c2ebd8',
+        200: '#9fddbd',
+        300: '#7ccfa1',
+        400: '#58c184',
+        500: '#3ea771',
+        600: '#2e825d',
+        700: '#1f5d46',
+        800: '#0f392c',
+        900: '#00150d',
+      },
+      red: {
+        50: '#ffe9e5',
+        100: '#fbc0ba',
+        200: '#f2948e',
+        300: '#eb6661',
+        400: '#e43535',
+        500: '#ca271b',
+        600: '#9e2413',
+        700: '#711e0c',
+        800: '#461505',
+        900: '#1e0a00',
+      },
+    },
   },
-  shadow:{
-    light: '0px 8px 16px rgba(143, 149, 178, 0.15)'
-  }
+  components: {
+    Button: {
+      variants: {
+        accept: {
+          bg: 'brand.green.500',
+          color: 'white',
+        },
+        accept_light: {
+          bg: 'brand.green.400',
+          color: 'white',
+        },
+        accept_dark: {
+          bg: 'brand.green.600',
+          color: 'white',
+        },
+        reject: {
+          bg: 'brand.red.400',
+          color: 'white',
+        },
+        reject_light: {
+          bg: 'brand.red.300',
+          color: 'white',
+        },
+        reject_dark: {
+          bg: 'brand.red.500',
+          color: 'white',
+        },
+
+        accept_outline: {
+          bg: 'transparent',
+          color: 'brand.green.500',
+          border: '1px solid',
+          borderColor: 'brand.green.500',
+        },
+        accept_light_outline: {
+          bg: 'transparent',
+          color: 'brand.green.400',
+          border: '1px solid',
+          borderColor: 'brand.green.400',
+        },
+        accept_dark_outline: {
+          bg: 'transparent',
+          color: 'brand.green.600',
+          border: '1px solid',
+          borderColor: 'brand.green.600',
+        },
+        reject_outline: {
+          bg: 'transparent',
+          color: 'brand.red.400',
+          border: '1px solid',
+          borderColor: 'brand.red.400',
+        },
+        reject_light_outline: {
+          bg: 'transparent',
+          color: 'brand.red.300',
+          border: '1px solid',
+          borderColor: 'brand.red.300',
+        },
+        reject_dark_outline: {
+          bg: 'transparent',
+          color: 'brand.red.500',
+          border: '1px solid',
+          borderColor: 'brand.red.500',
+        },
+      },
+    },
+  },
 });
 
 export default theme;

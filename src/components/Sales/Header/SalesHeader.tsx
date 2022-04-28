@@ -23,6 +23,18 @@ export function SalesHeader(): JSX.Element {
   return (
     <Wrap spacing='30px' m='2rem auto' justify='space-evenly'>
       <WrapItem w='20rem'>
+        <FormContainer label='Cliente' id='client'>
+          <CustomSelect
+            name='clientName'
+            placeholder='Cliente'
+            options={clients?.map((client) => ({ id: client._id, name: client.name }))}
+            size='lg'
+            onChangeFn={handleSelect}
+            value={selectedValue.clientName}
+          />
+        </FormContainer>
+      </WrapItem>
+      <WrapItem w='20rem'>
         <FormContainer label='Ciudad' id='ciudad'>
           <CustomSelect
             name='deliveryCity'
@@ -49,18 +61,6 @@ export function SalesHeader(): JSX.Element {
             size='lg'
             onChangeFn={handleSelect}
             value={selectedValue.channel}
-          />
-        </FormContainer>
-      </WrapItem>
-      <WrapItem w='20rem'>
-        <FormContainer label='Cliente' id='client'>
-          <CustomSelect
-            name='clientName'
-            placeholder='Cliente'
-            options={clients?.map((client) => ({ id: client._id, name: client.name }))}
-            size='lg'
-            onChangeFn={handleSelect}
-            value={selectedValue.clientName}
           />
         </FormContainer>
       </WrapItem>

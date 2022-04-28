@@ -20,7 +20,7 @@ export function SideNav(): JSX.Element {
 
   return (
     <Box m='1rem'>
-      <Button ref={btnRef} colorScheme='teal' onClick={onOpen}>
+      <Button ref={btnRef} variant='outline' colorScheme='grey' onClick={onOpen}>
         <Icon as={RiMenu2Line} />
       </Button>
       <Drawer isOpen={isOpen} placement='left' onClose={onClose} finalFocusRef={btnRef}>

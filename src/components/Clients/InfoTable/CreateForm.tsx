@@ -42,7 +42,7 @@ export function CreateForm(props: CreateFormProps): JSX.Element {
             </InputGroup>
           );
         })}
-        <CustomButton color='green' onClick={handleClick}>
+        <CustomButton variant='accept' onClick={handleClick}>
           Guardar
         </CustomButton>
       </Stack>

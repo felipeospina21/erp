@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flex } from '@chakra-ui/react';
+import { Flex, Box } from '@chakra-ui/react';
 import { CustomButton } from '../../Shared';
 import TaxPicker from '../../TaxPicker';
 import ValueContainer from '../../ValueContainer';
@@ -15,11 +15,16 @@ export interface SalesFooterProps {
   setRowsData: React.Dispatch<React.SetStateAction<RowData[]>>;
 }
 
-export function SalesFooter({initialRowSate, isSalesBtnDisabled, rowsData, setRowsData}: SalesFooterProps): JSX.Element {
+export function SalesFooter({
+  initialRowSate,
+  isSalesBtnDisabled,
+  rowsData,
+  setRowsData,
+}: SalesFooterProps): JSX.Element {
   const [updateProduct] = useUpdateProductMutation();
   const [saveSale] = useSaveSaleMutation();
   const salesData = useAppSelector((state) => state.sales);
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
 
   const handleReset = (): void => {
     Array.from(document.querySelectorAll('input')).forEach((input) => (input.value = ''));
@@ -41,26 +46,21 @@ export function SalesFooter({initialRowSate, isSalesBtnDisabled, rowsData, setRo
   };
 
   return (
-    <Flex justify='flex-end' align='center'>
-      <CustomButton color='green' status={isSalesBtnDisabled} onClick={handleNewSale}>
-        Vender
-      </CustomButton>
-
-      <CustomButton color='red' onClick={handleReset}>
-        Borrar
-      </CustomButton>
-
-      <Flex
-        flexDir='column'
-        justifyItems='center'
-        alignItems='stretch'
-        p='0 1rem'
-        m='1rem 2rem'
-        minW='400px'>
+    <Flex flexDir='column' align='flex-end' mr='2rem'>
+      <Flex flexDir='column' justifyItems='center' alignItems='stretch' p='0 1rem' minW='400px'>
         <ValueContainer name='subtotal' value={salesData.data.subtotal} />
         <TaxPicker />
         <ValueContainer name='total' value={salesData.data.total} />
       </Flex>
+
+      <Box mt='1rem'>
+        <CustomButton variant='accept' status={isSalesBtnDisabled} onClick={handleNewSale}>
+          Vender
+        </CustomButton>
+        <CustomButton variant='reject' onClick={handleReset}>
+          Borrar
+        </CustomButton>
+      </Box>
     </Flex>
   );
 }

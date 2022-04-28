@@ -77,7 +77,8 @@ export function TableContainer({
           </Table>
         </Wrapper>
         <Button
-          colorScheme='teal'
+          variant= 'ghost'
+          color='brand.green.600'
           size='sm'
           my='1rem'
           leftIcon={<Icon as={FaPlusCircle} />}

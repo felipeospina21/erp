@@ -1,13 +1,16 @@
-import { PDFDocument, StandardFonts, grayscale } from "pdf-lib";
-import download from "downloadjs";
-import {  SaleResponse } from "../redux/services";
+import { PDFDocument, StandardFonts, grayscale } from 'pdf-lib';
+import download from 'downloadjs';
+import { SaleResponse } from '../redux/services';
 
-export function thousandSeparator(num: number, decimals?: number): string {
-  const formatedNum = num.toFixed(decimals ?? 0);
-  return formatedNum.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+export function numberToCurrency(num: number, locale?: string, currency?: string): string {
+  return num.toLocaleString(locale ?? 'es-CO', { style: 'currency', currency: currency ?? 'COP' });
 }
 
-export function formatDate(date: number | Date | undefined, locale? : string | string[] | undefined, options?: Intl.DateTimeFormatOptions | undefined): string {
+export function formatDate(
+  date: number | Date | undefined,
+  locale?: string | string[] | undefined,
+  options?: Intl.DateTimeFormatOptions | undefined
+): string {
   return new Intl.DateTimeFormat(locale, options).format(date);
 }
 
@@ -20,15 +23,7 @@ export async function createPdf(data: SaleResponse): Promise<void> {
   const page = pdfDoc.addPage();
   const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
   const {
-    clientInfo:{
-      name : clientName,
-      idType,
-      idNumber,
-      addres1,
-      addres2,
-      city,
-      department,
-    },
+    clientInfo: { name: clientName, idType, idNumber, addres1, addres2, city, department },
     orderedProducts,
   } = data;
   const pageConfig = {
@@ -52,12 +47,12 @@ export async function createPdf(data: SaleResponse): Promise<void> {
     font: timesRomanFont,
   };
 
-  function addInvoiceData() : void {
+  function addInvoiceData(): void {
     const invoiceDate = new Date();
     const dueDate = new Date();
     dueDate.setDate(invoiceDate.getDate() + 30);
-    const formatedInvoiceDate = formatDate(invoiceDate, "es");
-    const formatedDueDate = formatDate(dueDate, "es");
+    const formatedInvoiceDate = formatDate(invoiceDate, 'es');
+    const formatedDueDate = formatDate(dueDate, 'es');
     // page.drawText(`Cuenta de cobro N° ${invoiceCount}`, {
     page.drawText(`Cuenta de cobro N° ${0}`, {
       ...fontStyles,
@@ -81,7 +76,7 @@ export async function createPdf(data: SaleResponse): Promise<void> {
       x: leftColX,
       ...fontStyles,
     };
-    page.drawText("Cliente:", { ...props, y: height - 95 });
+    page.drawText('Cliente:', { ...props, y: height - 95 });
     page.drawText(clientName, { ...props, y: height - 110 });
     page.drawText(`${idType} ${idNumber}`, { ...props, y: height - 125 });
     page.drawText(`${addres1}. ${addres2}`, { ...props, y: height - 140 });
@@ -93,25 +88,25 @@ export async function createPdf(data: SaleResponse): Promise<void> {
       x: rightColX,
       ...fontStyles,
     };
-    page.drawText("Debe A:", { ...props, y: height - 95 });
-    page.drawText("Catalina Restrepo", { ...props, y: height - 110 });
-    page.drawText("CC 1.039.454.392", { ...props, y: height - 125 });
-    page.drawText("Ahorros Bancolombia", { ...props, y: height - 140 });
-    page.drawText("N°693 657 886 85", { ...props, y: height - 155 });
+    page.drawText('Debe A:', { ...props, y: height - 95 });
+    page.drawText('Catalina Restrepo', { ...props, y: height - 110 });
+    page.drawText('CC 1.039.454.392', { ...props, y: height - 125 });
+    page.drawText('Ahorros Bancolombia', { ...props, y: height - 140 });
+    page.drawText('N°693 657 886 85', { ...props, y: height - 155 });
   }
 
-  function addTableHeader() : void{
-    page.drawText("PRODUCTO", { ...fontStyles, x: tablePositionX.col1, y: height - 180 });
-    page.drawText("CANTIDAD", { ...fontStyles, x: tablePositionX.col2, y: height - 180 });
-    page.drawText("PRECIO", { ...fontStyles, x: tablePositionX.col3, y: height - 180 });
-    page.drawText("TOTAL", { ...fontStyles, x: tablePositionX.col4, y: height - 180 });
+  function addTableHeader(): void {
+    page.drawText('PRODUCTO', { ...fontStyles, x: tablePositionX.col1, y: height - 180 });
+    page.drawText('CANTIDAD', { ...fontStyles, x: tablePositionX.col2, y: height - 180 });
+    page.drawText('PRECIO', { ...fontStyles, x: tablePositionX.col3, y: height - 180 });
+    page.drawText('TOTAL', { ...fontStyles, x: tablePositionX.col4, y: height - 180 });
   }
   let newLineY = 180;
 
-  function addProducts():void {
+  function addProducts(): void {
     addTableHeader();
     const props = { ...fontStyles, y: height - newLineY };
-    orderedProducts.forEach(product => {
+    orderedProducts.forEach((product) => {
       const discountedPrice = product.item.price - product.item.price * product.discount;
       newLineY += lineHeight;
       props.y = height - newLineY;
@@ -123,22 +118,30 @@ export async function createPdf(data: SaleResponse): Promise<void> {
         ...props,
         x: tablePositionX.col2,
       });
-      page.drawText(`$${thousandSeparator(discountedPrice, 0)}`, {
+      page.drawText(numberToCurrency(discountedPrice), {
         ...props,
         x: tablePositionX.col3,
       });
-      page.drawText(`$${thousandSeparator(product.subtotal, 0)}`, {
+      page.drawText(numberToCurrency(product.subtotal), {
         ...props,
         x: tablePositionX.col4,
       });
     });
   }
 
-  function addFooter():void {
-    page.drawText("Observaciones:", { ...fontStyles, x: leftColX, y: newLineY - orderedProducts.length * 30 });
-    page.drawText("Recibido Por:", { ...fontStyles, x: rightColX, y: newLineY - orderedProducts.length * 30});
+  function addFooter(): void {
+    page.drawText('Observaciones:', {
+      ...fontStyles,
+      x: leftColX,
+      y: newLineY - orderedProducts.length * 30,
+    });
+    page.drawText('Recibido Por:', {
+      ...fontStyles,
+      x: rightColX,
+      y: newLineY - orderedProducts.length * 30,
+    });
     page.drawText(
-      "DE LA TIERRA - Cll 6 sur # 50 - 30. Medellín - Cel. 304 4070005 - WP 305 4806327",
+      'DE LA TIERRA - Cll 6 sur # 50 - 30. Medellín - Cel. 304 4070005 - WP 305 4806327',
       { ...fontStyles, size: 9, x: leftColX * 2, y: 30 }
     );
   }
@@ -160,8 +163,8 @@ export async function createPdf(data: SaleResponse): Promise<void> {
     borderOpacity: 0.75,
   });
 
-  const jpgUrl = "https://pdf-lib.js.org/assets/cat_riding_unicorn.jpg";
-  const jpgImageBytes = await fetch(jpgUrl).then(res => res.arrayBuffer());
+  const jpgUrl = 'https://pdf-lib.js.org/assets/cat_riding_unicorn.jpg';
+  const jpgImageBytes = await fetch(jpgUrl).then((res) => res.arrayBuffer());
   const jpgImage = await pdfDoc.embedJpg(jpgImageBytes);
   page.drawImage(jpgImage, {
     x: leftColX,
@@ -173,7 +176,7 @@ export async function createPdf(data: SaleResponse): Promise<void> {
 
   try {
     const pdfBytes = await pdfDoc.save();
-    download(pdfBytes, "pdf-lib_creation_example.pdf", "application/pdf");
+    download(pdfBytes, 'pdf-lib_creation_example.pdf', 'application/pdf');
   } catch (error) {
     console.log(error);
   }
