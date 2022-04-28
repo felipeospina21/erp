@@ -2,11 +2,12 @@ import React, { Dispatch, SetStateAction } from 'react';
 import { Form, Formik, Field } from 'formik';
 import { Button, Container } from '@chakra-ui/react';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import FormField from './FormField';
+import ClientsFormField from './ClientsFormField';
 import { newClientData, resetNewClientData } from '../redux/slices/clientsSlice/clientsSlice';
 import { useCreateClientMutation } from '../redux/services';
 import type { Client } from '../redux/services';
-export interface FormContainerProps {
+
+export interface ClientsFormProps {
   fieldsData: {
     name: string;
     type: string;
@@ -16,7 +17,7 @@ export interface FormContainerProps {
   }[];
   setDisplayModal: Dispatch<SetStateAction<boolean>>;
 }
-function FormContainer({ fieldsData, setDisplayModal }: FormContainerProps): JSX.Element {
+function ClientsForm({ fieldsData, setDisplayModal }: ClientsFormProps): JSX.Element {
   const [createClient, { isLoading }] = useCreateClientMutation();
   const clients = useAppSelector((state) => state.clients);
   const dispatch = useAppDispatch();
@@ -65,7 +66,7 @@ function FormContainer({ fieldsData, setDisplayModal }: FormContainerProps): JSX
                   placeholder={formField.placeholder}
                   onChange={handleChange}
                   // validate={validateName}
-                  component={FormField}
+                  component={ClientsFormField}
                 />
               );
             })}
@@ -79,4 +80,4 @@ function FormContainer({ fieldsData, setDisplayModal }: FormContainerProps): JSX
   );
 }
 
-export default FormContainer;
+export default ClientsForm;

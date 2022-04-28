@@ -1,20 +1,10 @@
-import React from 'react';
 import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Button,
-  Box,
-  Icon,
-  TableContainer as Wrapper,
+  Box, Button, Icon, Table, TableContainer as Wrapper, Tbody, Thead, Tr
 } from '@chakra-ui/react';
 import { FaPlusCircle } from 'react-icons/fa';
-import TableRow from './TableRow';
-import TableCellHeader from './TableCellHeader';
-import { TableStylesProvider } from '../../context/TableStylesContext';
-// import type { Product } from "../../redux/services";
-import { RowData } from '../../pages/ventas';
+import { TableStylesProvider } from '../../../context/TableStylesContext';
+import { TableCellHeader, TableRow } from './';
+import { RowData } from '../../../pages/ventas';
 
 export interface TableContainerProps {
   header: {
@@ -27,13 +17,13 @@ export interface TableContainerProps {
   setSalesBtnDisabled: (salesBtnDisabled: boolean) => void;
 }
 
-const TableContainer = ({
+export function TableContainer({
   header,
   rowsData,
   setRowsData,
   salesBtnDisabled,
   setSalesBtnDisabled,
-}: TableContainerProps): JSX.Element => {
+}: TableContainerProps): JSX.Element {
   const addRow = (): void => {
     salesBtnDisabled ? null : setSalesBtnDisabled(true);
     const newRowId = rowsData.length + 1;
@@ -61,7 +51,7 @@ const TableContainer = ({
   return (
     <TableStylesProvider>
       <Box overflow='auto' mb='1rem'>
-        <Wrapper border='1px solid' borderColor='brand.grey.100' borderRadius='md' p='2rem 0.5rem'>
+        <Wrapper border='1px solid' borderColor='brand.grey.50' borderRadius='md' p='2rem 0.5rem'>
           <Table variant='simple' maxW='1300px' m={['auto']}>
             <Thead fontSize={['sm', 'md']}>
               <Tr>
@@ -97,6 +87,4 @@ const TableContainer = ({
       </Box>
     </TableStylesProvider>
   );
-};
-
-export default TableContainer;
+}

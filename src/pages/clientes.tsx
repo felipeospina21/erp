@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import InfoTableContainer from '../components/InfoTable/InfoTableContainer';
-import FormContainer from '../components/FormContainer';
-import ModalContainer from '../components/ModalContainer';
+import { InfoTableContainer } from '../components/Clients';
+import ClientsForm from '../components/ClientsForm';
+import { CustomModal } from '../components/Shared';
 import { useGetClientsQuery } from '../redux/services';
 
 const Clientes = (): JSX.Element => {
@@ -71,12 +71,12 @@ const Clientes = (): JSX.Element => {
     <>
       <InfoTableContainer headerList={fields} data={clients ?? []} />
 
-      <ModalContainer
+      <CustomModal
         title='Crear Cliente'
         isDisplayed={displayModal}
         setDisplayModal={setDisplayModal}>
-        <FormContainer fieldsData={fields} setDisplayModal={setDisplayModal} />
-      </ModalContainer>
+        <ClientsForm fieldsData={fields} setDisplayModal={setDisplayModal} />
+      </CustomModal>
     </>
   );
 };

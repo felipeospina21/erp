@@ -7,7 +7,7 @@ import {
   Input,
 } from "@chakra-ui/react";
 
-export interface FormFieldProps {
+export interface ClientsFormFieldProps {
   field: any;
   form: any;
   required: boolean;
@@ -16,7 +16,8 @@ export interface FormFieldProps {
   placeholder:string;
   onChange: (event:React.ChangeEvent<HTMLInputElement>)=>void
 }
-const FormField = ({ field, form, ...props }:FormFieldProps):JSX.Element => {
+
+const ClientsFormField = ({ field, form, ...props }:ClientsFormFieldProps):JSX.Element => {
   return (
     <FormControl
       isRequired={props.required}
@@ -30,4 +31,4 @@ const FormField = ({ field, form, ...props }:FormFieldProps):JSX.Element => {
   );
 };
 
-export default FormField;
+export default ClientsFormField;

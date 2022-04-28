@@ -1,20 +1,27 @@
+import { IconButton, Select, Td, Tr, useToast } from '@chakra-ui/react';
 import React, { useContext } from 'react';
-import { Tr, Td, Select, IconButton, useToast } from '@chakra-ui/react';
 import { BiTrash } from 'react-icons/bi';
-import { TableStylesContext } from '../../context/TableStylesContext';
-import { thousandSeparator } from '../../utils/utils';
-import TableCellBody from './TableCellBody';
-import InputCell from './InputCell';
-import { useGetProductsQuery } from '../../redux/services';
-import type { RowData } from '../../pages/ventas';
-export interface TableRowProps{
+import { TableStylesContext } from '../../../context/TableStylesContext';
+import type { RowData } from '../../../pages/ventas';
+import { useGetProductsQuery } from '../../../redux/services';
+import { thousandSeparator } from '../../../utils/utils';
+import { InputCell, TableCellBody } from './';
+
+export interface TableRowProps {
   id: number;
   rowsData: RowData[];
   rowData: RowData;
   setRowsData: (rowsData: RowData[]) => void;
   removeRow: (id: number) => void;
 }
-const TableRow = ({id, rowsData, rowData, setRowsData, removeRow}: TableRowProps): JSX.Element => {
+
+export function TableRow({
+  id,
+  rowsData,
+  rowData,
+  setRowsData,
+  removeRow,
+}: TableRowProps): JSX.Element {
   const [cellStyles] = useContext(TableStylesContext);
   const { data: products } = useGetProductsQuery();
   const toast = useToast();
@@ -70,7 +77,7 @@ const TableRow = ({id, rowsData, rowData, setRowsData, removeRow}: TableRowProps
 
   return (
     <Tr>
-      <Td p='0' w={['170px', 'auto']} maxW='300px' >
+      <Td p='0' w={['170px', 'auto']} maxW='300px'>
         <Select
           placeholder='Select option'
           onChange={handleSelectChange}
@@ -117,6 +124,4 @@ const TableRow = ({id, rowsData, rowData, setRowsData, removeRow}: TableRowProps
       </TableCellBody>
     </Tr>
   );
-};
-
-export default TableRow;
+}

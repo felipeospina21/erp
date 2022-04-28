@@ -1,12 +1,12 @@
 import React from 'react';
 import { Tr, Td, Button } from '@chakra-ui/react';
-import ModalContainer from '../ModalContainer';
-import { NewClientResponse, useDeleteClientMutation } from '../../redux/services';
+import CustomModal from '../../Shared/CustomModal/CustomModal';
+import { NewClientResponse, useDeleteClientMutation } from '../../../redux/services';
 
 export interface ClientsRowProps {
   client: NewClientResponse;
 }
-const ClientsRow = ({ client }: ClientsRowProps): JSX.Element => {
+export function ClientsRow({ client }: ClientsRowProps): JSX.Element {
   const [deleteClient] = useDeleteClientMutation();
 
   function handleDelete(clientId: string): void {
@@ -32,12 +32,12 @@ const ClientsRow = ({ client }: ClientsRowProps): JSX.Element => {
         </Button>
       </Td>
       <Td>
-        <ModalContainer title='Actualizar Cliente'>
+        <CustomModal title='Actualizar Cliente'>
           <p>text test</p>
-        </ModalContainer>
+        </CustomModal>
       </Td>
     </Tr>
   );
-};
+}
 
 export default ClientsRow;

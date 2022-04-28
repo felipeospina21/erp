@@ -1,6 +1,6 @@
-import React from "react";
-import { Input, Stack, InputGroup, Container } from "@chakra-ui/react";
-import CustomButton from "../Shared/CustomButton/CustomButton";
+import React from 'react';
+import { Input, Stack, InputGroup, Container } from '@chakra-ui/react';
+import { CustomButton } from '../../Shared';
 
 export interface CreateFormProps {
   stateObj: any;
@@ -14,11 +14,11 @@ export interface CreateFormProps {
   hideForm: (hide: boolean) => void;
 }
 
-const CreateForm = (props: CreateFormProps): JSX.Element => {
+export function CreateForm(props: CreateFormProps): JSX.Element {
   function handleChange(event: React.ChangeEvent<HTMLInputElement>): void {
     const name = event.target.name;
     const type = event.target.type;
-    const value = type === "number" ? Number(event.target.value) : event.target.value;
+    const value = type === 'number' ? Number(event.target.value) : event.target.value;
     props.setStateObj({ ...props.stateObj, [name]: value });
   }
 
@@ -33,7 +33,12 @@ const CreateForm = (props: CreateFormProps): JSX.Element => {
         {props.fields.map((field) => {
           return (
             <InputGroup key={field.fieldName}>
-              <Input name={field.fieldName} type={field.fieldType} placeholder={field.title} onChange={handleChange} />
+              <Input
+                name={field.fieldName}
+                type={field.fieldType}
+                placeholder={field.title}
+                onChange={handleChange}
+              />
             </InputGroup>
           );
         })}
@@ -43,6 +48,6 @@ const CreateForm = (props: CreateFormProps): JSX.Element => {
       </Stack>
     </Container>
   );
-};
+}
 
 export default CreateForm;

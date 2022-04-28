@@ -1,6 +1,6 @@
 import React from 'react';
 import { ChakraProvider } from '@chakra-ui/react';
-import Layout from '../components/Layout/Layout';
+import Layout from '../components/Shared/Layout/Layout';
 import { store } from '../redux/store';
 import { Provider } from 'react-redux';
 import '../styles/globals.css';

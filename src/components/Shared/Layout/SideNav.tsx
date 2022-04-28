@@ -1,6 +1,6 @@
-import React from "react";
-import { useDisclosure } from "@chakra-ui/react";
-import { RiMenu2Line } from "react-icons/ri";
+import React from 'react';
+import { useDisclosure } from '@chakra-ui/react';
+import { RiMenu2Line } from 'react-icons/ri';
 import {
   Icon,
   Button,
@@ -11,10 +11,10 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
-} from "@chakra-ui/react";
-import NavLinks from "./NavLinks";
+} from '@chakra-ui/react';
+import NavLinks from './NavLinks';
 
-const SideNav = (): JSX.Element => {
+export function SideNav(): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = React.useRef<HTMLButtonElement>(null);
 
@@ -36,6 +36,6 @@ const SideNav = (): JSX.Element => {
       </Drawer>
     </Box>
   );
-};
+}
 
 export default SideNav;

@@ -10,18 +10,18 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
-export interface ModalContainerProps {
+export interface CustomModalProps {
   title: string;
   children: JSX.Element | JSX.Element[];
   isDisplayed?: boolean;
   setDisplayModal?: Dispatch<SetStateAction<boolean>>;
 }
-const ModalContainer = ({
+export function CustomModal({
   title,
   children,
   isDisplayed,
   setDisplayModal,
-}: ModalContainerProps): JSX.Element => {
+}: CustomModalProps): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   function handleDisplay(): void {
@@ -42,6 +42,4 @@ const ModalContainer = ({
       </Modal>
     </>
   );
-};
-
-export default ModalContainer;
+}

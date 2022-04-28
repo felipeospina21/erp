@@ -1,11 +1,12 @@
-import React from "react";
-import NextLink from "next/link";
-import { List, ListItem, Box } from "@chakra-ui/react";
+import React from 'react';
+import NextLink from 'next/link';
+import { List, ListItem, Box } from '@chakra-ui/react';
 
 export interface NavLinksProps {
   onClose: () => void;
 }
-const NavLinks = ({ onClose }: NavLinksProps): JSX.Element => {
+
+export function NavLinks({ onClose }: NavLinksProps): JSX.Element {
   return (
     <List spacing={3}>
       <StyledLink href='/' text='Home' onClose={onClose} />
@@ -14,7 +15,7 @@ const NavLinks = ({ onClose }: NavLinksProps): JSX.Element => {
       <StyledLink href='/costos' text='Costos' onClose={onClose} />
     </List>
   );
-};
+}
 
 export default NavLinks;
 
@@ -22,7 +23,7 @@ export default NavLinks;
 export interface LinkProps {
   href?: string;
   text?: string;
-};
+}
 export interface StyledLinkProps extends LinkProps {
   onClose: () => void;
 }
@@ -31,21 +32,21 @@ export interface MyButtonProps extends LinkProps {
   onClick: () => void;
 }
 
+const MyButton = React.forwardRef(
+  ({ onClick, href, text }: MyButtonProps, ref: any): JSX.Element => {
+    return (
+      <a href={href} onClick={onClick} ref={ref}>
+        {text}
+      </a>
+    );
+  }
+);
+MyButton.displayName = 'MyButton';
 
-const MyButton = React.forwardRef(({ onClick, href, text }:MyButtonProps, ref: any): JSX.Element => {
-  return (
-    <a href={href} onClick={onClick} ref={ref}>
-      {text}
-    </a>
-  );
-});
-MyButton.displayName = "MyButton";
-
-
-const StyledLink = ({href, text, onClose}:StyledLinkProps): JSX.Element => (
+const StyledLink = ({ href, text, onClose }: StyledLinkProps): JSX.Element => (
   <ListItem>
     <NextLink href={href ?? ''} passHref>
-      <Box color='teal' as='button' _hover={{ textDecor: "underline" }}>
+      <Box color='teal' as='button' _hover={{ textDecor: 'underline' }}>
         <MyButton text={text} onClick={onClose} />
       </Box>
     </NextLink>

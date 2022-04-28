@@ -6,8 +6,7 @@ export interface LayoutProps {
   children: JSX.Element;
 }
 
-const Layout = ({ children }: LayoutProps): JSX.Element => {
-
+export function Layout({ children }: LayoutProps): JSX.Element {
   return (
     <>
       <SideNav />
@@ -16,6 +15,6 @@ const Layout = ({ children }: LayoutProps): JSX.Element => {
       </Box>
     </>
   );
-};
+}
 
 export default Layout;

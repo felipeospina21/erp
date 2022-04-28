@@ -1,3 +1,10 @@
+:root{
+  --boxShadow:0px 8px 16px rgba(143, 149, 178, 0.15);
+  --border-50: 1px solid #ecf2fe;
+  --border-100: 1px solid #d3d8e1;
+  --borderRadius: 16px;
+}
+
 html,
 body {
   padding: 0;
