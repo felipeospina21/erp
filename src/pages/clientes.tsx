@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { InfoTableContainer } from '@/components/Clients';
-import ClientsForm from '@/components/ClientsForm';
+// import ClientsForm from '@/components/ClientsForm';
+import ClientsForm from '@/components/Clients/ClientForm/ClientForm';
 import { CustomModal } from '@/components/Shared';
 import { useGetClientsQuery } from '@/redux/services';
 
