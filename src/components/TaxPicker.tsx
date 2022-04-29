@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Box, SimpleGrid } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
 import { updateSalesData } from '@/redux/slices/salesSlice';
 import { CustomSelect } from './Shared';
 import { nanoid } from '@reduxjs/toolkit';
+import { useAppSelector } from '@/redux/hooks';
 
 const TaxPicker = (): JSX.Element => {
-  const [selectedValue, setSelectedValue] = useState('')
+  const tax = useAppSelector(state => state.sales.newSaleData.tax)
   const dispatch = useDispatch();
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
     const { value } = event.target
-    setSelectedValue(value)
     const formatedValue = Number(value) / 100;
     dispatch(updateSalesData({ tax: formatedValue }));
   };
@@ -30,7 +30,7 @@ const TaxPicker = (): JSX.Element => {
         maxW='10rem'
         placeholder='select'
         onChangeFn={handleChange}
-        value={selectedValue}
+        value={String(tax * 100)}
       />
     </SimpleGrid>
   );

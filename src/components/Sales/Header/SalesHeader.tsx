@@ -1,23 +1,23 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { nanoid } from '@reduxjs/toolkit';
 import { Wrap, WrapItem } from '@chakra-ui/react';
 import { CustomSelect, FormContainer } from '@/components/Shared';
-import { useAppDispatch } from '@/redux/hooks';
-import { updateSalesData } from '@/redux/slices/salesSlice';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { SalesData, updateSalesData } from '@/redux/slices/salesSlice';
 import { useGetClientsQuery } from '@/redux/services';
 
 export function SalesHeader(): JSX.Element {
-  const [selectedValue, setSelectedValue] = useState({
-    deliveryCity: '',
-    channel: '',
-    clientName: '',
-  });
   const { data: clients } = useGetClientsQuery();
+  const newSaleData = useAppSelector(state => state.sales.newSaleData)
   const dispatch = useAppDispatch();
+
   const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>): void => {
     const { name, value } = event.target;
-    setSelectedValue({ ...selectedValue, [name]: value });
-    dispatch(updateSalesData({ [name]: value }));
+    if(name === 'clientName'){
+      const clientId = clients?.filter(client => client.name.toLowerCase() === value.toLowerCase())[0]?._id
+      dispatch(updateSalesData({clientInfo: clientId}))
+    }
+    dispatch(updateSalesData({ [name as keyof SalesData]: value }));
   };
 
   return (
@@ -30,7 +30,7 @@ export function SalesHeader(): JSX.Element {
             options={clients?.map((client) => ({ id: client._id, name: client.name }))}
             size='lg'
             onChangeFn={handleSelect}
-            value={selectedValue.clientName}
+            value={newSaleData.clientName}
           />
         </FormContainer>
       </WrapItem>
@@ -45,14 +45,14 @@ export function SalesHeader(): JSX.Element {
             ]}
             size='lg'
             onChangeFn={handleSelect}
-            value={selectedValue.deliveryCity}
+            value={newSaleData.deliveryCity}
           />
         </FormContainer>
       </WrapItem>
       <WrapItem w='20rem'>
         <FormContainer label='Canal' id='channel'>
           <CustomSelect
-            name='channel'
+            name='salesChannel'
             placeholder='Canal'
             options={[
               { id: nanoid(), name: 'Directo' },
@@ -60,7 +60,7 @@ export function SalesHeader(): JSX.Element {
             ]}
             size='lg'
             onChangeFn={handleSelect}
-            value={selectedValue.channel}
+            value={newSaleData.salesChannel}
           />
         </FormContainer>
       </WrapItem>

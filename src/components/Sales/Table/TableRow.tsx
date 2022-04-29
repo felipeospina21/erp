@@ -3,9 +3,11 @@ import React, { useContext } from 'react';
 import { BiTrash } from 'react-icons/bi';
 import { TableStylesContext } from '../../../context/TableStylesContext';
 import type { RowData } from '@/pages/ventas';
-import { useGetProductsQuery } from '@/redux/services';
+import { NewSaleOrderedProduct, useGetProductsQuery } from '@/redux/services';
 import { numberToCurrency } from '@/utils/index';
 import { InputCell, TableCellBody } from './';
+import { useAppDispatch } from '@/redux/hooks';
+import { updateSalesData } from '@/redux/slices/salesSlice';
 
 export interface TableRowProps {
   id: number;
@@ -25,6 +27,7 @@ export function TableRow({
   const [cellStyles] = useContext(TableStylesContext);
   const { data: products } = useGetProductsQuery();
   const toast = useToast();
+  const dispatch = useAppDispatch();
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
     const prodIndex = products
@@ -48,6 +51,7 @@ export function TableRow({
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const value = event.target.value;
     const newRowsData = [...rowsData];
+    let orderedProducts: NewSaleOrderedProduct[] = [];
 
     newRowsData.map((row) => {
       const product = products?.filter((product) => product._id === row.productId)[0];
@@ -72,7 +76,18 @@ export function TableRow({
         row.subtotal = grossSubTotal;
       }
       setRowsData(newRowsData);
+
+      const orderedProduct = {
+        item: row.productId,
+        listId: row.id.toString(),
+        discount: row.discount,
+        quantity: row.quantity,
+        subtotal: row.subtotal,
+      };
+      orderedProducts = [...orderedProducts, orderedProduct];
     });
+
+    dispatch(updateSalesData({ orderedProducts }));
   };
 
   return (
