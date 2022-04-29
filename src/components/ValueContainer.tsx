@@ -12,10 +12,10 @@ const ValueContainer = ({ name, value }: ValueContainerProps): JSX.Element => {
 
   return (
     <SimpleGrid columns={2} spacing={1}>
-      <Box textAlign='right' fontSize='1.5rem' mt='1.5rem' w='100%'>
+      <Box textAlign="right" fontSize="1.5rem" mt="1.5rem" w="100%">
         {text}
       </Box>
-      <Box textAlign='right' fontSize='1.5rem' mt='1.5rem' w='100%'>
+      <Box textAlign="right" fontSize="1.5rem" mt="1.5rem" w="100%">
         {numberToCurrency(value)}
       </Box>
     </SimpleGrid>

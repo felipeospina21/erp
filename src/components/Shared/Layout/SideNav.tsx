@@ -19,17 +19,17 @@ export function SideNav(): JSX.Element {
   const btnRef = React.useRef<HTMLButtonElement>(null);
 
   return (
-    <Box m='1rem'>
-      <Button ref={btnRef} variant='outline' colorScheme='grey' onClick={onOpen}>
+    <Box m="1rem">
+      <Button ref={btnRef} variant="outline" colorScheme="grey" onClick={onOpen}>
         <Icon as={RiMenu2Line} />
       </Button>
-      <Drawer isOpen={isOpen} placement='left' onClose={onClose} finalFocusRef={btnRef}>
+      <Drawer isOpen={isOpen} placement="left" onClose={onClose} finalFocusRef={btnRef}>
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
           <DrawerHeader>Módulos</DrawerHeader>
 
-          <DrawerBody display='flex' flexDir='column'>
+          <DrawerBody display="flex" flexDir="column">
             <NavLinks onClose={onClose} />
           </DrawerBody>
         </DrawerContent>

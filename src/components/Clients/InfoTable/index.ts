@@ -1,2 +1,2 @@
-export * from './ClientRow'
-export * from './InfoTableContainer'
+export * from './ClientRow';
+export * from './InfoTableContainer';

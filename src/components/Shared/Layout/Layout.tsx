@@ -10,7 +10,7 @@ export function Layout({ children }: LayoutProps): JSX.Element {
   return (
     <>
       <SideNav />
-      <Box as='main' m='1rem 2rem'>
+      <Box as="main" m="1rem 2rem">
         {children}
       </Box>
     </>

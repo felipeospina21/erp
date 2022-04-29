@@ -92,12 +92,13 @@ export function TableRow({
 
   return (
     <Tr>
-      <Td p='0' w={['170px', 'auto']} maxW='300px'>
+      <Td p="0" w={['170px', 'auto']} maxW="300px">
         <Select
-          placeholder='Select option'
+          placeholder="Select option"
           onChange={handleSelectChange}
-          size='sm'
-          fontSize={['sm', 'md']}>
+          size="sm"
+          fontSize={['sm', 'md']}
+        >
           {products?.map((product) => {
             return (
               <option key={product._id} value={product.name}>
@@ -112,14 +113,14 @@ export function TableRow({
       <TableCellBody>{rowData.price}</TableCellBody>
       <TableCellBody>
         <InputCell
-          id='quantity'
+          id="quantity"
           handleInputChange={handleInputChange}
           textAlign={cellStyles.textAlign}
         />
       </TableCellBody>
       <TableCellBody>
         <InputCell
-          id='discount'
+          id="discount"
           handleInputChange={handleInputChange}
           textAlign={cellStyles.textAlign}
         />
@@ -130,11 +131,11 @@ export function TableRow({
           onClick={(): void => {
             removeRow(id);
           }}
-          aria-label='eliminar fila'
+          aria-label="eliminar fila"
           icon={<BiTrash />}
-          colorScheme='red'
-          size='sm'
-          variant='ghost'
+          colorScheme="red"
+          size="sm"
+          variant="ghost"
         />
       </TableCellBody>
     </Tr>

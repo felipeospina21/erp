@@ -8,8 +8,8 @@ export interface CustomTableProps {
 
 export function CustomTable({ Headers, Rows }: CustomTableProps): JSX.Element {
   return (
-    <Box overflow='auto' mb='1rem'>
-      <Table variant='simple' maxW='1300px' m={['auto']}>
+    <Box overflow="auto" mb="1rem">
+      <Table variant="simple" maxW="1300px" m={['auto']}>
         <Thead fontSize={['sm', 'md']}>{Headers}</Thead>
         <Tbody fontSize={['sm', 'md']}>{Rows}</Tbody>
       </Table>

@@ -8,8 +8,8 @@ export interface InfoTableContainerProps {
 }
 export function InfoTableContainer({ data }: InfoTableContainerProps): JSX.Element {
   return (
-    <Box overflow='auto' mb='1rem'>
-      <Table variant='simple' maxW='1300px' m={['auto']}>
+    <Box overflow="auto" mb="1rem">
+      <Table variant="simple" maxW="1300px" m={['auto']}>
         <Thead fontSize={['sm', 'md']}>
           <Tr>
             {clientFields.map((header) => {

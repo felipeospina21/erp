@@ -9,10 +9,10 @@ export interface NavLinksProps {
 export function NavLinks({ onClose }: NavLinksProps): JSX.Element {
   return (
     <List spacing={3}>
-      <StyledLink href='/' text='Home' onClose={onClose} />
-      <StyledLink href='/ventas' text='Ventas' onClose={onClose} />
-      <StyledLink href='/clientes' text='Clientes' onClose={onClose} />
-      <StyledLink href='/costos' text='Costos' onClose={onClose} />
+      <StyledLink href="/" text="Home" onClose={onClose} />
+      <StyledLink href="/ventas" text="Ventas" onClose={onClose} />
+      <StyledLink href="/clientes" text="Clientes" onClose={onClose} />
+      <StyledLink href="/costos" text="Costos" onClose={onClose} />
     </List>
   );
 }
@@ -49,7 +49,7 @@ MyButton.displayName = 'MyButton';
 const StyledLink = ({ href, text, onClose }: StyledLinkProps): JSX.Element => (
   <ListItem>
     <NextLink href={href ?? ''} passHref>
-      <Box color='brand.grey.800' as='button' _hover={{ textDecor: 'underline' }}>
+      <Box color="brand.grey.800" as="button" _hover={{ textDecor: 'underline' }}>
         <MyButton text={text} onClick={onClose} />
       </Box>
     </NextLink>

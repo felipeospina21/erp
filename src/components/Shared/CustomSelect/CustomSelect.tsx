@@ -30,7 +30,8 @@ export function CustomSelect({
       maxW={maxW ?? 'inherit'}
       m={margin ?? '0'}
       onChange={onChangeFn}
-      value={value}>
+      value={value}
+    >
       {options?.map((option) => (
         <option key={option.id}>{option.name}</option>
       ))}

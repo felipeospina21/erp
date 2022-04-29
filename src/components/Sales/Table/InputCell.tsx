@@ -12,8 +12,8 @@ export function InputCell(props: InputCellProps): JSX.Element {
       id={props.id}
       onChange={props.handleInputChange}
       textAlign={props.textAlign}
-      size='sm'
-      variant='unstyled'
+      size="sm"
+      variant="unstyled"
     />
   );
 }

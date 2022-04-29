@@ -1,1 +1,1 @@
-export * from './ControlledInput'
+export * from './ControlledInput';
