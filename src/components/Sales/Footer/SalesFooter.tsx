@@ -70,7 +70,7 @@ export function SalesFooter({
 
   return (
     <Flex flexDir="column" align="flex-end" mr="2rem">
-      <Flex flexDir="column" justifyItems="center" alignItems="stretch" p="0 1rem" minW="400px">
+      <Flex flexDir="column" justifyItems="center" alignItems="stretch" m="0 2.5rem" minW="400px">
         <ValueContainer name="subtotal" value={salesData.newSaleData.subtotal} />
         <TaxPicker />
         <ValueContainer name="total" value={salesData.newSaleData.total} />

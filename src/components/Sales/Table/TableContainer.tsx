@@ -3,7 +3,7 @@ import {
   Button,
   Icon,
   Table,
-  TableContainer as Wrapper,
+  TableContainer as TableWrapper,
   Tbody,
   Thead,
   Tr,
@@ -58,7 +58,12 @@ export function TableContainer({
   return (
     <TableStylesProvider>
       <Box overflow="auto" mb="1rem">
-        <Wrapper border="1px solid" borderColor="brand.grey.50" borderRadius="md" p="2rem 0.5rem">
+        <TableWrapper
+          border="1px solid"
+          borderColor="brand.grey.50"
+          borderRadius="xl"
+          p="2rem 0.5rem"
+        >
           <Table variant="simple" maxW="1300px" m={['auto']}>
             <Thead fontSize={['sm', 'md']}>
               <Tr>
@@ -82,7 +87,7 @@ export function TableContainer({
               })}
             </Tbody>
           </Table>
-        </Wrapper>
+        </TableWrapper>
         <Button
           variant="ghost"
           color="brand.green.600"

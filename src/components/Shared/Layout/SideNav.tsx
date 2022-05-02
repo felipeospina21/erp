@@ -19,8 +19,8 @@ export function SideNav(): JSX.Element {
   const btnRef = React.useRef<HTMLButtonElement>(null);
 
   return (
-    <Box m="1rem">
-      <Button ref={btnRef} variant="outline" colorScheme="grey" onClick={onOpen}>
+    <Box p="1rem" bg={'brand.grey.600'}>
+      <Button ref={btnRef} variant="solid" colorScheme="whiteAlpha" onClick={onOpen}>
         <Icon as={RiMenu2Line} />
       </Button>
       <Drawer isOpen={isOpen} placement="left" onClose={onClose} finalFocusRef={btnRef}>

@@ -1,21 +1,7 @@
 import { PDFDocument, StandardFonts, grayscale } from 'pdf-lib';
 import download from 'downloadjs';
 import { SaleResponse } from '../redux/services';
-
-export function numberToCurrency(num: number, locale?: string, currency?: string): string {
-  return num.toLocaleString(locale ?? 'es-CO', {
-    style: 'currency',
-    currency: currency ?? 'COP',
-  });
-}
-
-export function formatDate(
-  date: number | Date | undefined,
-  locale?: string | string[] | undefined,
-  options?: Intl.DateTimeFormatOptions | undefined
-): string {
-  return new Intl.DateTimeFormat(locale, options).format(date);
-}
+import { numberToCurrency, formatDate } from './';
 
 export async function createPdf(data: SaleResponse): Promise<void> {
   // const snapshot = await getDocs(collection(db, "invoiceCount"));

@@ -16,18 +16,19 @@ const TaxPicker = (): JSX.Element => {
     dispatch(updateSalesData({ tax: formatedValue }));
   };
   return (
-    <SimpleGrid columns={2} spacing={1} justifyItems="end" fontSize="1.5rem" mt="1.5rem" w="100%">
-      <Box textAlign="right" fontSize="1.5rem" w="100%">
+    <SimpleGrid columns={2} spacing={1} justifyItems="end" mt="1.5rem" w="100%">
+      <Box textAlign="right" w="100%" fontWeight="500">
         IVA (%):
       </Box>
       <CustomSelect
+        id="tax-picker"
         options={[
           { id: nanoid(), name: '19' },
           { id: nanoid(), name: '16' },
         ]}
-        size="lg"
+        size="sm"
         margin="0"
-        maxW="10rem"
+        maxW="8rem"
         placeholder="select"
         onChangeFn={handleChange}
         value={String(tax * 100)}

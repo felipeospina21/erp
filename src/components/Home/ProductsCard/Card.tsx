@@ -15,7 +15,7 @@ export function Card({ product, locale }: CardProps): JSX.Element {
       align="center"
       justify="space-evenly"
       border="var(--border-100)"
-      borderRadius="var(--borderRadius)"
+      borderRadius="2xl"
       boxShadow={'var(--boxShadow)'}
       h="300px"
       w="300px"
