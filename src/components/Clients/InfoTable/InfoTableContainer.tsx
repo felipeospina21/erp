@@ -1,10 +1,10 @@
 import React from 'react';
 import { Table, Thead, Tbody, Tr, Th, Box } from '@chakra-ui/react';
 import ClientRow from './ClientRow/ClientRow';
-import { NewClientResponse } from '@/redux/services';
+import { Client } from '@/redux/services';
 import { clientFields } from '../ClientForm/fields/clientFields';
 export interface InfoTableContainerProps {
-  data: NewClientResponse[] | [];
+  data: Client[] | [];
 }
 export function InfoTableContainer({ data }: InfoTableContainerProps): JSX.Element {
   return (

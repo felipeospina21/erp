@@ -1,18 +1,26 @@
 import React, { useState } from 'react';
 import { Tr, Td, Button } from '@chakra-ui/react';
 import { CustomModal } from '@/components/Shared';
-import { NewClientResponse, useDeleteClientMutation } from '@/redux/services';
-import ClientForm from '../../ClientForm';
+import { Client, useDeleteClientMutation, useUpdateClientMutation } from '@/redux/services';
+import { CustomForm } from '@/components/Shared/Form';
+import { clientFields } from '../../ClientForm';
 
 export interface ClientRowProps {
-  client: NewClientResponse;
+  client: Client;
 }
 export function ClientRow({ client }: ClientRowProps): JSX.Element {
   const [displayModal, setDisplayModal] = useState(false);
   const [deleteClient] = useDeleteClientMutation();
+  const [updateClient, { isLoading }] = useUpdateClientMutation();
 
   function handleDelete(clientId: string): void {
     deleteClient({ _id: clientId });
+  }
+
+  function onSubmit(values: any): void {
+    const payload = { _id: client._id ?? '', update: { ...values } };
+    updateClient(payload);
+    setDisplayModal(false);
   }
 
   return (
@@ -40,7 +48,14 @@ export function ClientRow({ client }: ClientRowProps): JSX.Element {
           isDisplayed={displayModal}
           setDisplayModal={setDisplayModal}
         >
-          <ClientForm action="update" setDisplayModal={setDisplayModal} clientId={client._id} />
+          <CustomForm
+            data={client}
+            onSubmit={onSubmit}
+            buttonText="modificar"
+            fields={clientFields}
+            isLoading={isLoading}
+            controlled
+          />
         </CustomModal>
       </Td>
     </Tr>

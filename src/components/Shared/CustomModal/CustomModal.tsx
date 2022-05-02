@@ -8,15 +8,23 @@ import {
   ModalCloseButton,
   Button,
   useDisclosure,
+  IconButton,
 } from '@chakra-ui/react';
 
 export interface CustomModalProps {
+  button: {
+    icon?: JSX.Element;
+    text?: string;
+    bgColor?: string;
+    variant?: string;
+  };
   title: string;
   children: JSX.Element | JSX.Element[];
   isDisplayed?: boolean;
   setDisplayModal?: Dispatch<SetStateAction<boolean>>;
 }
 export function CustomModal({
+  button,
   title,
   children,
   isDisplayed,
@@ -28,13 +36,23 @@ export function CustomModal({
     if (!setDisplayModal) return;
     setDisplayModal(!isDisplayed);
   }
+
   return (
     <>
-      <Button onClick={setDisplayModal ? handleDisplay : onOpen}>{title}</Button>
+      {button?.icon ? (
+        <IconButton
+          icon={button?.icon}
+          onClick={setDisplayModal ? handleDisplay : onOpen}
+          bgColor={button?.bgColor}
+          aria-label={title}
+        />
+      ) : (
+        <Button onClick={setDisplayModal ? handleDisplay : onOpen}>{button?.text}</Button>
+      )}
 
       <Modal isOpen={isDisplayed ?? isOpen} onClose={setDisplayModal ? handleDisplay : onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent py="2rem">
           <ModalHeader>{title}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>{children}</ModalBody>

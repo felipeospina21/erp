@@ -1,11 +1,6 @@
-export interface ClientFields {
-  name: string;
-  type: string;
-  placeholder: string;
-  label: string;
-  required: boolean;
-}
-export const productsFields: ClientFields[] = [
+import { Fields } from '@/components/Shared/Form';
+
+export const productsFields: Fields[] = [
   {
     name: 'name',
     type: 'text',
