@@ -9,9 +9,9 @@ export interface CardsContainerProps {
 
 export function CardsContainer({ data }: CardsContainerProps): JSX.Element {
   return (
-    <Flex justify='center' m='1rem' w='100%' wrap='wrap'>
+    <Flex justify="center" m="1rem" w="100%" wrap="wrap">
       {data?.map((product) => (
-        <Card key={product._id} product={product} locale='es-CO' />
+        <Card key={product._id} product={product} locale="es-CO" />
       ))}
     </Flex>
   );

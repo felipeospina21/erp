@@ -7,7 +7,7 @@ export interface OrderInfo {
   listId: string;
   quantity: number;
   subtotal: number;
-};
+}
 
 export interface SaleInfo {
   deliveryCity: string;
@@ -15,25 +15,25 @@ export interface SaleInfo {
   subtotal: number;
   tax: number;
   total: number;
-};
-export interface OrderedProduct extends OrderInfo{
-  item: Product ;
+}
+export interface OrderedProduct extends OrderInfo {
+  item: Product;
 }
 
 export interface NewSaleOrderedProduct extends OrderInfo {
-  item: string ;
+  item: string;
 }
 
-export interface NewSale extends SaleInfo{
+export interface NewSale extends SaleInfo {
   clientInfo: string;
   orderedProducts: NewSaleOrderedProduct[];
-};
-export interface SaleResponse extends SaleInfo{
+}
+export interface SaleResponse extends SaleInfo {
   clientInfo: Client;
   orderedProducts: OrderedProduct[];
 }
 
-export interface NewSaleResponse extends SaleResponse, DocumentId {};
+export interface NewSaleResponse extends SaleResponse, DocumentId {}
 
 export const saleApi = createApi({
   reducerPath: 'saleApi',
@@ -46,15 +46,15 @@ export const saleApi = createApi({
       query: () => '/',
       providesTags: [{ type: 'Sale' }],
     }),
-    saveSale: build.mutation<NewSaleResponse,Partial<NewSale>>({
+    saveSale: build.mutation<NewSaleResponse, Partial<NewSale>>({
       // TODO: Check body type, not to be partial but required
       query: (body) => ({
-        url:'/',
+        url: '/',
         method: 'POST',
         body,
       }),
-      invalidatesTags: [{type: 'Sale'}, {type:'Product'}]
-    })
+      invalidatesTags: [{ type: 'Sale' }, { type: 'Product' }],
+    }),
   }),
 });
 

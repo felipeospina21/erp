@@ -1,18 +1,7 @@
 import { PDFDocument, StandardFonts, grayscale } from 'pdf-lib';
 import download from 'downloadjs';
 import { SaleResponse } from '../redux/services';
-
-export function numberToCurrency(num: number, locale?: string, currency?: string): string {
-  return num.toLocaleString(locale ?? 'es-CO', { style: 'currency', currency: currency ?? 'COP' });
-}
-
-export function formatDate(
-  date: number | Date | undefined,
-  locale?: string | string[] | undefined,
-  options?: Intl.DateTimeFormatOptions | undefined
-): string {
-  return new Intl.DateTimeFormat(locale, options).format(date);
-}
+import { numberToCurrency, formatDate } from './';
 
 export async function createPdf(data: SaleResponse): Promise<void> {
   // const snapshot = await getDocs(collection(db, "invoiceCount"));
@@ -96,10 +85,26 @@ export async function createPdf(data: SaleResponse): Promise<void> {
   }
 
   function addTableHeader(): void {
-    page.drawText('PRODUCTO', { ...fontStyles, x: tablePositionX.col1, y: height - 180 });
-    page.drawText('CANTIDAD', { ...fontStyles, x: tablePositionX.col2, y: height - 180 });
-    page.drawText('PRECIO', { ...fontStyles, x: tablePositionX.col3, y: height - 180 });
-    page.drawText('TOTAL', { ...fontStyles, x: tablePositionX.col4, y: height - 180 });
+    page.drawText('PRODUCTO', {
+      ...fontStyles,
+      x: tablePositionX.col1,
+      y: height - 180,
+    });
+    page.drawText('CANTIDAD', {
+      ...fontStyles,
+      x: tablePositionX.col2,
+      y: height - 180,
+    });
+    page.drawText('PRECIO', {
+      ...fontStyles,
+      x: tablePositionX.col3,
+      y: height - 180,
+    });
+    page.drawText('TOTAL', {
+      ...fontStyles,
+      x: tablePositionX.col4,
+      y: height - 180,
+    });
   }
   let newLineY = 180;
 

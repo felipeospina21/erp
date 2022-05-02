@@ -1,11 +1,14 @@
-import { IconButton, Select, Td, Tr, useToast } from '@chakra-ui/react';
+import { IconButton, Td, Tr, useToast } from '@chakra-ui/react';
 import React, { useContext } from 'react';
-import { BiTrash } from 'react-icons/bi';
+import { MdClear } from 'react-icons/md';
 import { TableStylesContext } from '../../../context/TableStylesContext';
 import type { RowData } from '@/pages/ventas';
-import { useGetProductsQuery } from '@/redux/services';
+import { NewSaleOrderedProduct, useGetProductsQuery } from '@/redux/services';
 import { numberToCurrency } from '@/utils/index';
 import { InputCell, TableCellBody } from './';
+import { useAppDispatch } from '@/redux/hooks';
+import { updateSalesData } from '@/redux/slices/salesSlice';
+import { CustomSelect } from '@/components/Shared';
 
 export interface TableRowProps {
   id: number;
@@ -25,6 +28,7 @@ export function TableRow({
   const [cellStyles] = useContext(TableStylesContext);
   const { data: products } = useGetProductsQuery();
   const toast = useToast();
+  const dispatch = useAppDispatch();
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
     const prodIndex = products
@@ -48,6 +52,7 @@ export function TableRow({
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const value = event.target.value;
     const newRowsData = [...rowsData];
+    let orderedProducts: NewSaleOrderedProduct[] = [];
 
     newRowsData.map((row) => {
       const product = products?.filter((product) => product._id === row.productId)[0];
@@ -64,7 +69,7 @@ export function TableRow({
           });
         }
       } else if (event.target.id === 'discount' && row.id === id) {
-        const value = Number(event.target.value);
+        const value = Number(event.target.value) / 100;
         const price = product?.price ?? 0;
         const netSubtotal = price * row.quantity;
         const grossSubTotal = netSubtotal - netSubtotal * value;
@@ -72,39 +77,46 @@ export function TableRow({
         row.subtotal = grossSubTotal;
       }
       setRowsData(newRowsData);
+
+      const orderedProduct = {
+        item: row.productId,
+        listId: row.id.toString(),
+        discount: row.discount,
+        quantity: row.quantity,
+        subtotal: row.subtotal,
+      };
+      orderedProducts = [...orderedProducts, orderedProduct];
     });
+
+    dispatch(updateSalesData({ orderedProducts }));
   };
 
   return (
     <Tr>
-      <Td p='0' w={['170px', 'auto']} maxW='300px'>
-        <Select
-          placeholder='Select option'
-          onChange={handleSelectChange}
-          size='sm'
-          fontSize={['sm', 'md']}>
-          {products?.map((product) => {
-            return (
-              <option key={product._id} value={product.name}>
-                {product.name}
-              </option>
-            );
-          })}
-        </Select>
+      <Td p="0" w={['170px', 'auto']} maxW="300px">
+        <CustomSelect
+          id={rowData.id.toString()}
+          placeholder="Select option"
+          onChangeFn={handleSelectChange}
+          size="sm"
+          borderRadius="md"
+          fontSize={['sm', 'md']}
+          options={products?.map((prod) => ({ id: prod._id, name: prod.name }))}
+        />
       </Td>
 
-      <TableCellBody>{rowData.stock}</TableCellBody>
-      <TableCellBody>{rowData.price}</TableCellBody>
+      <TableCellBody>{rowData.stock.toLocaleString()}</TableCellBody>
+      <TableCellBody>{numberToCurrency(rowData.price)}</TableCellBody>
       <TableCellBody>
         <InputCell
-          id='quantity'
+          id="quantity"
           handleInputChange={handleInputChange}
           textAlign={cellStyles.textAlign}
         />
       </TableCellBody>
       <TableCellBody>
         <InputCell
-          id='discount'
+          id="discount"
           handleInputChange={handleInputChange}
           textAlign={cellStyles.textAlign}
         />
@@ -115,11 +127,11 @@ export function TableRow({
           onClick={(): void => {
             removeRow(id);
           }}
-          aria-label='eliminar fila'
-          icon={<BiTrash />}
-          colorScheme='red'
-          size='sm'
-          variant='ghost'
+          aria-label="eliminar fila"
+          icon={<MdClear />}
+          colorScheme="red"
+          size="md"
+          variant="ghost"
         />
       </TableCellBody>
     </Tr>

@@ -1,1 +1,1 @@
-export * from './clientFields'
+export * from './clientFields';

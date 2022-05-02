@@ -1,5 +1,12 @@
 import {
-  Box, Button, Icon, Table, TableContainer as Wrapper, Tbody, Thead, Tr
+  Box,
+  Button,
+  Icon,
+  Table,
+  TableContainer as TableWrapper,
+  Tbody,
+  Thead,
+  Tr,
 } from '@chakra-ui/react';
 import { FaPlusCircle } from 'react-icons/fa';
 import { TableStylesProvider } from '../../../context/TableStylesContext';
@@ -50,9 +57,14 @@ export function TableContainer({
 
   return (
     <TableStylesProvider>
-      <Box overflow='auto' mb='1rem'>
-        <Wrapper border='1px solid' borderColor='brand.grey.50' borderRadius='md' p='2rem 0.5rem'>
-          <Table variant='simple' maxW='1300px' m={['auto']}>
+      <Box overflow="auto" mb="1rem">
+        <TableWrapper
+          border="1px solid"
+          borderColor="brand.grey.50"
+          borderRadius="xl"
+          p="2rem 0.5rem"
+        >
+          <Table variant="simple" maxW="1300px" m={['auto']}>
             <Thead fontSize={['sm', 'md']}>
               <Tr>
                 {header.map(({ title, id }) => {
@@ -75,14 +87,15 @@ export function TableContainer({
               })}
             </Tbody>
           </Table>
-        </Wrapper>
+        </TableWrapper>
         <Button
-          variant= 'ghost'
-          color='brand.green.600'
-          size='sm'
-          my='1rem'
+          variant="ghost"
+          color="brand.green.600"
+          size="sm"
+          my="1rem"
           leftIcon={<Icon as={FaPlusCircle} />}
-          onClick={addRow}>
+          onClick={addRow}
+        >
           Row
         </Button>
       </Box>

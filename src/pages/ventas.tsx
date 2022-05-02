@@ -87,13 +87,13 @@ const Ventas = (): JSX.Element => {
   }, [rowsData, dispatch]);
 
   useEffect(() => {
-    const newTotal = salesData.data.subtotal * (1 + salesData.data.tax);
+    const newTotal = salesData.newSaleData.subtotal * (1 + salesData.newSaleData.tax);
     dispatch(
       updateSalesData({
         total: newTotal,
       })
     );
-  }, [salesData.data.subtotal, salesData.data.tax, dispatch]);
+  }, [salesData.newSaleData.subtotal, salesData.newSaleData.tax, dispatch]);
 
   return (
     <>

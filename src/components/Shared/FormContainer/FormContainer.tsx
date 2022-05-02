@@ -19,7 +19,7 @@ export function FormContainer({
   label,
 }: FormContainerProps): JSX.Element {
   return (
-    <FormControl isInvalid={isError}>
+    <FormControl isInvalid={isError} id={id}>
       <FormLabel htmlFor={id}>{label}</FormLabel>
       {children}
       {isError && <FormErrorMessage>{errorMessage}</FormErrorMessage>}

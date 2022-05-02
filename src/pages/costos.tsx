@@ -1,12 +1,12 @@
-import React from "react";
-import { Button } from "@chakra-ui/react";
+import React from 'react';
+import { Button } from '@chakra-ui/react';
 // import { createPdf } from "../utils/utils";
 // import { salesData } from "../mocks/salesData";
 
-const costos = ():JSX.Element => {
-  function handleClick():void {
+const costos = (): JSX.Element => {
+  function handleClick(): void {
     // createPdf(salesData);
-    return ;
+    return;
   }
 
   return (

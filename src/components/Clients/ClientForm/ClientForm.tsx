@@ -1,8 +1,10 @@
 import { FormContainer } from '@/components/Shared';
 import {
   Client,
-  NewClientResponse, useCreateClientMutation, useGetClientsQuery,
-  useUpdateClientMutation
+  NewClientResponse,
+  useCreateClientMutation,
+  useGetClientsQuery,
+  useUpdateClientMutation,
 } from '@/redux/services';
 import { Button, Container } from '@chakra-ui/react';
 import { nanoid } from '@reduxjs/toolkit';
@@ -57,7 +59,8 @@ export function ClientsForm({ clientId, action, setDisplayModal }: ClientsFormPr
             id={field.name}
             label={field.label}
             isError={!!errors?.[field.name as keyof FormValues]}
-            errorMessage='This field is required'>
+            errorMessage="This field is required"
+          >
             <ClientInput
               register={register}
               name={field.name}
@@ -68,7 +71,7 @@ export function ClientsForm({ clientId, action, setDisplayModal }: ClientsFormPr
             />
           </FormContainer>
         ))}
-        <Button mt={4} colorScheme='teal' isLoading={isLoading || isUpdating} type='submit'>
+        <Button mt={4} colorScheme="teal" isLoading={isLoading || isUpdating} type="submit">
           {action === 'create' ? 'Crear' : 'Actualizar'}
         </Button>
       </form>

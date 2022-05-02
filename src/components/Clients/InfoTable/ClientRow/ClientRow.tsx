@@ -29,16 +29,18 @@ export function ClientRow({ client }: ClientRowProps): JSX.Element {
         <Button
           onClick={(): void => {
             handleDelete(client._id ?? '');
-          }}>
+          }}
+        >
           eliminar
         </Button>
       </Td>
       <Td>
         <CustomModal
-          title='Actualizar Cliente'
+          title="Actualizar Cliente"
           isDisplayed={displayModal}
-          setDisplayModal={setDisplayModal}>
-          <ClientForm action='update' setDisplayModal={setDisplayModal} clientId={client._id}/>
+          setDisplayModal={setDisplayModal}
+        >
+          <ClientForm action="update" setDisplayModal={setDisplayModal} clientId={client._id} />
         </CustomModal>
       </Td>
     </Tr>
