@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormControl, FormLabel, FormHelperText, FormErrorMessage } from '@chakra-ui/react';
 
-export interface FormContainerProps {
+export interface CustomFormFieldProps {
   children: JSX.Element | JSX.Element[];
   isError?: boolean;
   errorMessage?: string;
@@ -10,14 +10,14 @@ export interface FormContainerProps {
   label: string;
 }
 
-export function FormContainer({
+export function CustomFormField({
   children,
   isError,
   errorMessage,
   helperText,
   id,
   label,
-}: FormContainerProps): JSX.Element {
+}: CustomFormFieldProps): JSX.Element {
   return (
     <FormControl isInvalid={isError} id={id}>
       <FormLabel htmlFor={id}>{label}</FormLabel>

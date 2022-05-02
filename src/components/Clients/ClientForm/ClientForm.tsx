@@ -1,4 +1,4 @@
-import { FormContainer } from '@/components/Shared';
+import { CustomFormField } from '@/components/Shared';
 import {
   Client,
   NewClientResponse,
@@ -54,7 +54,7 @@ export function ClientsForm({ clientId, action, setDisplayModal }: ClientsFormPr
     <Container>
       <form onSubmit={handleSubmit(onSubmit)}>
         {clientFields.map((field) => (
-          <FormContainer
+          <CustomFormField
             key={nanoid()}
             id={field.name}
             label={field.label}
@@ -69,7 +69,7 @@ export function ClientsForm({ clientId, action, setDisplayModal }: ClientsFormPr
               action={action}
               value={getFieldValue(field.name)}
             />
-          </FormContainer>
+          </CustomFormField>
         ))}
         <Button mt={4} colorScheme="teal" isLoading={isLoading || isUpdating} type="submit">
           {action === 'create' ? 'Crear' : 'Actualizar'}
