@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Tr, Td, Button } from '@chakra-ui/react';
+import { Tr, Td } from '@chakra-ui/react';
 import { CustomModal } from '@/components/Shared';
 import { Client, useDeleteClientMutation, useUpdateClientMutation } from '@/redux/services';
 import { CustomForm } from '@/components/Shared/Form';
-import { clientFields } from '../../ClientForm';
+import { clientFields } from '../ClientForm';
+import { DeleteButton } from '@/components/Shared/Buttons';
+import { Edit } from '@/assets/icons';
 
 export interface ClientRowProps {
   client: Client;
@@ -34,20 +36,24 @@ export function ClientRow({ client }: ClientRowProps): JSX.Element {
       <Td>{client.department}</Td>
       <Td>{`${client.discount}%`}</Td>
       <Td>
-        <Button
+        <DeleteButton
+          // isLoading={isDeleteLoading}
           onClick={(): void => {
             handleDelete(client._id ?? '');
           }}
-        >
-          eliminar
-        </Button>
+        />
       </Td>
       <Td>
         <CustomModal
           title="Actualizar Cliente"
           isDisplayed={displayModal}
           setDisplayModal={setDisplayModal}
-          button={{ text: 'actualizar' }}
+          button={{
+            text: 'actualizar',
+            icon: <Edit />,
+            variant: 'ghost',
+            color: 'brand.green.500',
+          }}
         >
           <CustomForm
             data={client}

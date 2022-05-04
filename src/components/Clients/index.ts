@@ -1,2 +1,2 @@
-export * from './InfoTable';
+export * from './ClientRow';
 export * from './ClientForm';

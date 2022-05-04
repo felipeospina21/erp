@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { clientFields, InfoTableContainer } from '@/components/Clients';
+import { clientFields, ClientRow } from '@/components/Clients';
 import { CustomModal } from '@/components/Shared';
 import { useGetClientsQuery, useCreateClientMutation } from '@/redux/services';
 import { CustomForm } from '@/components/Shared/Form';
 import { FaPlus } from 'react-icons/fa';
+import { CustomTable } from '@/components/Shared/CustomTable';
+import { Th } from '@chakra-ui/react';
 
 const Clientes = (): JSX.Element => {
   const [displayModal, setDisplayModal] = useState(false);
@@ -18,8 +20,16 @@ const Clientes = (): JSX.Element => {
 
   return (
     <>
-      <InfoTableContainer data={clients ?? []} />
-
+      <CustomTable
+        Headers={clientFields.map((header) => {
+          return <Th key={header.name}>{header.label}</Th>;
+        })}
+        Rows={clients?.map((dataRow) => {
+          return <ClientRow key={dataRow._id} client={dataRow} />;
+        })}
+        variant="simple"
+        size="sm"
+      />
       <CustomModal
         title="Crear Cliente"
         isDisplayed={displayModal}

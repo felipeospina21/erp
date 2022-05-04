@@ -1,10 +1,10 @@
 import React from 'react';
-import { Heading, Text, Flex, IconButton } from '@chakra-ui/react';
+import { Heading, Text, Flex } from '@chakra-ui/react';
 import { numberToCurrency } from '@/utils/index';
 import { Product, useDeleteProductMutation } from '@/redux/services';
-import { Edit, Delete } from '@/assets/icons';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import type { SerializedError } from '@reduxjs/toolkit';
+import { DeleteButton, EditButton } from '@/components/Shared/Buttons';
 
 export interface CardProps {
   product: Product;
@@ -50,21 +50,8 @@ export function Card({ product, locale }: CardProps): JSX.Element {
         align="flex-end"
         bg="brand.grey.50"
       >
-        <IconButton
-          aria-label="Edit"
-          icon={<Edit />}
-          size="lg"
-          color="brand.green.500"
-          onClick={handleUpdate}
-        />
-        <IconButton
-          aria-label="Edit"
-          icon={<Delete />}
-          size="lg"
-          color="brand.red.500"
-          isLoading={isDeleteLoading}
-          onClick={handleDelete}
-        />
+        <EditButton onClick={handleUpdate} />
+        <DeleteButton isLoading={isDeleteLoading} onClick={handleDelete} />
       </Flex>
     </Flex>
   );

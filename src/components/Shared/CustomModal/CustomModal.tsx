@@ -16,7 +16,9 @@ export interface CustomModalProps {
     icon?: JSX.Element;
     text?: string;
     bgColor?: string;
-    variant?: string;
+    color?: string;
+    size?: 'lg' | 'md' | 'sm' | 'xs';
+    variant?: 'ghost' | 'outline' | 'solid' | 'link' | 'unstyled';
   };
   title: string;
   children: JSX.Element | JSX.Element[];
@@ -44,6 +46,9 @@ export function CustomModal({
           icon={button?.icon}
           onClick={setDisplayModal ? handleDisplay : onOpen}
           bgColor={button?.bgColor}
+          color={button?.color}
+          variant={button?.variant}
+          size={button?.size ?? 'lg'}
           aria-label={title}
         />
       ) : (
