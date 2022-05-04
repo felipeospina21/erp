@@ -47,6 +47,7 @@ export function ClientRow({ client }: ClientRowProps): JSX.Element {
           title="Actualizar Cliente"
           isDisplayed={displayModal}
           setDisplayModal={setDisplayModal}
+          button={{ text: 'actualizar' }}
         >
           <CustomForm
             data={client}

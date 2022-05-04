@@ -30,7 +30,7 @@ export function SalesHeader(): JSX.Element {
             name="clientName"
             placeholder="Cliente"
             options={clients?.map((client) => ({
-              id: client._id,
+              id: client._id ?? nanoid(),
               name: client.name,
             }))}
             size="lg"

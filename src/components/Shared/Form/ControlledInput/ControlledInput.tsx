@@ -1,7 +1,7 @@
 import React, { useState, ChangeEvent } from 'react';
 import { Input } from '@chakra-ui/react';
 import { UseFormRegister } from 'react-hook-form';
-import { FormValues } from '@/components/Clients/ClientForm';
+import { FormValues } from '@/components/Shared/Form';
 
 export interface ControlledInputProps {
   register: UseFormRegister<any>;
