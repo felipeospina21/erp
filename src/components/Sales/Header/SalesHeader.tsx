@@ -1,7 +1,7 @@
 import React from 'react';
 import { nanoid } from '@reduxjs/toolkit';
 import { Wrap, WrapItem } from '@chakra-ui/react';
-import { CustomSelect, FormContainer } from '@/components/Shared';
+import { CustomSelect, CustomFormField } from '@/components/Shared';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { SalesData, updateSalesData } from '@/redux/slices/salesSlice';
 import { useGetClientsQuery } from '@/redux/services';
@@ -25,22 +25,22 @@ export function SalesHeader(): JSX.Element {
   return (
     <Wrap spacing="30px" m="2rem auto" justify="space-evenly">
       <WrapItem w="20rem">
-        <FormContainer label="Cliente" id="client">
+        <CustomFormField label="Cliente" id="client">
           <CustomSelect
             name="clientName"
             placeholder="Cliente"
             options={clients?.map((client) => ({
-              id: client._id,
+              id: client._id ?? nanoid(),
               name: client.name,
             }))}
             size="lg"
             onChangeFn={handleSelect}
             value={newSaleData.clientName}
           />
-        </FormContainer>
+        </CustomFormField>
       </WrapItem>
       <WrapItem w="20rem">
-        <FormContainer label="Ciudad" id="ciudad">
+        <CustomFormField label="Ciudad" id="ciudad">
           <CustomSelect
             name="deliveryCity"
             placeholder="Ciudad"
@@ -52,10 +52,10 @@ export function SalesHeader(): JSX.Element {
             onChangeFn={handleSelect}
             value={newSaleData.deliveryCity}
           />
-        </FormContainer>
+        </CustomFormField>
       </WrapItem>
       <WrapItem w="20rem">
-        <FormContainer label="Canal" id="channel">
+        <CustomFormField label="Canal" id="channel">
           <CustomSelect
             name="salesChannel"
             placeholder="Canal"
@@ -67,7 +67,7 @@ export function SalesHeader(): JSX.Element {
             onChangeFn={handleSelect}
             value={newSaleData.salesChannel}
           />
-        </FormContainer>
+        </CustomFormField>
       </WrapItem>
     </Wrap>
   );

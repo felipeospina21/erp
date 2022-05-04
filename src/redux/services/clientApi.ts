@@ -4,6 +4,7 @@ export interface DocumentId {
   _id: string;
 }
 export interface Client {
+  _id?: string;
   addres1: string;
   addres2?: string;
   city: string;
@@ -14,7 +15,7 @@ export interface Client {
   idType: string;
   name: string;
 }
-export interface NewClientResponse extends Client, DocumentId {}
+// export interface NewClientResponse extends Client, DocumentId {}
 
 export interface UpdateClient extends DocumentId {
   update: {
@@ -35,7 +36,7 @@ export const clientApi = createApi({
   }),
   tagTypes: ['Client'],
   endpoints: (build) => ({
-    getClients: build.query<NewClientResponse[], void>({
+    getClients: build.query<Client[], void>({
       query: () => '/',
       providesTags: [{ type: 'Client' }],
     }),
@@ -43,7 +44,7 @@ export const clientApi = createApi({
       query: (id) => `/${id}`,
       providesTags: [{ type: 'Client' }],
     }),
-    createClient: build.mutation<NewClientResponse, Client>({
+    createClient: build.mutation<Client, Client>({
       query: (body) => ({
         url: '/',
         method: 'POST',
@@ -51,7 +52,7 @@ export const clientApi = createApi({
       }),
       invalidatesTags: [{ type: 'Client' }],
     }),
-    updateClient: build.mutation<NewClientResponse, UpdateClient>({
+    updateClient: build.mutation<Client, UpdateClient>({
       query: (body) => ({
         url: '/',
         method: 'PUT',
@@ -59,7 +60,7 @@ export const clientApi = createApi({
       }),
       invalidatesTags: [{ type: 'Client' }],
     }),
-    deleteClient: build.mutation<NewClientResponse, DocumentId>({
+    deleteClient: build.mutation<Client, DocumentId>({
       query: (body) => ({
         url: '/',
         method: 'DELETE',

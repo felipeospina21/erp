@@ -1,7 +1,7 @@
 import React, { useState, ChangeEvent } from 'react';
 import { Input } from '@chakra-ui/react';
 import { UseFormRegister } from 'react-hook-form';
-import { FormValues } from '@/components/Clients/ClientForm';
+import { FormValues } from '@/components/Shared/Form';
 
 export interface ControlledInputProps {
   register: UseFormRegister<any>;
@@ -18,7 +18,7 @@ export function ControlledInput({
   name,
   type,
   placeholder,
-  size,
+  size = 'lg',
   value: passedValue,
 }: ControlledInputProps): JSX.Element {
   const [value, setValue] = useState(passedValue ?? '');
@@ -32,7 +32,8 @@ export function ControlledInput({
         value={value}
         onChange={handleChange}
         placeholder={placeholder ?? ''}
-        size={size ?? 'sm'}
+        size={size}
+        variant={type === 'file' ? 'flushed' : 'outline'}
       />
     </>
   );
