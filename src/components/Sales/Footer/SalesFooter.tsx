@@ -10,7 +10,7 @@ import {
   useUpdateProductMutation,
 } from '@/redux/services';
 import { resetSale } from '@/redux/slices/salesSlice';
-import { Box, Flex } from '@chakra-ui/react';
+import { Box, Flex, useToast } from '@chakra-ui/react';
 import React from 'react';
 
 export interface SalesFooterProps {
@@ -33,6 +33,7 @@ export function SalesFooter({
   ] = useSaveSaleMutation();
   const salesData = useAppSelector((state) => state.sales);
   const dispatch = useAppDispatch();
+  const toast = useToast();
 
   const resetInputs = (): void => {
     Array.from(document.querySelectorAll('input')).forEach((input) => (input.value = ''));
@@ -63,7 +64,21 @@ export function SalesFooter({
     if (!isSaveSaleLoading && !isSaveSaleError) {
       await saveNewSale();
       resetInputs();
+      toast({
+        title: 'Success',
+        description: 'Sale succesfully registered.',
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      });
     } else {
+      toast({
+        title: 'Error',
+        description: "oops! something didn't work as expected. Try later",
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      });
       throw saveSaleError;
     }
   }
