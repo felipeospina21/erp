@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, SimpleGrid } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
 import { updateSalesData } from '@/redux/slices/salesSlice';
-import { CustomSelect } from './Shared';
+import { CustomSelect } from '@/components/Shared';
 import { nanoid } from '@reduxjs/toolkit';
 import { useAppSelector } from '@/redux/hooks';
 

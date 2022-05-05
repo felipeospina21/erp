@@ -17,16 +17,18 @@ export interface Client {
 }
 // export interface NewClientResponse extends Client, DocumentId {}
 
+export type UpdateClientValues = Omit<Client, '_id' | 'idNumber' | 'idType'>;
 export interface UpdateClient extends DocumentId {
-  update: {
-    addres1?: string;
-    addres2?: string;
-    city?: string;
-    department?: string;
-    discount?: number;
-    email?: string;
-    name?: string;
-  };
+  update: UpdateClientValues;
+  // {
+  //   addres1?: string;
+  //   addres2?: string;
+  //   city?: string;
+  //   department?: string;
+  //   discount?: number;
+  //   email?: string;
+  //   name?: string;
+  // };
 }
 
 export const clientApi = createApi({

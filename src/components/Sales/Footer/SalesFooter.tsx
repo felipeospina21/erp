@@ -1,6 +1,4 @@
 import { CustomButton } from '@/components/Shared';
-import TaxPicker from '@/components/TaxPicker';
-import ValueContainer from '@/components/ValueContainer';
 import { RowData } from '@/pages/ventas';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import {
@@ -12,6 +10,8 @@ import {
 import { resetSale } from '@/redux/slices/salesSlice';
 import { Box, Flex, useToast } from '@chakra-ui/react';
 import React from 'react';
+import TaxPicker from './TaxPicker';
+import ValueContainer from './ValueContainer';
 
 export interface SalesFooterProps {
   initialRowSate: RowData;

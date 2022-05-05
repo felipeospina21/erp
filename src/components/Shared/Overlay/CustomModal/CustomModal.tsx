@@ -55,10 +55,15 @@ export function CustomModal({
         <Button onClick={setDisplayModal ? handleDisplay : onOpen}>{button?.text}</Button>
       )}
 
-      <Modal isOpen={isDisplayed ?? isOpen} onClose={setDisplayModal ? handleDisplay : onClose}>
+      <Modal
+        scrollBehavior="inside"
+        size="xl"
+        isOpen={isDisplayed ?? isOpen}
+        onClose={setDisplayModal ? handleDisplay : onClose}
+      >
         <ModalOverlay />
         <ModalContent py="2rem">
-          <ModalHeader>{title}</ModalHeader>
+          <ModalHeader py="0">{title}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>{children}</ModalBody>
         </ModalContent>

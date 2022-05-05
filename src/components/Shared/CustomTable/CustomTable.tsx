@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Thead, Tbody, Box, Tr } from '@chakra-ui/react';
+import { TableContainer, Table, Thead, Tbody, Tr } from '@chakra-ui/react';
 
 export interface CustomTableProps {
   Headers: JSX.Element | JSX.Element[];
@@ -15,13 +15,20 @@ export function CustomTable({
   variant = 'simple',
 }: CustomTableProps): JSX.Element {
   return (
-    <Box overflow="auto" mb="1rem">
-      <Table variant={variant} maxW="1300px" m={['auto']} size={size}>
+    <TableContainer
+      overflow="auto"
+      mb="1rem"
+      border="1px solid"
+      borderColor="brand.grey.50"
+      borderRadius="xl"
+      p="2rem"
+    >
+      <Table variant={variant} maxW="1900px" m={['auto']} size={size}>
         <Thead fontSize={['sm', 'md']}>
           <Tr>{Headers}</Tr>
         </Thead>
-        <Tbody fontSize={['sm', 'md']}>{Rows}</Tbody>
+        <Tbody fontSize={'xs'}>{Rows}</Tbody>
       </Table>
-    </Box>
+    </TableContainer>
   );
 }

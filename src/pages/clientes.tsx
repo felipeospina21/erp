@@ -1,18 +1,16 @@
-import React, { useState } from 'react';
 import { clientFields, ClientRow } from '@/components/Clients';
-import { CustomModal } from '@/components/Shared';
-import { useGetClientsQuery, useCreateClientMutation } from '@/redux/services';
-import { CustomForm } from '@/components/Shared/Form';
-import { FaPlus } from 'react-icons/fa';
-import { CustomTable } from '@/components/Shared/CustomTable';
+import { CustomModal, CustomTable, ClientFormValues, CustomForm } from '@/components/Shared';
+import { useCreateClientMutation, useGetClientsQuery } from '@/redux/services';
 import { Th } from '@chakra-ui/react';
+import { useState } from 'react';
+import { FaPlus } from 'react-icons/fa';
 
 const Clientes = (): JSX.Element => {
   const [displayModal, setDisplayModal] = useState(false);
   const { data: clients } = useGetClientsQuery();
   const [createClient, { isLoading }] = useCreateClientMutation();
 
-  function onSubmit(data: any): void {
+  function onSubmit(data: ClientFormValues): void {
     const transformedData = { ...data, discount: Number(data.discount) };
     createClient(transformedData);
     setDisplayModal(false);
@@ -34,7 +32,7 @@ const Clientes = (): JSX.Element => {
         title="Crear Cliente"
         isDisplayed={displayModal}
         setDisplayModal={setDisplayModal}
-        button={{ icon: <FaPlus />, bgColor: 'brand.green.100' }}
+        button={{ icon: <FaPlus />, bgColor: 'brand.green.100', size: 'md' }}
       >
         <CustomForm
           onSubmit={onSubmit}

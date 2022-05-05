@@ -11,14 +11,16 @@ export function DeleteButton({
   variant = 'ghost',
 }: IconButtonProps): JSX.Element {
   return (
-    <IconButton
-      aria-label="eliminar"
-      icon={<Delete />}
-      size={size}
-      color={`brand.red.${colorVariant}`}
-      variant={variant}
-      isLoading={isLoading}
-      onClick={onClick}
-    />
+    <>
+      <IconButton
+        aria-label="eliminar"
+        icon={<Delete />}
+        size={size}
+        color={`brand.red.${colorVariant}`}
+        variant={variant}
+        isLoading={isLoading}
+        onClick={onClick}
+      />
+    </>
   );
 }

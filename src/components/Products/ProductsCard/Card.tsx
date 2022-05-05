@@ -4,7 +4,7 @@ import { numberToCurrency } from '@/utils/index';
 import { Product, useDeleteProductMutation } from '@/redux/services';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import type { SerializedError } from '@reduxjs/toolkit';
-import { DeleteButton, EditButton } from '@/components/Shared/Buttons';
+import { DeleteButton, EditButton } from '@/components/Shared/IconButtons';
 
 export interface CardProps {
   product: Product;

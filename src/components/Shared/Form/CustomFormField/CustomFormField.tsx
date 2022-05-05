@@ -19,7 +19,7 @@ export function CustomFormField({
   label,
 }: CustomFormFieldProps): JSX.Element {
   return (
-    <FormControl isInvalid={isError} id={id}>
+    <FormControl isInvalid={isError} id={id} mt="1rem">
       <FormLabel htmlFor={id}>{label}</FormLabel>
       {children}
       {isError && <FormErrorMessage>{errorMessage}</FormErrorMessage>}
