@@ -15,6 +15,7 @@ export default function ProductosPage(): JSX.Element {
   }
   return (
     <Flex flexDir="column" align="center" justify="space-around" minH="100vh">
+      <img />
       <CustomModal
         title="Nuevo Producto"
         isDisplayed={displayModal}
