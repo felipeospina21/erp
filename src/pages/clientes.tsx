@@ -32,7 +32,7 @@ const Clientes = (): JSX.Element => {
         title="Crear Cliente"
         isDisplayed={displayModal}
         setDisplayModal={setDisplayModal}
-        button={{ icon: <FaPlus />, bgColor: 'brand.green.100', size: 'md' }}
+        button={{ icon: <FaPlus />, bgColor: 'brand.green.100', size: 'sm' }}
       >
         <CustomForm
           onSubmit={onSubmit}

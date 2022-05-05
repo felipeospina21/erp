@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Heading, Flex } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 import { CardsContainer } from '@/components/Products';
 import { useGetProductsQuery } from '@/redux/services';
 import { FaPlus } from 'react-icons/fa';
@@ -16,9 +16,6 @@ export default function ProductosPage(): JSX.Element {
   }
   return (
     <Flex flexDir="column" align="center" justify="space-around" minH="100vh">
-      <Heading as="h1" size="2xl" mb="2rem">
-        Products
-      </Heading>
       <CustomModal
         title="Nuevo Producto"
         isDisplayed={displayModal}

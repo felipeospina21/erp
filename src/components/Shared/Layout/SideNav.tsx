@@ -1,5 +1,6 @@
 import React from 'react';
-import { useDisclosure } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
+import { Flex, Heading, useDisclosure } from '@chakra-ui/react';
 import { RiMenu2Line } from 'react-icons/ri';
 import {
   Icon,
@@ -17,12 +18,19 @@ import NavLinks from './NavLinks';
 export function SideNav(): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = React.useRef<HTMLButtonElement>(null);
+  const router = useRouter();
+  const [, currPage] = router.pathname.split('/');
 
   return (
     <Box p="1rem" bg={'brand.grey.600'}>
-      <Button ref={btnRef} variant="solid" colorScheme="whiteAlpha" onClick={onOpen}>
-        <Icon as={RiMenu2Line} />
-      </Button>
+      <Flex align="center">
+        <Button ref={btnRef} variant="solid" colorScheme="whiteAlpha" onClick={onOpen}>
+          <Icon as={RiMenu2Line} />
+        </Button>
+        <Heading as="h1" size="xl" ml="40%" color="brand.grey.200" letterSpacing="5px">
+          {currPage.toLocaleUpperCase()}
+        </Heading>
+      </Flex>
       <Drawer isOpen={isOpen} placement="left" onClose={onClose} finalFocusRef={btnRef}>
         <DrawerOverlay />
         <DrawerContent>

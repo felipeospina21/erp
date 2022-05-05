@@ -21,3 +21,7 @@ a {
 * {
   box-sizing: border-box;
 }
+
+body.chakra-ui-light {
+  background-color: #ecf2fe;
+}
