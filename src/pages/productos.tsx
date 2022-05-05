@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
-import { Flex } from '@chakra-ui/react';
 import { CardsContainer } from '@/components/Products';
-import { useGetProductsQuery } from '@/redux/services';
-import { FaPlus } from 'react-icons/fa';
-import { CustomModal } from '@/components/Shared';
-import { CustomForm } from '@/components/Shared/Form';
 import { productsFields } from '@/components/Products/ProductForm/fields/productFields';
+import { CustomModal, CustomForm } from '@/components/Shared';
+import { useGetProductsQuery } from '@/redux/services';
+import { Flex } from '@chakra-ui/react';
+import { useState } from 'react';
+import { FaPlus } from 'react-icons/fa';
 
 export default function ProductosPage(): JSX.Element {
   const [displayModal, setDisplayModal] = useState(false);
