@@ -10,7 +10,7 @@ export interface ClientFormValues extends Omit<Client, 'discount'> {
 
 export type FormValues =
   | ClientFormValues
-  | Product
+  | Omit<Product, 'image'>
   | UpdateClient
   | UpdateProduct
   | UpdateClientValues;
