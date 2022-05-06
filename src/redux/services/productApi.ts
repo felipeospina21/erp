@@ -6,7 +6,7 @@ export interface Product extends DocumentId {
   name: string;
   price: number;
   stock: number;
-  subtotal?: number;
+  image?: Buffer;
 }
 
 export interface UpdateProduct extends DocumentId {
