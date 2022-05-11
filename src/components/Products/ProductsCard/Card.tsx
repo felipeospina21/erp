@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Heading, Text, Flex, Box } from '@chakra-ui/react';
 import { numberToCurrency } from '@/utils/index';
-import { Product, useDeleteProductMutation } from '@/redux/services';
+import { Product, useDeleteProductMutation, useGetProductsQuery } from '@/redux/services';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import type { SerializedError } from '@reduxjs/toolkit';
 import { DeleteButton, EditButton } from '@/components/Shared/IconButtons';
 import Image from 'next/image';
+import { CardSkeleton } from '@/components/Shared';
 
 export interface CardProps {
   product: Product;
@@ -14,7 +15,7 @@ export interface CardProps {
 
 export function Card({ product, locale }: CardProps): JSX.Element {
   const [deleteProduct, { isLoading: isDeleteLoading }] = useDeleteProductMutation();
-  const [img64, setImg64] = useState('');
+  const { isFetching: areProductsFetching } = useGetProductsQuery();
 
   async function handleDelete(): Promise<
     { data: Product } | { error: FetchBaseQueryError | SerializedError }
@@ -26,12 +27,9 @@ export function Card({ product, locale }: CardProps): JSX.Element {
     return;
   }
 
-  useEffect(() => {
-    if (product.image) {
-      const buf = Buffer.from(product.image);
-      setImg64(buf.toString('base64'));
-    }
-  }, [product.image]);
+  if (areProductsFetching) {
+    return <CardSkeleton />;
+  }
 
   return (
     <Flex
@@ -48,13 +46,12 @@ export function Card({ product, locale }: CardProps): JSX.Element {
     >
       <Box borderRadius="xl" width="100%" overflow="hidden">
         <Image
-          src={`data:image/jpeg;base64,${img64}`}
+          src={product.image ?? ''}
           alt="product image"
           width="100%"
           height="80px"
           layout="responsive"
           objectFit={'cover'}
-          // placeholder='blur'
         />
       </Box>
       <Flex flexDir="column" justify="center" align="center" mt="1rem" w="100%">

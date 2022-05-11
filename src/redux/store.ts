@@ -16,7 +16,11 @@ export const reducer = {
 export const store = configureStore({
   reducer,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(clientApi.middleware, productApi.middleware, saleApi.middleware),
+    getDefaultMiddleware({ serializableCheck: false }).concat(
+      clientApi.middleware,
+      productApi.middleware,
+      saleApi.middleware
+    ),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

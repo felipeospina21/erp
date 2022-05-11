@@ -6,7 +6,7 @@ export interface Product extends DocumentId {
   name: string;
   price: number;
   stock: number;
-  image?: Buffer;
+  image?: string;
 }
 
 export interface UpdateProduct extends DocumentId {
@@ -45,8 +45,20 @@ export const productApi = createApi({
       }),
       invalidatesTags: [{ type: 'Product' }],
     }),
+    createProduct: build.mutation<Product, FormData>({
+      query: (body) => ({
+        url: '/',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: [{ type: 'Product' }],
+    }),
   }),
 });
 
-export const { useGetProductsQuery, useUpdateProductMutation, useDeleteProductMutation } =
-  productApi;
+export const {
+  useGetProductsQuery,
+  useUpdateProductMutation,
+  useDeleteProductMutation,
+  useCreateProductMutation,
+} = productApi;
