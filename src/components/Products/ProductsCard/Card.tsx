@@ -1,12 +1,21 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Heading, Text, Flex, Box } from '@chakra-ui/react';
 import { numberToCurrency } from '@/utils/index';
-import { Product, useDeleteProductMutation, useGetProductsQuery } from '@/redux/services';
+import {
+  Product,
+  UpdateProduct,
+  useDeleteProductMutation,
+  useGetProductsQuery,
+  useUpdateProductMutation,
+} from '@/redux/services';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import type { SerializedError } from '@reduxjs/toolkit';
-import { DeleteButton, EditButton } from '@/components/Shared/IconButtons';
+import { DeleteButton } from '@/components/Shared/IconButtons';
 import Image from 'next/image';
-import { CardSkeleton } from '@/components/Shared';
+import { CardSkeleton, ConfirmationAlert, CustomModal, CustomForm } from '@/components/Shared';
+import { Edit } from '@/assets/icons';
+import { SubmitHandler } from 'react-hook-form';
+import { productsFields } from '../ProductForm';
 
 export interface CardProps {
   product: Product;
@@ -14,7 +23,11 @@ export interface CardProps {
 }
 
 export function Card({ product, locale }: CardProps): JSX.Element {
+  const [displayModal, setDisplayModal] = useState(false);
+  const [displayAlert, setDisplayAlert] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleteProduct, { isLoading: isDeleteLoading }] = useDeleteProductMutation();
+  const [updateProduct, { isLoading: isUpdateLoading }] = useUpdateProductMutation();
   const { isFetching: areProductsFetching } = useGetProductsQuery();
 
   async function handleDelete(): Promise<
@@ -23,9 +36,19 @@ export function Card({ product, locale }: CardProps): JSX.Element {
     return await deleteProduct({ _id: product._id ?? '' });
   }
 
-  async function handleUpdate() {
-    return;
+  function onSubmit(values: Product): void | SubmitHandler<UpdateProduct> {
+    const payload = { _id: product._id ?? '', update: { ...values } };
+    updateProduct(payload);
+    setDisplayModal(false);
   }
+
+  useEffect(() => {
+    if (confirmDelete) {
+      handleDelete();
+      setConfirmDelete(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [confirmDelete]);
 
   if (areProductsFetching) {
     return <CardSkeleton />;
@@ -63,15 +86,45 @@ export function Card({ product, locale }: CardProps): JSX.Element {
           <Text mt="0.5rem">{`Precio: ${numberToCurrency(product.price)}`}</Text>
         </Flex>
       </Flex>
-      <Flex
-        w="100%"
-        borderRadius="2xl"
-        justify={'space-evenly'}
-        align="flex-end"
-        bg="brand.grey.50"
-      >
-        <EditButton onClick={handleUpdate} />
-        <DeleteButton isLoading={isDeleteLoading} onClick={handleDelete} />
+      <Flex w="100%" borderRadius="2xl" justify={'space-evenly'} align="center" bg="brand.grey.50">
+        <CustomModal
+          title="Actualizar Producto"
+          isDisplayed={displayModal}
+          setDisplayModal={setDisplayModal}
+          button={{
+            text: 'actualizar',
+            icon: <Edit />,
+            variant: 'ghost',
+            color: 'brand.green.500',
+            size: 'md',
+          }}
+        >
+          <CustomForm
+            data={product}
+            onSubmit={onSubmit}
+            buttonText="modificar"
+            fields={productsFields}
+            isLoading={isUpdateLoading}
+            controlled
+          />
+        </CustomModal>
+
+        <ConfirmationAlert
+          header="Desea Eliminar?"
+          body={`Seguro desea eliminar de forma permanente el cliente ${product.name}?`}
+          button={
+            <DeleteButton
+              isLoading={isDeleteLoading}
+              size="md"
+              onClick={(): void => {
+                setDisplayAlert(true);
+              }}
+            />
+          }
+          setConfirmation={setConfirmDelete}
+          isOpen={displayAlert}
+          toggleDisplay={setDisplayAlert}
+        />
       </Flex>
     </Flex>
   );

@@ -10,7 +10,7 @@ export interface ClientFormValues extends Omit<Client, 'discount'> {
 
 export type FormValues =
   | ClientFormValues
-  | Omit<Product, 'image'>
+  | Product
   | UpdateClient
   | UpdateProduct
   | UpdateClientValues;
@@ -64,7 +64,7 @@ export function CustomForm({
                 name={field.name}
                 required={field.required}
                 type={field.type}
-                value={String(data?.[field.name as keyof FormValues])}
+                value={field.type !== 'file' ? String(data?.[field.name as keyof FormValues]) : ''}
                 size={inputSize}
               />
             ) : (
