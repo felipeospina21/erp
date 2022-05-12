@@ -9,6 +9,10 @@ export interface Product extends DocumentId {
   image?: string;
 }
 
+export interface UpdateStock extends DocumentId {
+  stock: number;
+}
+
 export const productApi = createApi({
   reducerPath: 'productApi',
   baseQuery: fetchBaseQuery({
@@ -23,6 +27,14 @@ export const productApi = createApi({
     updateProduct: build.mutation<Product, FormData>({
       query: (body) => ({
         url: '/',
+        method: 'PUT',
+        body,
+      }),
+      invalidatesTags: [{ type: 'Product' }],
+    }),
+    updateProductStock: build.mutation<Product, UpdateStock>({
+      query: (body) => ({
+        url: '/updateStock',
         method: 'PUT',
         body,
       }),
@@ -50,6 +62,7 @@ export const productApi = createApi({
 export const {
   useGetProductsQuery,
   useUpdateProductMutation,
+  useUpdateProductStockMutation,
   useDeleteProductMutation,
   useCreateProductMutation,
 } = productApi;
