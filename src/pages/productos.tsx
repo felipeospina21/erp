@@ -1,18 +1,43 @@
 import { CardsContainer } from '@/components/Products';
 import { productsFields } from '@/components/Products/ProductForm/fields/productFields';
-import { CustomModal, CustomForm } from '@/components/Shared';
-import { useGetProductsQuery } from '@/redux/services';
-import { Flex } from '@chakra-ui/react';
+import { CustomModal, CustomForm, CardSkeleton } from '@/components/Shared';
+import { useCreateProductMutation, useGetProductsQuery } from '@/redux/services';
+import { Flex, Skeleton } from '@chakra-ui/react';
 import { useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
 
 export default function ProductosPage(): JSX.Element {
   const [displayModal, setDisplayModal] = useState(false);
-  const { data: products } = useGetProductsQuery();
+  const { data: products, isLoading: areProductsLoading } = useGetProductsQuery();
+  const [createProduct] = useCreateProductMutation();
 
-  function createNewProduct(data: any) {
-    console.log(data);
+  function createNewProduct(data: any): void {
+    const newProduct = new FormData();
+
+    newProduct.append('alias', data.alias);
+    newProduct.append('name', data.name);
+    newProduct.append('price', data.price);
+    newProduct.append('stock', data.stock);
+    newProduct.append('image', data.image[0]);
+
+    createProduct(newProduct);
+    setDisplayModal(false);
   }
+
+  if (areProductsLoading) {
+    return (
+      <Flex flexDir="column" align="center" justify="space-around" h="50vh" m="5rem auto">
+        <Skeleton borderRadius="md" h="40px" w="40px" />
+        <Flex justify="center" m="1rem" w="100%" wrap="wrap">
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+        </Flex>
+      </Flex>
+    );
+  }
+
   return (
     <Flex flexDir="column" align="center" justify="space-around" minH="100vh">
       <CustomModal

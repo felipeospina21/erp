@@ -6,16 +6,11 @@ export interface Product extends DocumentId {
   name: string;
   price: number;
   stock: number;
-  subtotal?: number;
+  image?: string;
 }
 
-export interface UpdateProduct extends DocumentId {
-  update: {
-    alias?: string;
-    name?: string;
-    price?: number;
-    stock?: number;
-  };
+export interface UpdateStock extends DocumentId {
+  stock: number;
 }
 
 export const productApi = createApi({
@@ -29,9 +24,17 @@ export const productApi = createApi({
       query: () => '/',
       providesTags: [{ type: 'Product' }],
     }),
-    updateProduct: build.mutation<Product, UpdateProduct>({
+    updateProduct: build.mutation<Product, FormData>({
       query: (body) => ({
         url: '/',
+        method: 'PUT',
+        body,
+      }),
+      invalidatesTags: [{ type: 'Product' }],
+    }),
+    updateProductStock: build.mutation<Product, UpdateStock>({
+      query: (body) => ({
+        url: '/updateStock',
         method: 'PUT',
         body,
       }),
@@ -45,8 +48,21 @@ export const productApi = createApi({
       }),
       invalidatesTags: [{ type: 'Product' }],
     }),
+    createProduct: build.mutation<Product, FormData>({
+      query: (body) => ({
+        url: '/',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: [{ type: 'Product' }],
+    }),
   }),
 });
 
-export const { useGetProductsQuery, useUpdateProductMutation, useDeleteProductMutation } =
-  productApi;
+export const {
+  useGetProductsQuery,
+  useUpdateProductMutation,
+  useUpdateProductStockMutation,
+  useDeleteProductMutation,
+  useCreateProductMutation,
+} = productApi;

@@ -1,5 +1,5 @@
 import { CustomFormField, ControlledInput } from '@/components/Shared';
-import { Client, Product, UpdateClient, UpdateClientValues, UpdateProduct } from '@/redux/services';
+import { Client, Product, UpdateClient, UpdateClientValues } from '@/redux/services';
 import { Button, Container, Input } from '@chakra-ui/react';
 import { nanoid } from '@reduxjs/toolkit';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -10,9 +10,9 @@ export interface ClientFormValues extends Omit<Client, 'discount'> {
 
 export type FormValues =
   | ClientFormValues
-  | Product
+  | Omit<Product, 'image'>
   | UpdateClient
-  | UpdateProduct
+  | FormData
   | UpdateClientValues;
 
 export interface Fields {
@@ -64,7 +64,7 @@ export function CustomForm({
                 name={field.name}
                 required={field.required}
                 type={field.type}
-                value={String(data?.[field.name as keyof FormValues])}
+                value={field.type !== 'file' ? String(data?.[field.name as keyof FormValues]) : ''}
                 size={inputSize}
               />
             ) : (

@@ -5,7 +5,7 @@ import {
   NewSaleResponse,
   Product,
   useSaveSaleMutation,
-  useUpdateProductMutation,
+  useUpdateProductStockMutation,
 } from '@/redux/services';
 import { resetSale } from '@/redux/slices/salesSlice';
 import { Box, Flex, useToast } from '@chakra-ui/react';
@@ -26,7 +26,7 @@ export function SalesFooter({
   rowsData,
   setRowsData,
 }: SalesFooterProps): JSX.Element {
-  const [updateProduct] = useUpdateProductMutation();
+  const [updateProductStock] = useUpdateProductStockMutation();
   const [
     saveSale,
     { isLoading: isSaveSaleLoading, isError: isSaveSaleError, error: saveSaleError },
@@ -51,9 +51,9 @@ export function SalesFooter({
       rowsData.forEach((row) => {
         const newStock = row.stock - row.quantity;
         promises.push(
-          updateProduct({
+          updateProductStock({
             _id: row.productId,
-            update: { stock: newStock },
+            stock: newStock,
           }).unwrap()
         );
       });
