@@ -1,21 +1,29 @@
-import Layout from '@/components/Shared/Layout/Layout';
-import { store } from '@/redux/store';
 import '@/styles/globals.css';
-import theme from '@/styles/theme';
-import { ChakraProvider } from '@chakra-ui/react';
 import type { AppProps } from 'next/app';
-import { Provider } from 'react-redux';
+import type { ReactElement } from 'react';
+import type { NextPage } from 'next';
 
-function MyApp({ Component, pageProps }: AppProps): JSX.Element {
-  return (
-    <Provider store={store}>
-      <ChakraProvider theme={theme}>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </ChakraProvider>
-    </Provider>
-  );
+type NextPageWithLayout = NextPage & {
+  getLayout?: (page: ReactElement) => ReactElement;
+};
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
+
+function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
+  const getLayout = Component.getLayout ?? ((page) => page);
+
+  return getLayout(<Component {...pageProps} />);
+  // return (
+  //   <Provider store={store}>
+  //     <ChakraProvider theme={theme}>
+  //       <Layout>
+  //         <Component {...pageProps} />
+  //       </Layout>
+  //     </ChakraProvider>
+  //   </Provider>
+  // );
 }
 
 export default MyApp;

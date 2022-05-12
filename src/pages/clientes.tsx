@@ -1,11 +1,17 @@
 import { clientFields, ClientRow } from '@/components/Clients';
-import { CustomModal, CustomTable, ClientFormValues, CustomForm } from '@/components/Shared';
+import {
+  CustomModal,
+  CustomTable,
+  ClientFormValues,
+  CustomForm,
+  Layout,
+} from '@/components/Shared';
 import { useCreateClientMutation, useGetClientsQuery } from '@/redux/services';
 import { Th } from '@chakra-ui/react';
-import { useState } from 'react';
+import { ReactElement, useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
 
-const Clientes = (): JSX.Element => {
+const Clientes = (): ReactElement => {
   const [displayModal, setDisplayModal] = useState(false);
   const { data: clients } = useGetClientsQuery();
   const [createClient, { isLoading }] = useCreateClientMutation();
@@ -46,3 +52,7 @@ const Clientes = (): JSX.Element => {
 };
 
 export default Clientes;
+
+Clientes.getLayout = function getLayout(page: ReactElement): JSX.Element {
+  return <Layout>{page}</Layout>;
+};

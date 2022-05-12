@@ -1,18 +1,26 @@
 import React from 'react';
-import { Box } from '@chakra-ui/react';
+import { Box, ChakraProvider } from '@chakra-ui/react';
 import SideNav from './SideNav';
+import { Provider } from 'react-redux';
+import { store } from '@/redux/store';
+import theme from '@/styles/theme';
 
 export interface LayoutProps {
   children: JSX.Element;
+  hasNav?: boolean;
 }
 
-export function Layout({ children }: LayoutProps): JSX.Element {
+export function Layout({ children, hasNav = true }: LayoutProps): JSX.Element {
   return (
     <>
-      <SideNav />
-      <Box as="main" m="1rem 2rem">
-        {children}
-      </Box>
+      <Provider store={store}>
+        <ChakraProvider theme={theme}>
+          {hasNav && <SideNav />}
+          <Box as="main" m="1rem 2rem">
+            {children}
+          </Box>
+        </ChakraProvider>
+      </Provider>
     </>
   );
 }
