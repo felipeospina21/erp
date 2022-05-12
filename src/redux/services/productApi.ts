@@ -9,15 +9,6 @@ export interface Product extends DocumentId {
   image?: string;
 }
 
-export interface UpdateProduct extends DocumentId {
-  update: {
-    alias?: string;
-    name?: string;
-    price?: number;
-    stock?: number;
-  };
-}
-
 export const productApi = createApi({
   reducerPath: 'productApi',
   baseQuery: fetchBaseQuery({
@@ -29,7 +20,7 @@ export const productApi = createApi({
       query: () => '/',
       providesTags: [{ type: 'Product' }],
     }),
-    updateProduct: build.mutation<Product, UpdateProduct>({
+    updateProduct: build.mutation<Product, FormData>({
       query: (body) => ({
         url: '/',
         method: 'PUT',

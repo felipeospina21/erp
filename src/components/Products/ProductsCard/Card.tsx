@@ -3,7 +3,6 @@ import { Heading, Text, Flex, Box } from '@chakra-ui/react';
 import { numberToCurrency } from '@/utils/index';
 import {
   Product,
-  UpdateProduct,
   useDeleteProductMutation,
   useGetProductsQuery,
   useUpdateProductMutation,
@@ -36,9 +35,18 @@ export function Card({ product, locale }: CardProps): JSX.Element {
     return await deleteProduct({ _id: product._id ?? '' });
   }
 
-  function onSubmit(values: Product): void | SubmitHandler<UpdateProduct> {
-    const payload = { _id: product._id ?? '', update: { ...values } };
-    updateProduct(payload);
+  function onSubmit(values: any): void | SubmitHandler<Product> {
+    const updatedProduct = new FormData();
+
+    updatedProduct.append('_id', product._id);
+    updatedProduct.append('alias', values.alias);
+    updatedProduct.append('name', values.name);
+    updatedProduct.append('price', values.price);
+    updatedProduct.append('stock', values.stock);
+    updatedProduct.append('image', values.image[0]);
+
+    // const payload = { _id: product._id ?? '', update: updatedProduct };
+    updateProduct(updatedProduct);
     setDisplayModal(false);
   }
 
