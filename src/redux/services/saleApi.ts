@@ -39,6 +39,14 @@ export const saleApi = createApi({
   reducerPath: 'saleApi',
   baseQuery: fetchBaseQuery({
     baseUrl: `${process.env.NEXT_PUBLIC_API_URL}/sales`,
+    prepareHeaders: (headers) => {
+      const token = sessionStorage.getItem('authToken');
+      if (token) {
+        headers.set('authorization', `Bearer ${token}`);
+      }
+
+      return headers;
+    },
   }),
   tagTypes: ['Sale', 'Product'],
   endpoints: (build) => ({

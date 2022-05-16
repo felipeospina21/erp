@@ -1,13 +1,31 @@
-import React, { ReactElement } from 'react';
-import { Grid, GridItem, Input, Container, Heading } from '@chakra-ui/react';
+import React, { ReactElement, useEffect } from 'react';
+import { Grid, GridItem, Container, Heading } from '@chakra-ui/react';
 import Image from 'next/image';
 import loginImg from '@/assets/login.png';
-import { CustomButton, CustomFormField, Layout } from '@/components/Shared';
+import { CustomForm, Layout } from '@/components/Shared';
+import { useLoginMutation, UserBody } from '@/redux/services/userApi';
+import { loginFields } from '@/components/Login';
+import { useRouter } from 'next/router';
 
-// export interface loginProps {
-// }
+export interface LoginProps {
+  token: string;
+}
+export default function Login(): JSX.Element {
+  const [login, { data: responseData, isLoading }] = useLoginMutation();
+  const router = useRouter();
 
-export default function Login(): ReactElement {
+  function loginUser(data: UserBody): void {
+    login(data);
+  }
+
+  useEffect(() => {
+    const token = responseData?.token;
+    if (token) {
+      sessionStorage.setItem('authToken', token);
+      router.push('/');
+    }
+  }, [responseData?.token, router]);
+
   return (
     <Grid templateColumns="repeat(2, 1fr)" gap={6} alignItems="flex-start">
       <GridItem>
@@ -15,20 +33,12 @@ export default function Login(): ReactElement {
           Login
         </Heading>
         <Container marginTop="10rem">
-          <CustomFormField id="username" label="Email">
-            <Input type="email" borderColor="brand.grey.200" />
-          </CustomFormField>
-          <CustomFormField id="password" label="Password">
-            <Input type="password" borderColor="brand.grey.200" />
-          </CustomFormField>
-          <CustomButton
-            variant="accept"
-            margin="2rem auto"
-            width="10rem"
-            onClick={() => console.log('login')}
-          >
-            Login
-          </CustomButton>
+          <CustomForm
+            onSubmit={loginUser}
+            isLoading={isLoading}
+            buttonText="Login"
+            fields={loginFields}
+          />
         </Container>
       </GridItem>
       <GridItem w="100%" h="90%">

@@ -15,26 +15,24 @@ export interface Client {
   idType: string;
   name: string;
 }
-// export interface NewClientResponse extends Client, DocumentId {}
 
 export type UpdateClientValues = Omit<Client, '_id' | 'idNumber' | 'idType'>;
 export interface UpdateClient extends DocumentId {
   update: UpdateClientValues;
-  // {
-  //   addres1?: string;
-  //   addres2?: string;
-  //   city?: string;
-  //   department?: string;
-  //   discount?: number;
-  //   email?: string;
-  //   name?: string;
-  // };
 }
 
 export const clientApi = createApi({
   reducerPath: 'clientApi',
   baseQuery: fetchBaseQuery({
     baseUrl: `${process.env.NEXT_PUBLIC_API_URL}/clients`,
+    prepareHeaders: (headers) => {
+      const token = sessionStorage.getItem('authToken');
+      if (token) {
+        headers.set('authorization', `Bearer ${token}`);
+      }
+
+      return headers;
+    },
   }),
   tagTypes: ['Client'],
   endpoints: (build) => ({

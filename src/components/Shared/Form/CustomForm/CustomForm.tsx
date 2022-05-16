@@ -1,5 +1,6 @@
 import { CustomFormField, ControlledInput } from '@/components/Shared';
 import { Client, Product, UpdateClient, UpdateClientValues } from '@/redux/services';
+import { UserBody } from '@/redux/services/userApi';
 import { Button, Container, Input } from '@chakra-ui/react';
 import { nanoid } from '@reduxjs/toolkit';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -13,7 +14,8 @@ export type FormValues =
   | Omit<Product, 'image'>
   | UpdateClient
   | FormData
-  | UpdateClientValues;
+  | UpdateClientValues
+  | UserBody;
 
 export interface Fields {
   name: string;

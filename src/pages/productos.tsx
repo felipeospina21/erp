@@ -5,11 +5,19 @@ import { useCreateProductMutation, useGetProductsQuery } from '@/redux/services'
 import { Flex, Skeleton } from '@chakra-ui/react';
 import { ReactElement, useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
+import { withIronSessionSsr } from 'iron-session/next';
+import { sessionOptions } from '@/utils/session';
+import type { UserResponse } from '@/redux/services';
+import { InferGetServerSidePropsType } from 'next';
 
-export default function ProductosPage(): ReactElement {
+export default function ProductosPage({
+  user,
+}: InferGetServerSidePropsType<typeof getServerSideProps>): ReactElement {
   const [displayModal, setDisplayModal] = useState(false);
   const { data: products, isLoading: areProductsLoading } = useGetProductsQuery();
   const [createProduct] = useCreateProductMutation();
+
+  console.log(user);
 
   function createNewProduct(data: any): void {
     const newProduct = new FormData();
@@ -61,3 +69,23 @@ export default function ProductosPage(): ReactElement {
 ProductosPage.getLayout = function getLayout(page: ReactElement): JSX.Element {
   return <Layout>{page}</Layout>;
 };
+
+export const getServerSideProps = withIronSessionSsr(async function ({ req, res }) {
+  console.log(req.token);
+  const user = req.session.user;
+
+  if (user === undefined) {
+    res.setHeader('location', '/login');
+    res.statusCode = 302;
+    res.end();
+    return {
+      props: {
+        user: { message: 'unauthorized', token: '' } as UserResponse,
+      },
+    };
+  }
+
+  return {
+    props: { user: req.session.user },
+  };
+}, sessionOptions);
