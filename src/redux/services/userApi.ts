@@ -1,5 +1,6 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
 import { DocumentId } from './clientApi';
+import { axiosBaseQuery } from './customBaseQuery';
 
 export interface UserBody {
   email: string;
@@ -14,7 +15,7 @@ export interface UserResponse {
 
 export const userApi = createApi({
   reducerPath: 'userApi',
-  baseQuery: fetchBaseQuery({
+  baseQuery: axiosBaseQuery({
     baseUrl: `${process.env.NEXT_PUBLIC_API_URL}/user`,
   }),
   tagTypes: ['User'],
@@ -23,7 +24,7 @@ export const userApi = createApi({
       query: (body) => ({
         url: '/',
         method: 'POST',
-        body,
+        data: { ...body },
       }),
       invalidatesTags: [{ type: 'User' }],
     }),
@@ -31,11 +32,20 @@ export const userApi = createApi({
       query: (body) => ({
         url: '/login',
         method: 'POST',
-        body,
+        withCredentials: true,
+        data: { ...body },
+      }),
+      invalidatesTags: [{ type: 'User' }],
+    }),
+    logout: build.mutation<UserResponse, void>({
+      query: () => ({
+        url: '/logout',
+        method: 'POST',
+        withCredentials: true,
       }),
       invalidatesTags: [{ type: 'User' }],
     }),
   }),
 });
 
-export const { useCreateUserMutation, useLoginMutation } = userApi;
+export const { useCreateUserMutation, useLoginMutation, useLogoutMutation } = userApi;

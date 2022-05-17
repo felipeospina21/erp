@@ -14,9 +14,11 @@ import {
   DrawerCloseButton,
 } from '@chakra-ui/react';
 import NavLinks from './NavLinks';
+import { useLogoutMutation } from '@/redux/services';
 
 export function SideNav(): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [logout] = useLogoutMutation();
   const btnRef = React.useRef<HTMLButtonElement>(null);
   const router = useRouter();
   const [, currPage] = router.pathname.split('/');
@@ -30,6 +32,7 @@ export function SideNav(): JSX.Element {
         <Heading as="h1" size="xl" ml="40%" color="brand.grey.200" letterSpacing="5px">
           {currPage.toLocaleUpperCase()}
         </Heading>
+        <Button onClick={() => logout()}>Logout</Button>
       </Flex>
       <Drawer isOpen={isOpen} placement="left" onClose={onClose} finalFocusRef={btnRef}>
         <DrawerOverlay />

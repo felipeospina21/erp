@@ -11,7 +11,7 @@ export interface LoginProps {
   token: string;
 }
 export default function Login(): JSX.Element {
-  const [login, { data: responseData, isLoading }] = useLoginMutation();
+  const [login, { isLoading, isSuccess, error }] = useLoginMutation();
   const router = useRouter();
 
   function loginUser(data: UserBody): void {
@@ -19,12 +19,12 @@ export default function Login(): JSX.Element {
   }
 
   useEffect(() => {
-    const token = responseData?.token;
-    if (token) {
-      sessionStorage.setItem('authToken', token);
+    if (isSuccess) {
       router.push('/');
+    } else {
+      console.log(error);
     }
-  }, [responseData?.token, router]);
+  }, [isSuccess, error, router]);
 
   return (
     <Grid templateColumns="repeat(2, 1fr)" gap={6} alignItems="flex-start">
@@ -32,6 +32,7 @@ export default function Login(): JSX.Element {
         <Heading as="h1" mt="4rem" textAlign="center">
           Login
         </Heading>
+
         <Container marginTop="10rem">
           <CustomForm
             onSubmit={loginUser}

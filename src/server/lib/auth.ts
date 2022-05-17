@@ -11,6 +11,7 @@ export async function setLoginSession(res: NextApiResponse, session: UserRespons
   const token = jwt.sign(obj, process.env.SECRET_TOKEN_KEY as Secret, {
     expiresIn: '2h',
   });
+  console.log(token);
 
   setTokenCookie(res, token);
 }
