@@ -1,26 +1,30 @@
-import React, { useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { Flex, Heading, useDisclosure } from '@chakra-ui/react';
-import { RiMenu2Line } from 'react-icons/ri';
+import { useAppSelector } from '@/redux/hooks';
+import { useLogoutMutation } from '@/redux/services';
 import {
-  Icon,
-  Button,
   Box,
   Drawer,
   DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
   DrawerHeader,
   DrawerOverlay,
-  DrawerContent,
-  DrawerCloseButton,
+  Flex,
+  Heading,
+  IconButton,
+  useDisclosure,
 } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
+import React, { useEffect } from 'react';
+import { RiMenu2Line } from 'react-icons/ri';
 import NavLinks from './NavLinks';
-import { useLogoutMutation } from '@/redux/services';
+import UserMenu from './UserMenu';
 
 export function SideNav(): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [logout, { isSuccess }] = useLogoutMutation();
   const btnRef = React.useRef<HTMLButtonElement>(null);
   const router = useRouter();
+  const user = useAppSelector((state) => state.user);
   const [, currPage] = router.pathname.split('/');
 
   function handleLogout(): void {
@@ -29,33 +33,33 @@ export function SideNav(): JSX.Element {
 
   useEffect(() => {
     if (isSuccess) {
-      router.push('/');
+      router.push('/login');
     }
   }, [isSuccess, router]);
   return (
     <Box p="1rem" bg={'brand.grey.600'}>
-      <Flex align="center">
-        <Button ref={btnRef} variant="solid" colorScheme="whiteAlpha" onClick={onOpen}>
-          <Icon as={RiMenu2Line} />
-        </Button>
-        <Heading as="h1" size="xl" ml="40%" color="brand.grey.200" letterSpacing="5px">
+      <Flex align="center" justify="space-between">
+        <Box w="12rem">
+          <IconButton
+            aria-label="menu-button"
+            icon={<RiMenu2Line />}
+            ref={btnRef}
+            variant="solid"
+            colorScheme="whiteAlpha"
+            onClick={onOpen}
+          />
+        </Box>
+        <Heading as="h1" size="xl" color="brand.grey.200" letterSpacing="5px">
           {currPage.toLocaleUpperCase()}
         </Heading>
-        <Flex align="center" justify="space-between" w="30%">
-          <Box fontSize="0.8rem" color="brand.grey.200">
-            hardcoded@email.com
-          </Box>
-          <Button size="xs" variant="solid" bgColor="brand.grey.200" onClick={handleLogout}>
-            Logout
-          </Button>
-        </Flex>
+        <UserMenu user={user} menuItemClickFn={{ handleLogout }} />
       </Flex>
+
       <Drawer isOpen={isOpen} placement="left" onClose={onClose} finalFocusRef={btnRef}>
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
           <DrawerHeader>Módulos</DrawerHeader>
-
           <DrawerBody display="flex" flexDir="column">
             <NavLinks onClose={onClose} />
           </DrawerBody>

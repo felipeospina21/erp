@@ -1,4 +1,5 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { axiosBaseQuery } from './customBaseQuery';
 
 export interface DocumentId {
   _id: string;
@@ -23,32 +24,24 @@ export interface UpdateClient extends DocumentId {
 
 export const clientApi = createApi({
   reducerPath: 'clientApi',
-  baseQuery: fetchBaseQuery({
+  baseQuery: axiosBaseQuery({
     baseUrl: `${process.env.NEXT_PUBLIC_API_URL}/clients`,
-    prepareHeaders: (headers) => {
-      const token = sessionStorage.getItem('authToken');
-      if (token) {
-        headers.set('authorization', `Bearer ${token}`);
-      }
-
-      return headers;
-    },
   }),
   tagTypes: ['Client'],
   endpoints: (build) => ({
     getClients: build.query<Client[], void>({
-      query: () => '/',
+      query: () => ({ url: '/', method: 'GET', withCredentials: true }),
       providesTags: [{ type: 'Client' }],
     }),
     getClientById: build.query<Client[], string>({
-      query: (id) => `/${id}`,
+      query: (id) => ({ url: `/${id}`, method: 'GET', withCredentials: true }),
       providesTags: [{ type: 'Client' }],
     }),
     createClient: build.mutation<Client, Client>({
       query: (body) => ({
         url: '/',
         method: 'POST',
-        body,
+        data: { ...body },
       }),
       invalidatesTags: [{ type: 'Client' }],
     }),
@@ -56,7 +49,7 @@ export const clientApi = createApi({
       query: (body) => ({
         url: '/',
         method: 'PUT',
-        body,
+        data: { ...body },
       }),
       invalidatesTags: [{ type: 'Client' }],
     }),
@@ -64,7 +57,7 @@ export const clientApi = createApi({
       query: (body) => ({
         url: '/',
         method: 'DELETE',
-        body,
+        data: { ...body },
       }),
       invalidatesTags: [{ type: 'Client' }],
     }),

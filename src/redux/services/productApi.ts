@@ -27,7 +27,7 @@ export const productApi = createApi({
   tagTypes: ['Product'],
   endpoints: (build) => ({
     getProducts: build.query<Product[], void>({
-      query: () => ({ url: '/', method: 'get', withCredentials: true }),
+      query: () => ({ url: '/', method: 'GET', withCredentials: true }),
       providesTags: [{ type: 'Product' }],
     }),
     updateProduct: build.mutation<Product, FormData>({

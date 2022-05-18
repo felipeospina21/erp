@@ -1,6 +1,7 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
 import type { Client, DocumentId } from './clientApi';
 import type { Product } from './productApi';
+import { axiosBaseQuery } from './customBaseQuery';
 
 export interface OrderInfo {
   discount: number;
@@ -37,21 +38,13 @@ export interface NewSaleResponse extends SaleResponse, DocumentId {}
 
 export const saleApi = createApi({
   reducerPath: 'saleApi',
-  baseQuery: fetchBaseQuery({
+  baseQuery: axiosBaseQuery({
     baseUrl: `${process.env.NEXT_PUBLIC_API_URL}/sales`,
-    prepareHeaders: (headers) => {
-      const token = sessionStorage.getItem('authToken');
-      if (token) {
-        headers.set('authorization', `Bearer ${token}`);
-      }
-
-      return headers;
-    },
   }),
   tagTypes: ['Sale', 'Product'],
   endpoints: (build) => ({
     getSales: build.query<SaleResponse[], void>({
-      query: () => '/',
+      query: () => ({ url: '/', method: 'GET', withCredentials: true }),
       providesTags: [{ type: 'Sale' }],
     }),
     saveSale: build.mutation<NewSaleResponse, Partial<NewSale>>({
@@ -59,7 +52,7 @@ export const saleApi = createApi({
       query: (body) => ({
         url: '/',
         method: 'POST',
-        body,
+        data: { ...body },
       }),
       invalidatesTags: [{ type: 'Sale' }, { type: 'Product' }],
     }),

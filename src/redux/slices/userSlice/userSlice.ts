@@ -2,22 +2,25 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '@/redux/store';
 
 export interface UserState {
-  authToken: string;
+  isLoggedin: boolean;
+  email: string;
 }
-const initialState: UserState = {
-  authToken: '',
-};
+const initialState = {
+  isLoggedin: false,
+} as UserState;
 
 export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setToken: (state, action: PayloadAction<string>) => {
-      state.authToken = action.payload;
+    setUser: (state, action: PayloadAction<UserState>) => {
+      const { isLoggedin, email } = action.payload;
+      state.isLoggedin = isLoggedin;
+      state.email = email;
     },
   },
 });
 
-export const { setToken } = userSlice.actions;
+export const { setUser } = userSlice.actions;
 export const selectUser = (state: RootState): UserState => state.user;
 export default userSlice.reducer;
