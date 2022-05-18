@@ -1,6 +1,7 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
 import type { DocumentId } from './clientApi';
-
+import { axiosBaseQuery } from './customBaseQuery';
+// import { HYDRATE } from "next-redux-wrapper";
 export interface Product extends DocumentId {
   alias: string;
   name: string;
@@ -15,20 +16,25 @@ export interface UpdateStock extends DocumentId {
 
 export const productApi = createApi({
   reducerPath: 'productApi',
-  baseQuery: fetchBaseQuery({
+  baseQuery: axiosBaseQuery({
     baseUrl: `${process.env.NEXT_PUBLIC_API_URL}/products`,
   }),
+  // extractRehydrationInfo(action, { reducerPath }) {
+  //   if (action.type === HYDRATE) {
+  //     return action.payload[reducerPath];
+  //   }
+  // },
   tagTypes: ['Product'],
   endpoints: (build) => ({
     getProducts: build.query<Product[], void>({
-      query: () => '/',
+      query: () => ({ url: '/', method: 'get', withCredentials: true }),
       providesTags: [{ type: 'Product' }],
     }),
     updateProduct: build.mutation<Product, FormData>({
       query: (body) => ({
         url: '/',
         method: 'PUT',
-        body,
+        data: { ...body },
       }),
       invalidatesTags: [{ type: 'Product' }],
     }),
@@ -36,7 +42,7 @@ export const productApi = createApi({
       query: (body) => ({
         url: '/updateStock',
         method: 'PUT',
-        body,
+        data: { ...body },
       }),
       invalidatesTags: [{ type: 'Product' }],
     }),
@@ -44,7 +50,7 @@ export const productApi = createApi({
       query: (body) => ({
         url: '/',
         method: 'DELETE',
-        body,
+        data: { ...body },
       }),
       invalidatesTags: [{ type: 'Product' }],
     }),
@@ -52,7 +58,7 @@ export const productApi = createApi({
       query: (body) => ({
         url: '/',
         method: 'POST',
-        body,
+        data: { ...body },
       }),
       invalidatesTags: [{ type: 'Product' }],
     }),

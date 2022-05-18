@@ -1,14 +1,14 @@
 import { CardsContainer } from '@/components/Products';
 import { productsFields } from '@/components/Products/ProductForm/fields/productFields';
-import { CustomModal, CustomForm, CardSkeleton } from '@/components/Shared';
+import { CustomModal, CustomForm, CardSkeleton, Layout } from '@/components/Shared';
 import { useCreateProductMutation, useGetProductsQuery } from '@/redux/services';
 import { Flex, Skeleton } from '@chakra-ui/react';
-import { useState } from 'react';
+import { ReactElement, useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
 
-export default function ProductosPage(): JSX.Element {
+export default function ProductosPage(): ReactElement {
   const [displayModal, setDisplayModal] = useState(false);
-  const { data: products, isLoading: areProductsLoading } = useGetProductsQuery();
+  const { data: products, isLoading: areProductsLoading, isError, error } = useGetProductsQuery();
   const [createProduct] = useCreateProductMutation();
 
   function createNewProduct(data: any): void {
@@ -22,6 +22,10 @@ export default function ProductosPage(): JSX.Element {
 
     createProduct(newProduct);
     setDisplayModal(false);
+  }
+
+  if (isError) {
+    return <>{JSON.stringify(error)}</>;
   }
 
   if (areProductsLoading) {
@@ -57,3 +61,11 @@ export default function ProductosPage(): JSX.Element {
     </Flex>
   );
 }
+
+ProductosPage.getLayout = function getLayout(page: ReactElement): JSX.Element {
+  return <Layout>{page}</Layout>;
+};
+
+// export async function getServerSideProps() {
+//   useGetProductsQuery()
+// }

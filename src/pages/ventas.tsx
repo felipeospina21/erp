@@ -1,7 +1,8 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { ReactElement, useEffect, useMemo, useState } from 'react';
 import { SalesFooter, SalesHeader, TableContainer } from '@/components/Sales';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { updateSalesData } from '@/redux/slices/salesSlice';
+import { Layout } from '@/components/Shared';
 
 export interface RowData {
   id: number;
@@ -14,7 +15,7 @@ export interface RowData {
   productId: string;
 }
 
-const Ventas = (): JSX.Element => {
+const Ventas = (): ReactElement => {
   const initialRowSate: RowData = {
     id: 1,
     item: '',
@@ -118,3 +119,7 @@ const Ventas = (): JSX.Element => {
 };
 
 export default Ventas;
+
+Ventas.getLayout = function getLayout(page: ReactElement): JSX.Element {
+  return <Layout>{page}</Layout>;
+};

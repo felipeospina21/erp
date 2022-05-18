@@ -7,8 +7,6 @@ import {
   useGetProductsQuery,
   useUpdateProductMutation,
 } from '@/redux/services';
-import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
-import type { SerializedError } from '@reduxjs/toolkit';
 import { DeleteButton } from '@/components/Shared/IconButtons';
 import Image from 'next/image';
 import { CardSkeleton, ConfirmationAlert, CustomModal, CustomForm } from '@/components/Shared';
@@ -29,9 +27,7 @@ export function Card({ product, locale }: CardProps): JSX.Element {
   const [updateProduct, { isLoading: isUpdateLoading }] = useUpdateProductMutation();
   const { isFetching: areProductsFetching } = useGetProductsQuery();
 
-  async function handleDelete(): Promise<
-    { data: Product } | { error: FetchBaseQueryError | SerializedError }
-  > {
+  async function handleDelete(): Promise<{ data: Product } | { error: unknown }> {
     return await deleteProduct({ _id: product._id ?? '' });
   }
 
@@ -45,7 +41,6 @@ export function Card({ product, locale }: CardProps): JSX.Element {
     updatedProduct.append('stock', values.stock);
     updatedProduct.append('image', values.image[0]);
 
-    // const payload = { _id: product._id ?? '', update: updatedProduct };
     updateProduct(updatedProduct);
     setDisplayModal(false);
   }

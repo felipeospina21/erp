@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { Button } from '@chakra-ui/react';
+import { Layout } from '@/components/Shared';
 // import { createPdf } from "../utils/utils";
 // import { salesData } from "../mocks/salesData";
 
-const costos = (): JSX.Element => {
+const Costos = (): ReactElement => {
   function handleClick(): void {
     // createPdf(salesData);
     return;
@@ -18,4 +19,8 @@ const costos = (): JSX.Element => {
   );
 };
 
-export default costos;
+export default Costos;
+
+Costos.getLayout = function getLayout(page: ReactElement): JSX.Element {
+  return <Layout>{page}</Layout>;
+};
