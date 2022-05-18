@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { createWrapper } from 'next-redux-wrapper';
+// import { createWrapper } from 'next-redux-wrapper';
 import { clientApi, productApi, saleApi, userApi } from './services';
 import productsReducer from './slices/productsSlice';
 import clientsReducer from './slices/clientsSlice';
@@ -17,20 +17,29 @@ export const reducer = {
   [userApi.reducerPath]: userApi.reducer,
 };
 
-export const store = () =>
-  configureStore({
-    reducer,
-    middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(
-        clientApi.middleware,
-        productApi.middleware,
-        saleApi.middleware,
-        userApi.middleware
-      ),
-  });
+// export const store = () =>
+//   configureStore({
+//     reducer,
+//     middleware: (getDefaultMiddleware) =>
+//       getDefaultMiddleware().concat(
+//         clientApi.middleware,
+//         productApi.middleware,
+//         saleApi.middleware,
+//         userApi.middleware
+//       ),
+//   });
 
-export type AppStore = ReturnType<typeof store>;
-export type RootState = ReturnType<AppStore['getState']>;
-export type AppDispatch = AppStore['dispatch'];
+// export type AppStore = ReturnType<typeof store>;
+// export type RootState = ReturnType<AppStore['getState']>;
+// export type AppDispatch = AppStore['dispatch'];
 
-export const wrapper = createWrapper<AppStore>(store, { debug: true });
+// export const wrapper = createWrapper<AppStore>(store, { debug: true });
+
+export const store = configureStore({
+  reducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(clientApi.middleware, productApi.middleware, saleApi.middleware),
+});
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
