@@ -1,12 +1,12 @@
 import React, { ReactElement } from 'react';
 import { Button } from '@chakra-ui/react';
 import { Layout } from '@/components/Shared';
-// import { createPdf } from "../utils/utils";
-// import { salesData } from "../mocks/salesData";
+import { createPdf } from '../utils/utils';
+import { salesData } from '../mocks/salesData';
 
 const Costos = (): ReactElement => {
   function handleClick(): void {
-    // createPdf(salesData);
+    createPdf(salesData);
     return;
   }
 

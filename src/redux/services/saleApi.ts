@@ -23,6 +23,8 @@ export interface OrderedProduct extends OrderInfo {
 
 export interface NewSaleOrderedProduct extends OrderInfo {
   item: string;
+  price?: number;
+  name?: string;
 }
 
 export interface NewSale extends SaleInfo {

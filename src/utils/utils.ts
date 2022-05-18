@@ -1,9 +1,13 @@
 import { PDFDocument, StandardFonts, grayscale } from 'pdf-lib';
 import download from 'downloadjs';
-import { SaleResponse } from '../redux/services';
+import { Client, NewSaleOrderedProduct, SaleInfo } from '../redux/services';
 import { numberToCurrency, formatDate } from './';
 
-export async function createPdf(data: SaleResponse): Promise<void> {
+export interface CreatePdfData extends SaleInfo {
+  clientInfo: Client;
+  orderedProducts: Array<NewSaleOrderedProduct>;
+}
+export async function createPdf(data: CreatePdfData): Promise<void> {
   // const snapshot = await getDocs(collection(db, "invoiceCount"));
   // const invoiceCountArr = snapshot.docs.map(doc => doc.data());
   // const invoiceCount = invoiceCountArr[0].count;
@@ -112,10 +116,11 @@ export async function createPdf(data: SaleResponse): Promise<void> {
     addTableHeader();
     const props = { ...fontStyles, y: height - newLineY };
     orderedProducts.forEach((product) => {
-      const discountedPrice = product.item.price - product.item.price * product.discount;
+      const price = product.price ?? 0;
+      const discountedPrice = price - price * product.discount;
       newLineY += lineHeight;
       props.y = height - newLineY;
-      page.drawText(product.item.name, {
+      page.drawText(product.name ?? '', {
         ...props,
         x: tablePositionX.col1,
       });
