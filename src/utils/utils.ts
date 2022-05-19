@@ -7,7 +7,7 @@ export interface CreatePdfData extends SaleInfo {
   clientInfo: Client;
   orderedProducts: Array<NewSaleOrderedProduct>;
 }
-export async function createPdf(data: CreatePdfData): Promise<void> {
+export async function createPdf(data: CreatePdfData, invoice?: number): Promise<void> {
   // const snapshot = await getDocs(collection(db, "invoiceCount"));
   // const invoiceCountArr = snapshot.docs.map(doc => doc.data());
   // const invoiceCount = invoiceCountArr[0].count;
@@ -46,8 +46,8 @@ export async function createPdf(data: CreatePdfData): Promise<void> {
     dueDate.setDate(invoiceDate.getDate() + 30);
     const formatedInvoiceDate = formatDate(invoiceDate, 'es');
     const formatedDueDate = formatDate(dueDate, 'es');
-    // page.drawText(`Cuenta de cobro N° ${invoiceCount}`, {
-    page.drawText(`Cuenta de cobro N° ${0}`, {
+    page.drawText(`Cuenta de cobro N° ${invoice}`, {
+      // page.drawText(`Cuenta de cobro N° ${0}`, {
       ...fontStyles,
       x: rightColX,
       y: height - 20,

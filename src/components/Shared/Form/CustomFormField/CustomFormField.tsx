@@ -4,26 +4,37 @@ import { FormControl, FormLabel, FormHelperText, FormErrorMessage } from '@chakr
 export interface CustomFormFieldProps {
   children: JSX.Element | JSX.Element[];
   isError?: boolean;
+  isRequired?: boolean;
   errorMessage?: string;
   helperText?: string;
   id: string;
   label: string;
+  variant?: 'floating';
 }
 
 export function CustomFormField({
   children,
   isError,
+  isRequired,
   errorMessage,
   helperText,
   id,
   label,
+  variant,
 }: CustomFormFieldProps): JSX.Element {
   return (
-    <FormControl isInvalid={isError} id={id} mt="1rem">
-      <FormLabel htmlFor={id}>{label}</FormLabel>
+    <FormControl
+      variant={variant}
+      isInvalid={isError}
+      isRequired={isRequired}
+      id={id}
+      mt="1rem"
+      bgColor="inherit"
+    >
       {children}
       {isError && <FormErrorMessage>{errorMessage}</FormErrorMessage>}
       {helperText && <FormHelperText>{helperText}</FormHelperText>}
+      <FormLabel htmlFor={id}>{label}</FormLabel>
     </FormControl>
   );
 }

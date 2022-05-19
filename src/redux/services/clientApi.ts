@@ -30,11 +30,11 @@ export const clientApi = createApi({
   tagTypes: ['Client'],
   endpoints: (build) => ({
     getClients: build.query<Client[], void>({
-      query: () => ({ url: '/', method: 'GET', withCredentials: true }),
+      query: () => ({ url: '/', method: 'GET' }),
       providesTags: [{ type: 'Client' }],
     }),
     getClientById: build.query<Client[], string>({
-      query: (id) => ({ url: `/${id}`, method: 'GET', withCredentials: true }),
+      query: (id) => ({ url: `/${id}`, method: 'GET' }),
       providesTags: [{ type: 'Client' }],
     }),
     createClient: build.mutation<Client, Client>({

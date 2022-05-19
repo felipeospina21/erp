@@ -35,7 +35,7 @@ export default function Login(): JSX.Element {
           Login
         </Heading>
 
-        <Container marginTop="10rem">
+        <Container marginTop="10rem" bgColor="var(--bgColor-light)">
           <CustomForm
             onSubmit={loginUser}
             isLoading={isLoading}

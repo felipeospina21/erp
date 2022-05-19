@@ -27,21 +27,22 @@ export const productApi = createApi({
   tagTypes: ['Product'],
   endpoints: (build) => ({
     getProducts: build.query<Product[], void>({
-      query: () => ({ url: '/', method: 'GET', withCredentials: true }),
+      query: () => ({ url: '/', method: 'GET' }),
       providesTags: [{ type: 'Product' }],
     }),
     updateProduct: build.mutation<Product, FormData>({
       query: (body) => ({
         url: '/',
-        method: 'PUT',
-        data: { ...body },
+        method: 'put',
+        headers: { 'Content-Type': 'multipart/form-data' },
+        data: body,
       }),
       invalidatesTags: [{ type: 'Product' }],
     }),
     updateProductStock: build.mutation<Product, UpdateStock>({
       query: (body) => ({
         url: '/updateStock',
-        method: 'PUT',
+        method: 'put',
         data: { ...body },
       }),
       invalidatesTags: [{ type: 'Product' }],
@@ -58,7 +59,8 @@ export const productApi = createApi({
       query: (body) => ({
         url: '/',
         method: 'POST',
-        data: { ...body },
+        headers: { 'Content-Type': 'multipart/form-data' },
+        data: body,
       }),
       invalidatesTags: [{ type: 'Product' }],
     }),

@@ -1,7 +1,7 @@
 import { CustomFormField, ControlledInput } from '@/components/Shared';
 import { Client, Product, UpdateClient, UpdateClientValues } from '@/redux/services';
 import { UserBody } from '@/redux/services/userApi';
-import { Button, Container, Input } from '@chakra-ui/react';
+import { Button, Container } from '@chakra-ui/react';
 import { nanoid } from '@reduxjs/toolkit';
 import { useForm, SubmitHandler } from 'react-hook-form';
 
@@ -41,8 +41,8 @@ export function CustomForm({
   fields,
   onSubmit,
   inputSize = 'lg',
-  controlled = false,
-}: ClientsFormProps): JSX.Element {
+}: // controlled = false,
+ClientsFormProps): JSX.Element {
   const {
     register,
     handleSubmit,
@@ -50,17 +50,31 @@ export function CustomForm({
   } = useForm<FormValues>();
 
   return (
-    <Container>
-      <form onSubmit={handleSubmit(onSubmit)}>
+    <Container bgColor="inherit">
+      <form onSubmit={handleSubmit(onSubmit)} style={{ backgroundColor: 'inherit' }}>
         {fields.map((field) => (
           <CustomFormField
             key={nanoid()}
             id={field.name}
             label={field.label}
             isError={!!errors?.[field.name as keyof FormValues]}
+            isRequired={field.required}
             errorMessage="This field is required"
+            variant={'floating'}
           >
-            {controlled ? (
+            <ControlledInput
+              register={register}
+              name={field.name}
+              required={field.required}
+              type={field.type}
+              value={
+                data?.[field.name as keyof FormValues]
+                  ? String(data?.[field.name as keyof FormValues])
+                  : undefined
+              }
+              size={inputSize}
+            />
+            {/* {controlled ? (
               <ControlledInput
                 register={register}
                 name={field.name}
@@ -76,7 +90,7 @@ export function CustomForm({
                 variant={field.type === 'file' ? 'flushed' : 'outline'}
                 size={inputSize}
               />
-            )}
+            )} */}
           </CustomFormField>
         ))}
         <Button mt={4} colorScheme="teal" isLoading={isLoading} type="submit">

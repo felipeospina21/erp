@@ -19,6 +19,8 @@ export interface CardProps {
   locale?: string;
 }
 
+// BUG: Check edit product bug, related with custom form changes
+
 export function Card({ product, locale }: CardProps): JSX.Element {
   const [displayModal, setDisplayModal] = useState(false);
   const [displayAlert, setDisplayAlert] = useState(false);

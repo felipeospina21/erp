@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar, Flex, Menu, MenuList, MenuButton, MenuItem, Button } from '@chakra-ui/react';
+import { Avatar, Flex, Menu, MenuList, MenuItem, Button } from '@chakra-ui/react';
 import { DownArrow } from '@/assets/icons';
 import { UserData } from '@/redux/services';
 
@@ -17,8 +17,8 @@ export default function UserMenu({
     <Flex align="center" justify="space-between" wrap="wrap" w="12rem" p="0 0.5rem">
       <Avatar size="sm" name={`${firstName} ${lastName}`} src={image} />
       <Menu>
-        <MenuButton
-          as={Button}
+        <Button
+          id="user-menu-btn"
           rightIcon={<DownArrow />}
           variant="ghost"
           p="0 0.3rem"
@@ -28,7 +28,7 @@ export default function UserMenu({
           _active={{ backgroundColor: 'none' }}
         >
           {email}
-        </MenuButton>
+        </Button>
         <MenuList>
           <MenuItem onClick={handleLogout}>Logout</MenuItem>
         </MenuList>

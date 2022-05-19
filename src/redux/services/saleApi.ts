@@ -28,7 +28,7 @@ export interface NewSaleOrderedProduct extends OrderInfo {
 }
 
 export interface NewSale extends SaleInfo {
-  clientInfo: string;
+  clientId: string;
   orderedProducts: NewSaleOrderedProduct[];
 }
 export interface SaleResponse extends SaleInfo {
@@ -53,7 +53,8 @@ export const saleApi = createApi({
       // TODO: Check body type, not to be partial but required
       query: (body) => ({
         url: '/',
-        method: 'POST',
+        method: 'post',
+        withCredentials: true,
         data: { ...body },
       }),
       invalidatesTags: [{ type: 'Sale' }, { type: 'Product' }],

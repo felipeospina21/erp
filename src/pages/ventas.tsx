@@ -3,6 +3,7 @@ import { SalesFooter, SalesHeader, TableContainer } from '@/components/Sales';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { updateSalesData } from '@/redux/slices/salesSlice';
 import { Layout } from '@/components/Shared';
+import { Divider } from '@chakra-ui/react';
 
 export interface RowData {
   id: number;
@@ -58,6 +59,10 @@ const Ventas = (): ReactElement => {
         title: 'Total',
         id: 'total',
       },
+      {
+        title: '',
+        id: 'action',
+      },
     ],
     []
   );
@@ -99,7 +104,7 @@ const Ventas = (): ReactElement => {
   return (
     <>
       <SalesHeader />
-
+      <Divider w="90%" m="auto" />
       <TableContainer
         header={header}
         rowsData={rowsData}
