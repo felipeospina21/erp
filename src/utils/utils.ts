@@ -1,13 +1,13 @@
 import { PDFDocument, StandardFonts, grayscale } from 'pdf-lib';
 import download from 'downloadjs';
-import { SaleResponse } from '../redux/services';
+import { Client, NewSaleOrderedProduct, SaleInfo } from '../redux/services';
 import { numberToCurrency, formatDate } from './';
 
-export async function createPdf(data: SaleResponse): Promise<void> {
-  // const snapshot = await getDocs(collection(db, "invoiceCount"));
-  // const invoiceCountArr = snapshot.docs.map(doc => doc.data());
-  // const invoiceCount = invoiceCountArr[0].count;
-
+export interface CreatePdfData extends SaleInfo {
+  clientInfo: Client;
+  orderedProducts: Array<NewSaleOrderedProduct>;
+}
+export async function createPdf(data: CreatePdfData, invoice?: number): Promise<void> {
   const pdfDoc = await PDFDocument.create();
   const page = pdfDoc.addPage();
   const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
@@ -42,8 +42,7 @@ export async function createPdf(data: SaleResponse): Promise<void> {
     dueDate.setDate(invoiceDate.getDate() + 30);
     const formatedInvoiceDate = formatDate(invoiceDate, 'es');
     const formatedDueDate = formatDate(dueDate, 'es');
-    // page.drawText(`Cuenta de cobro N° ${invoiceCount}`, {
-    page.drawText(`Cuenta de cobro N° ${0}`, {
+    page.drawText(`Cuenta de cobro N° ${invoice}`, {
       ...fontStyles,
       x: rightColX,
       y: height - 20,
@@ -112,10 +111,11 @@ export async function createPdf(data: SaleResponse): Promise<void> {
     addTableHeader();
     const props = { ...fontStyles, y: height - newLineY };
     orderedProducts.forEach((product) => {
-      const discountedPrice = product.item.price - product.item.price * product.discount;
+      const price = product.price ?? 0;
+      const discountedPrice = price - price * product.discount;
       newLineY += lineHeight;
       props.y = height - newLineY;
-      page.drawText(product.item.name, {
+      page.drawText(product.name ?? '', {
         ...props,
         x: tablePositionX.col1,
       });

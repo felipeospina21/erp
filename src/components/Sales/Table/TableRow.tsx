@@ -82,6 +82,8 @@ export function TableRow({
         discount: row.discount,
         quantity: row.quantity,
         subtotal: row.subtotal,
+        price: row.price,
+        name: row.item,
       };
       orderedProducts = [...orderedProducts, orderedProduct];
     });
@@ -98,7 +100,6 @@ export function TableRow({
           onChangeFn={handleSelectChange}
           size="sm"
           borderRadius="md"
-          fontSize={['sm', 'md']}
           options={products?.map((prod) => ({ id: prod._id, name: prod.name }))}
         />
       </Td>
@@ -106,10 +107,20 @@ export function TableRow({
       <TableCellBody>{rowData.stock.toLocaleString()}</TableCellBody>
       <TableCellBody>{numberToCurrency(rowData.price)}</TableCellBody>
       <TableCellBody>
-        <InputCell id="quantity" handleInputChange={handleInputChange} textAlign="center" />
+        <InputCell
+          id="quantity"
+          handleInputChange={handleInputChange}
+          textAlign="center"
+          variant="outline"
+        />
       </TableCellBody>
       <TableCellBody>
-        <InputCell id="discount" handleInputChange={handleInputChange} textAlign="center" />
+        <InputCell
+          id="discount"
+          handleInputChange={handleInputChange}
+          textAlign="center"
+          variant="outline"
+        />
       </TableCellBody>
       <TableCellBody>{numberToCurrency(rowData.subtotal)}</TableCellBody>
       <TableCellBody>

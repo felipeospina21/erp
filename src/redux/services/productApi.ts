@@ -1,39 +1,49 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
 import type { DocumentId } from './clientApi';
-
+import { axiosBaseQuery } from './customBaseQuery';
+// import { HYDRATE } from "next-redux-wrapper";
 export interface Product extends DocumentId {
   alias: string;
   name: string;
   price: number;
   stock: number;
-  subtotal?: number;
+  image?: string;
 }
 
-export interface UpdateProduct extends DocumentId {
-  update: {
-    alias?: string;
-    name?: string;
-    price?: number;
-    stock?: number;
-  };
+export interface UpdateStock extends DocumentId {
+  stock: number;
 }
 
 export const productApi = createApi({
   reducerPath: 'productApi',
-  baseQuery: fetchBaseQuery({
+  baseQuery: axiosBaseQuery({
     baseUrl: `${process.env.NEXT_PUBLIC_API_URL}/products`,
   }),
+  // extractRehydrationInfo(action, { reducerPath }) {
+  //   if (action.type === HYDRATE) {
+  //     return action.payload[reducerPath];
+  //   }
+  // },
   tagTypes: ['Product'],
   endpoints: (build) => ({
     getProducts: build.query<Product[], void>({
-      query: () => '/',
+      query: () => ({ url: '/', method: 'GET' }),
       providesTags: [{ type: 'Product' }],
     }),
-    updateProduct: build.mutation<Product, UpdateProduct>({
+    updateProduct: build.mutation<Product, FormData>({
       query: (body) => ({
         url: '/',
-        method: 'PUT',
-        body,
+        method: 'put',
+        headers: { 'Content-Type': 'multipart/form-data' },
+        data: body,
+      }),
+      invalidatesTags: [{ type: 'Product' }],
+    }),
+    updateProductStock: build.mutation<Product, UpdateStock>({
+      query: (body) => ({
+        url: '/updateStock',
+        method: 'put',
+        data: { ...body },
       }),
       invalidatesTags: [{ type: 'Product' }],
     }),
@@ -41,12 +51,26 @@ export const productApi = createApi({
       query: (body) => ({
         url: '/',
         method: 'DELETE',
-        body,
+        data: { ...body },
+      }),
+      invalidatesTags: [{ type: 'Product' }],
+    }),
+    createProduct: build.mutation<Product, FormData>({
+      query: (body) => ({
+        url: '/',
+        method: 'POST',
+        headers: { 'Content-Type': 'multipart/form-data' },
+        data: body,
       }),
       invalidatesTags: [{ type: 'Product' }],
     }),
   }),
 });
 
-export const { useGetProductsQuery, useUpdateProductMutation, useDeleteProductMutation } =
-  productApi;
+export const {
+  useGetProductsQuery,
+  useUpdateProductMutation,
+  useUpdateProductStockMutation,
+  useDeleteProductMutation,
+  useCreateProductMutation,
+} = productApi;

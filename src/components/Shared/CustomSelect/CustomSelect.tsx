@@ -3,6 +3,7 @@ import { Select } from '@chakra-ui/react';
 
 export interface CustomSelectProps {
   borderRadius?: string;
+  borderColor?: string;
   fontSize?: string | string[];
   id?: string;
   margin?: string;
@@ -17,6 +18,7 @@ export interface CustomSelectProps {
 
 export function CustomSelect({
   borderRadius,
+  borderColor,
   fontSize,
   id,
   name,
@@ -31,6 +33,7 @@ export function CustomSelect({
   return (
     <Select
       borderRadius={borderRadius ?? 'md'}
+      borderColor={borderColor ?? 'brand.grey.100'}
       name={name ?? placeholder}
       placeholder={placeholder}
       size={size}

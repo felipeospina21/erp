@@ -21,7 +21,7 @@ export function ControlledInput({
   size = 'lg',
   value: passedValue,
 }: ControlledInputProps): JSX.Element {
-  const [value, setValue] = useState(passedValue ?? '');
+  const [value, setValue] = useState(passedValue ?? undefined);
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => setValue(event.target.value);
 
   return (
@@ -34,6 +34,7 @@ export function ControlledInput({
         placeholder={placeholder ?? ''}
         size={size}
         variant={type === 'file' ? 'flushed' : 'outline'}
+        className={value || type === 'file' ? 'valid' : undefined}
       />
     </>
   );

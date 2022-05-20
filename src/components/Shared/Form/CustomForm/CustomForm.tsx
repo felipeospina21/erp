@@ -1,5 +1,6 @@
 import { CustomFormField, ControlledInput } from '@/components/Shared';
-import { Client, Product, UpdateClient, UpdateClientValues, UpdateProduct } from '@/redux/services';
+import { Client, Product, UpdateClient, UpdateClientValues } from '@/redux/services';
+import { UserBody } from '@/redux/services/userApi';
 import { Button, Container, Input } from '@chakra-ui/react';
 import { nanoid } from '@reduxjs/toolkit';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -10,10 +11,11 @@ export interface ClientFormValues extends Omit<Client, 'discount'> {
 
 export type FormValues =
   | ClientFormValues
-  | Product
+  | Omit<Product, 'image'>
   | UpdateClient
-  | UpdateProduct
-  | UpdateClientValues;
+  | FormData
+  | UpdateClientValues
+  | UserBody;
 
 export interface Fields {
   name: string;
@@ -48,15 +50,17 @@ export function CustomForm({
   } = useForm<FormValues>();
 
   return (
-    <Container>
-      <form onSubmit={handleSubmit(onSubmit)}>
+    <Container bgColor="inherit">
+      <form onSubmit={handleSubmit(onSubmit)} style={{ backgroundColor: 'inherit' }}>
         {fields.map((field) => (
           <CustomFormField
             key={nanoid()}
             id={field.name}
             label={field.label}
             isError={!!errors?.[field.name as keyof FormValues]}
+            isRequired={field.required}
             errorMessage="This field is required"
+            variant={'floating'}
           >
             {controlled ? (
               <ControlledInput
@@ -64,7 +68,7 @@ export function CustomForm({
                 name={field.name}
                 required={field.required}
                 type={field.type}
-                value={String(data?.[field.name as keyof FormValues])}
+                value={field.type !== 'file' ? String(data?.[field.name as keyof FormValues]) : ''}
                 size={inputSize}
               />
             ) : (

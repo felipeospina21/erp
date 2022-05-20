@@ -65,7 +65,7 @@ export function CustomModal({
         <ModalContent py="2rem">
           <ModalHeader py="0">{title}</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>{children}</ModalBody>
+          <ModalBody bgColor="white">{children}</ModalBody>
         </ModalContent>
       </Modal>
     </>

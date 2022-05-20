@@ -1,19 +1,38 @@
 import { clientFields, ClientRow } from '@/components/Clients';
-import { CustomModal, CustomTable, ClientFormValues, CustomForm } from '@/components/Shared';
+import {
+  CustomModal,
+  CustomTable,
+  ClientFormValues,
+  CustomForm,
+  Layout,
+} from '@/components/Shared';
 import { useCreateClientMutation, useGetClientsQuery } from '@/redux/services';
 import { Th } from '@chakra-ui/react';
-import { useState } from 'react';
+import { ReactElement, useState, useEffect } from 'react';
 import { FaPlus } from 'react-icons/fa';
+import { IsAuth } from '../utils';
+import { useRouter } from 'next/router';
 
-const Clientes = (): JSX.Element => {
+export default function ClientesPage({ isAuth }: IsAuth): ReactElement {
   const [displayModal, setDisplayModal] = useState(false);
   const { data: clients } = useGetClientsQuery();
   const [createClient, { isLoading }] = useCreateClientMutation();
+  const router = useRouter();
 
   function onSubmit(data: ClientFormValues): void {
     const transformedData = { ...data, discount: Number(data.discount) };
     createClient(transformedData);
     setDisplayModal(false);
+  }
+
+  useEffect(() => {
+    if (!isAuth) {
+      router.push('/login');
+    }
+  }, [isAuth, router]);
+
+  if (!isAuth) {
+    return <>Not authorized</>;
   }
 
   return (
@@ -43,6 +62,20 @@ const Clientes = (): JSX.Element => {
       </CustomModal>
     </>
   );
+}
+
+ClientesPage.getLayout = function getLayout(page: ReactElement): JSX.Element {
+  return <Layout>{page}</Layout>;
 };
 
-export default Clientes;
+ClientesPage.getInitialProps = async () => {
+  if (typeof window !== 'undefined') {
+    const isAuth = sessionStorage.getItem('isAuth');
+    if (isAuth) {
+      return { isAuth: true };
+    } else {
+      return { isAuth: false };
+    }
+  }
+  return {};
+};

@@ -62,7 +62,7 @@ export function TableContainer({
         borderRadius="xl"
         p="2rem 0.5rem"
       >
-        <Table variant="simple" maxW="1300px" m={['auto']}>
+        <Table variant="simple" maxW="1300px" m={['auto']} colorScheme="blackAlpha">
           <Thead fontSize={['sm', 'md']}>
             <Tr>
               {header.map(({ title, id }) => {
@@ -70,7 +70,7 @@ export function TableContainer({
               })}
             </Tr>
           </Thead>
-          <Tbody fontSize={['sm', 'md']}>
+          <Tbody fontSize={['xs', 'sm']}>
             {rowsData.map((row) => {
               return (
                 <TableRow

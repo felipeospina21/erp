@@ -1,7 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react';
 import { SalesFooter, SalesHeader, TableContainer } from '@/components/Sales';
+import { Layout } from '@/components/Shared';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { updateSalesData } from '@/redux/slices/salesSlice';
+import { Divider } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
+import React, { ReactElement, useEffect, useMemo, useState } from 'react';
+import { IsAuth } from '../utils';
 
 export interface RowData {
   id: number;
@@ -14,7 +18,7 @@ export interface RowData {
   productId: string;
 }
 
-const Ventas = (): JSX.Element => {
+export default function VentasPage({ isAuth }: IsAuth): ReactElement {
   const initialRowSate: RowData = {
     id: 1,
     item: '',
@@ -28,8 +32,8 @@ const Ventas = (): JSX.Element => {
   const [rowsData, setRowsData] = useState<RowData[]>([initialRowSate]);
   const [isSalesBtnDisabled, setSalesBtnDisabled] = useState(true);
   const salesData = useAppSelector((state) => state.sales);
-  // const { data: client } = useGetClientByIdQuery(sales);
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const header = useMemo(
     () => [
@@ -57,9 +61,19 @@ const Ventas = (): JSX.Element => {
         title: 'Total',
         id: 'total',
       },
+      {
+        title: '',
+        id: 'action',
+      },
     ],
     []
   );
+
+  useEffect(() => {
+    if (!isAuth) {
+      router.push('/login');
+    }
+  }, [isAuth, router]);
 
   useEffect(() => {
     const filteredRows = rowsData.filter(
@@ -95,10 +109,14 @@ const Ventas = (): JSX.Element => {
     );
   }, [salesData.newSaleData.subtotal, salesData.newSaleData.tax, dispatch]);
 
+  if (!isAuth) {
+    return <>Not authorized</>;
+  }
+
   return (
     <>
       <SalesHeader />
-
+      <Divider w="90%" m="auto" />
       <TableContainer
         header={header}
         rowsData={rowsData}
@@ -115,6 +133,20 @@ const Ventas = (): JSX.Element => {
       />
     </>
   );
+}
+
+VentasPage.getLayout = function getLayout(page: ReactElement): JSX.Element {
+  return <Layout>{page}</Layout>;
 };
 
-export default Ventas;
+VentasPage.getInitialProps = async () => {
+  if (typeof window !== 'undefined') {
+    const isAuth = sessionStorage.getItem('isAuth');
+    if (isAuth) {
+      return { isAuth: true };
+    } else {
+      return { isAuth: false };
+    }
+  }
+  return {};
+};
