@@ -1,6 +1,6 @@
 import {
-  Box,
   Button,
+  Flex,
   Icon,
   Table,
   TableContainer as TableWrapper,
@@ -13,6 +13,7 @@ import { TableCellHeader, TableRow } from './';
 import { RowData } from '@/pages/ventas';
 
 export interface TableContainerProps {
+  pageMaxW: string;
   header: {
     title: string;
     id: string;
@@ -24,6 +25,7 @@ export interface TableContainerProps {
 }
 
 export function TableContainer({
+  pageMaxW,
   header,
   rowsData,
   setRowsData,
@@ -55,14 +57,17 @@ export function TableContainer({
   };
 
   return (
-    <Box overflow="auto" mb="1rem">
+    <Flex flexDir="column" align="flex-start" m="auto" maxW={pageMaxW} overflow="auto" mb="1rem">
       <TableWrapper
         border="1px solid"
         borderColor="brand.grey.50"
         borderRadius="xl"
         p="2rem 0.5rem"
+        w="100%"
+        display="flex"
+        justifyContent="center"
       >
-        <Table variant="simple" maxW="1300px" m={['auto']} colorScheme="blackAlpha">
+        <Table variant="simple" w="90%" m={['auto']} colorScheme="blackAlpha">
           <Thead fontSize={['sm', 'md']}>
             <Tr>
               {header.map(({ title, id }) => {
@@ -91,11 +96,12 @@ export function TableContainer({
         color="brand.green.600"
         size="sm"
         my="1rem"
+        ml={[null, '1rem', '2rem', '4rem']}
         leftIcon={<Icon as={FaPlusCircle} />}
         onClick={addRow}
       >
         Row
       </Button>
-    </Box>
+    </Flex>
   );
 }

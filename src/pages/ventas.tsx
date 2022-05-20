@@ -115,9 +115,10 @@ export default function VentasPage({ isAuth }: IsAuth): ReactElement {
 
   return (
     <>
-      <SalesHeader />
+      <SalesHeader pageMaxW={'var(--maxPageWitdth)'} />
       <Divider w="90%" m="auto" />
       <TableContainer
+        pageMaxW={'var(--maxPageWitdth)'}
         header={header}
         rowsData={rowsData}
         setRowsData={setRowsData}
@@ -126,6 +127,7 @@ export default function VentasPage({ isAuth }: IsAuth): ReactElement {
       />
 
       <SalesFooter
+        pageMaxW={'var(--maxPageWitdth)'}
         initialRowSate={initialRowSate}
         isSalesBtnDisabled={isSalesBtnDisabled}
         rowsData={rowsData}

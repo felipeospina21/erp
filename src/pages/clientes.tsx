@@ -7,7 +7,7 @@ import {
   Layout,
 } from '@/components/Shared';
 import { useCreateClientMutation, useGetClientsQuery } from '@/redux/services';
-import { Th } from '@chakra-ui/react';
+import { Box, Th } from '@chakra-ui/react';
 import { ReactElement, useState, useEffect } from 'react';
 import { FaPlus } from 'react-icons/fa';
 import { IsAuth } from '../utils';
@@ -36,7 +36,7 @@ export default function ClientesPage({ isAuth }: IsAuth): ReactElement {
   }
 
   return (
-    <>
+    <Box maxW="var(--maxPageWitdth)" m="auto">
       <CustomTable
         Headers={clientFields.map((header) => {
           return <Th key={header.name}>{header.label}</Th>;
@@ -60,7 +60,7 @@ export default function ClientesPage({ isAuth }: IsAuth): ReactElement {
           fields={clientFields}
         />
       </CustomModal>
-    </>
+    </Box>
   );
 }
 
