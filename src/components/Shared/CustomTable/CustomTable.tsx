@@ -23,7 +23,7 @@ export function CustomTable({
       borderRadius="xl"
       p="2rem"
     >
-      <Table variant={variant} maxW="1900px" m={['auto']} size={size}>
+      <Table variant={variant} m={['auto']} size={size}>
         <Thead fontSize={['sm', 'md']}>
           <Tr>{Headers}</Tr>
         </Thead>
