@@ -10,10 +10,9 @@ export function NavLinks({ onClose }: NavLinksProps): JSX.Element {
   return (
     <List spacing={3}>
       <StyledLink href="/" text="Home" onClose={onClose} />
-      <StyledLink href="/ventas" text="Ventas" onClose={onClose} />
       <StyledLink href="/clientes" text="Clientes" onClose={onClose} />
-      <StyledLink href="/costos" text="Costos" onClose={onClose} />
       <StyledLink href="/productos" text="Productos" onClose={onClose} />
+      <StyledLink href="/ventas" text="Ventas" onClose={onClose} />
     </List>
   );
 }

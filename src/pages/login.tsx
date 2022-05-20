@@ -6,25 +6,28 @@ import { CustomForm, Layout } from '@/components/Shared';
 import { useLoginMutation, UserBody } from '@/redux/services/userApi';
 import { loginFields } from '@/components/Login';
 import { useRouter } from 'next/router';
+import { setUser } from '@/redux/slices/userSlice';
+import { useAppDispatch } from '@/redux/hooks';
 
 export interface LoginProps {
   token: string;
 }
 export default function Login(): JSX.Element {
-  const [login, { isLoading, isSuccess, error }] = useLoginMutation();
+  const [login, { data, isLoading, isSuccess, error }] = useLoginMutation();
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   function loginUser(data: UserBody): void {
     login(data);
   }
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && data?.user) {
       router.push('/');
-    } else {
-      console.log(error);
+      sessionStorage.setItem('isAuth', 'true');
+      dispatch(setUser(data?.user));
     }
-  }, [isSuccess, error, router]);
+  }, [isSuccess, error, router, dispatch, data?.user]);
 
   return (
     <Grid templateColumns="repeat(2, 1fr)" gap={6} alignItems="flex-start">
@@ -33,7 +36,7 @@ export default function Login(): JSX.Element {
           Login
         </Heading>
 
-        <Container marginTop="10rem">
+        <Container marginTop="10rem" bgColor="var(--bgColor-light)">
           <CustomForm
             onSubmit={loginUser}
             isLoading={isLoading}

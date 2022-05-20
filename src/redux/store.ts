@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 // import { createWrapper } from 'next-redux-wrapper';
-import { clientApi, productApi, saleApi, userApi } from './services';
+import { clientApi, productApi, saleApi, userApi, invoiceApi } from './services';
 import productsReducer from './slices/productsSlice';
 import clientsReducer from './slices/clientsSlice';
 import salesReducer from './slices/salesSlice';
@@ -15,6 +15,7 @@ export const reducer = {
   [productApi.reducerPath]: productApi.reducer,
   [saleApi.reducerPath]: saleApi.reducer,
   [userApi.reducerPath]: userApi.reducer,
+  [invoiceApi.reducerPath]: invoiceApi.reducer,
 };
 
 // export const store = () =>
@@ -38,7 +39,13 @@ export const reducer = {
 export const store = configureStore({
   reducer,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(clientApi.middleware, productApi.middleware, saleApi.middleware),
+    getDefaultMiddleware().concat(
+      clientApi.middleware,
+      productApi.middleware,
+      saleApi.middleware,
+      userApi.middleware,
+      invoiceApi.middleware
+    ),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

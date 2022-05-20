@@ -11,13 +11,23 @@ export const axiosBaseQuery =
       data?: AxiosRequestConfig['data'];
       params?: AxiosRequestConfig['params'];
       withCredentials?: AxiosRequestConfig['withCredentials'];
+      proxy?: AxiosRequestConfig['proxy'];
+      headers?: AxiosRequestConfig['headers'];
     },
     unknown,
     unknown
   > =>
-  async ({ url, method, data, params, withCredentials }) => {
+  async ({ url, method, data, params, proxy, headers, withCredentials = true }) => {
     try {
-      const result = await axios({ url: baseUrl + url, method, data, params, withCredentials });
+      const result = await axios({
+        url: baseUrl + url,
+        method,
+        data,
+        params,
+        withCredentials,
+        proxy,
+        headers,
+      });
       return { data: result.data };
     } catch (axiosError) {
       const err = axiosError as AxiosError;

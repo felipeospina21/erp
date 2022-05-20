@@ -1,15 +1,18 @@
 import { CardsContainer } from '@/components/Products';
 import { productsFields } from '@/components/Products/ProductForm/fields/productFields';
-import { CustomModal, CustomForm, CardSkeleton, Layout } from '@/components/Shared';
+import { CardSkeleton, CustomForm, CustomModal, Layout } from '@/components/Shared';
 import { useCreateProductMutation, useGetProductsQuery } from '@/redux/services';
+import { IsAuth } from '@/utils/auth';
 import { Flex, Skeleton } from '@chakra-ui/react';
-import { ReactElement, useState } from 'react';
+import { useRouter } from 'next/router';
+import { ReactElement, useEffect, useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
 
-export default function ProductosPage(): ReactElement {
+export default function ProductosPage({ isAuth }: IsAuth): ReactElement {
   const [displayModal, setDisplayModal] = useState(false);
   const { data: products, isLoading: areProductsLoading, isError, error } = useGetProductsQuery();
   const [createProduct] = useCreateProductMutation();
+  const router = useRouter();
 
   function createNewProduct(data: any): void {
     const newProduct = new FormData();
@@ -22,6 +25,16 @@ export default function ProductosPage(): ReactElement {
 
     createProduct(newProduct);
     setDisplayModal(false);
+  }
+
+  useEffect(() => {
+    if (!isAuth) {
+      router.push('/login');
+    }
+  }, [isAuth, router]);
+
+  if (!isAuth) {
+    return <>Not authorized</>;
   }
 
   if (isError) {
@@ -66,6 +79,14 @@ ProductosPage.getLayout = function getLayout(page: ReactElement): JSX.Element {
   return <Layout>{page}</Layout>;
 };
 
-// export async function getServerSideProps() {
-//   useGetProductsQuery()
-// }
+ProductosPage.getInitialProps = async () => {
+  if (typeof window !== 'undefined') {
+    const isAuth = sessionStorage.getItem('isAuth');
+    if (isAuth) {
+      return { isAuth: true };
+    } else {
+      return { isAuth: false };
+    }
+  }
+  return {};
+};

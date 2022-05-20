@@ -8,9 +8,16 @@ export interface UserBody {
 }
 export interface User extends DocumentId, UserBody {}
 
+export interface UserData {
+  isLoggedin: boolean;
+  email: string;
+  firstName?: string;
+  lastName?: string;
+  image?: string;
+}
 export interface UserResponse {
   message: string;
-  token?: string;
+  user?: UserData;
 }
 
 export const userApi = createApi({

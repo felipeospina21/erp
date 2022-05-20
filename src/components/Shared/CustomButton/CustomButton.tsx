@@ -19,6 +19,8 @@ export interface CustomButtonProps {
   children: string;
   margin?: string;
   width?: string;
+  padding?: string;
+  fontSize?: string;
   onClick: () => void;
 }
 
@@ -29,6 +31,8 @@ export function CustomButton({
   onClick,
   margin = '0.5rem 1rem',
   width = '8rem',
+  padding = '0.5rem 2rem',
+  fontSize = 'md',
 }: CustomButtonProps): JSX.Element {
   return (
     <Button
@@ -36,8 +40,9 @@ export function CustomButton({
       variant={variant}
       w={width}
       m={margin}
-      p="0.5rem 2rem"
+      p={padding}
       onClick={onClick}
+      fontSize={fontSize}
     >
       {children}
     </Button>

@@ -50,15 +50,17 @@ export function CustomForm({
   } = useForm<FormValues>();
 
   return (
-    <Container>
-      <form onSubmit={handleSubmit(onSubmit)}>
+    <Container bgColor="inherit">
+      <form onSubmit={handleSubmit(onSubmit)} style={{ backgroundColor: 'inherit' }}>
         {fields.map((field) => (
           <CustomFormField
             key={nanoid()}
             id={field.name}
             label={field.label}
             isError={!!errors?.[field.name as keyof FormValues]}
+            isRequired={field.required}
             errorMessage="This field is required"
+            variant={'floating'}
           >
             {controlled ? (
               <ControlledInput
