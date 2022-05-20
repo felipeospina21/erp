@@ -24,6 +24,7 @@ export default function Login(): JSX.Element {
   useEffect(() => {
     if (isSuccess && data?.user) {
       router.push('/');
+      sessionStorage.setItem('isAuth', 'true');
       dispatch(setUser(data?.user));
     }
   }, [isSuccess, error, router, dispatch, data?.user]);

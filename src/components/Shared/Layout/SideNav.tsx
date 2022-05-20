@@ -33,6 +33,7 @@ export function SideNav(): JSX.Element {
 
   useEffect(() => {
     if (isSuccess) {
+      sessionStorage.removeItem('isAuth');
       router.push('/login');
     }
   }, [isSuccess, router]);

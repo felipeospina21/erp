@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { Heading, Text, Flex, Box } from '@chakra-ui/react';
-import { numberToCurrency } from '@/utils/index';
+import { Edit } from '@/assets/icons';
+import { CardSkeleton, ConfirmationAlert, CustomForm, CustomModal } from '@/components/Shared';
+import { DeleteButton } from '@/components/Shared/IconButtons';
 import {
   Product,
   useDeleteProductMutation,
   useGetProductsQuery,
   useUpdateProductMutation,
 } from '@/redux/services';
-import { DeleteButton } from '@/components/Shared/IconButtons';
+import { numberToCurrency } from '@/utils/numberToCurrency';
+import { Box, Flex, Heading, Text } from '@chakra-ui/react';
 import Image from 'next/image';
-import { CardSkeleton, ConfirmationAlert, CustomModal, CustomForm } from '@/components/Shared';
-import { Edit } from '@/assets/icons';
+import React, { useEffect, useState } from 'react';
 import { SubmitHandler } from 'react-hook-form';
 import { productsFields } from '../ProductForm';
 
@@ -18,8 +18,6 @@ export interface CardProps {
   product: Product;
   locale?: string;
 }
-
-// BUG: Check edit product bug, related with custom form changes
 
 export function Card({ product, locale }: CardProps): JSX.Element {
   const [displayModal, setDisplayModal] = useState(false);
