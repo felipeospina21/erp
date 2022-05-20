@@ -32,6 +32,10 @@ export interface ClientsFormProps {
   isLoading: boolean;
   fields: Fields[];
   inputSize?: string;
+  button?: {
+    width?: string | string[];
+    margin?: string | string[];
+  };
   onSubmit: (data: any) => void | SubmitHandler<any>;
 }
 export function CustomForm({
@@ -40,6 +44,7 @@ export function CustomForm({
   data,
   fields,
   onSubmit,
+  button,
   inputSize = 'lg',
   controlled = false,
 }: ClientsFormProps): JSX.Element {
@@ -81,7 +86,13 @@ export function CustomForm({
             )}
           </CustomFormField>
         ))}
-        <Button mt={4} colorScheme="teal" isLoading={isLoading} type="submit">
+        <Button
+          m={button?.margin}
+          colorScheme="teal"
+          isLoading={isLoading}
+          type="submit"
+          w={button?.width}
+        >
           {buttonText}
         </Button>
       </form>

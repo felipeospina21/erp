@@ -38,7 +38,8 @@ export function SalesHeader({ pageMaxW }: SalesHeaderProps): JSX.Element {
       m="2rem auto"
       p="1rem"
       justify="space-evenly"
-      wrap={['wrap', 'wrap', 'nowrap']}
+      flexDir={['column', 'row', 'row']}
+      wrap={['nowrap', 'nowrap', 'wrap']}
     >
       <CustomSelect
         name="clientName"
@@ -54,6 +55,7 @@ export function SalesHeader({ pageMaxW }: SalesHeaderProps): JSX.Element {
         minW="10rem"
         fontSize="sm"
         label="Cliente"
+        container={{ width: ['12rem', null, '15rem'], margin: '0.5rem auto' }}
       />
 
       <CustomSelect
@@ -70,6 +72,7 @@ export function SalesHeader({ pageMaxW }: SalesHeaderProps): JSX.Element {
         minW="10rem"
         fontSize="sm"
         label="Ciudad"
+        container={{ width: ['12rem', null, '15rem'], margin: '0.5rem auto' }}
       />
 
       <CustomSelect
@@ -86,6 +89,7 @@ export function SalesHeader({ pageMaxW }: SalesHeaderProps): JSX.Element {
         minW="10rem"
         fontSize="sm"
         label="Canal"
+        container={{ width: ['12rem', null, '15rem'], margin: '0.5rem auto' }}
       />
     </Flex>
   );

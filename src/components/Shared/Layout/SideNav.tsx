@@ -50,7 +50,7 @@ export function SideNav(): JSX.Element {
             onClick={onOpen}
           />
         </Box>
-        <Heading as="h1" size="xl" color="brand.grey.200" letterSpacing="5px">
+        <Heading as="h1" fontSize={['md', '2xl', '3xl']} color="brand.grey.200" letterSpacing="5px">
           {currPage.toLocaleUpperCase()}
         </Heading>
         <UserMenu user={user} menuItemClickFn={{ handleLogout }} />
