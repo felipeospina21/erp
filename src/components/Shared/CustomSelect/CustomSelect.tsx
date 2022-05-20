@@ -16,6 +16,10 @@ export interface CustomSelectProps {
   size: string;
   value?: string;
   label?: string;
+  container?: {
+    width?: string | Array<string | null>;
+    margin?: string | Array<string | null>;
+  };
 }
 
 export function CustomSelect({
@@ -33,9 +37,10 @@ export function CustomSelect({
   onChangeFn,
   value,
   label,
+  container,
 }: CustomSelectProps): JSX.Element {
   return (
-    <Box>
+    <Box w={container?.width} m={container?.margin}>
       {label && <FormLabel htmlFor={id}>{label}</FormLabel>}
       <Select
         borderRadius={borderRadius ?? 'md'}

@@ -56,7 +56,13 @@ export default function ProductosPage({ isAuth }: IsAuth): ReactElement {
   }
 
   return (
-    <Flex flexDir="column" align="center" justify="space-around" minH="100vh">
+    <Flex
+      flexDir="column"
+      align="center"
+      justify="space-around"
+      minH="100vh"
+      m={['1rem auto', null, '2rem auto']}
+    >
       <CustomModal
         title="Nuevo Producto"
         isDisplayed={displayModal}
