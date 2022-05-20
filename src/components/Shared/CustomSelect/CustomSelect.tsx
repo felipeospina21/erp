@@ -1,5 +1,5 @@
 import React from 'react';
-import { Select } from '@chakra-ui/react';
+import { Box, FormLabel, Select } from '@chakra-ui/react';
 
 export interface CustomSelectProps {
   borderRadius?: string;
@@ -8,12 +8,14 @@ export interface CustomSelectProps {
   id?: string;
   margin?: string;
   maxW?: string;
+  minW?: string;
   name?: string;
   options: { id: string; name: string }[] | undefined;
   onChangeFn: (event: React.ChangeEvent<HTMLSelectElement>) => void;
   placeholder: string;
   size: string;
   value?: string;
+  label?: string;
 }
 
 export function CustomSelect({
@@ -24,29 +26,35 @@ export function CustomSelect({
   name,
   margin,
   maxW,
+  minW,
   placeholder,
   size,
   options,
   onChangeFn,
   value,
+  label,
 }: CustomSelectProps): JSX.Element {
   return (
-    <Select
-      borderRadius={borderRadius ?? 'md'}
-      borderColor={borderColor ?? 'brand.grey.100'}
-      name={name ?? placeholder}
-      placeholder={placeholder}
-      size={size}
-      fontSize={fontSize ?? 'inherit'}
-      maxW={maxW ?? 'inherit'}
-      m={margin ?? '0'}
-      onChange={onChangeFn}
-      value={value}
-      id={id}
-    >
-      {options?.map((option) => (
-        <option key={option.id}>{option.name}</option>
-      ))}
-    </Select>
+    <Box>
+      {label && <FormLabel htmlFor={id}>{label}</FormLabel>}
+      <Select
+        borderRadius={borderRadius ?? 'md'}
+        borderColor={borderColor ?? 'brand.grey.100'}
+        name={name ?? placeholder}
+        placeholder={placeholder}
+        size={size}
+        fontSize={fontSize ?? 'inherit'}
+        maxW={maxW ?? 'inherit'}
+        minW={minW ?? 'inherit'}
+        m={margin ?? '0'}
+        onChange={onChangeFn}
+        value={value}
+        id={id}
+      >
+        {options?.map((option) => (
+          <option key={option.id}>{option.name}</option>
+        ))}
+      </Select>
+    </Box>
   );
 }

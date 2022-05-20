@@ -17,6 +17,7 @@ import TaxPicker from './TaxPicker';
 import ValueContainer from './ValueContainer';
 
 export interface SalesFooterProps {
+  pageMaxW: string;
   initialRowSate: RowData;
   isSalesBtnDisabled: boolean;
   rowsData: RowData[];
@@ -24,6 +25,7 @@ export interface SalesFooterProps {
 }
 
 export function SalesFooter({
+  pageMaxW,
   initialRowSate,
   isSalesBtnDisabled,
   rowsData,
@@ -97,7 +99,7 @@ export function SalesFooter({
   }, [invoice?.count]);
 
   return (
-    <Flex flexDir="column" align="flex-end" mr="2rem">
+    <Flex maxW={pageMaxW} flexDir="column" align="flex-end" mr="2rem">
       <Flex flexDir="column" justifyItems="center" alignItems="stretch" m="0 2.5rem" minW="400px">
         <ValueContainer name="subtotal" value={salesData.newSaleData.subtotal} />
         <TaxPicker />

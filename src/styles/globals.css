@@ -4,6 +4,7 @@
   --border-50: 1px solid #ecf2fe;
   --border-100: 1px solid #d3d8e1;
   --borderRadius-card: 16px;
+  --maxPageWitdth: 1800px
 }
 
 html,
