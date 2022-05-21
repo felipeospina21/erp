@@ -36,7 +36,7 @@ export default function ClientesPage({ isAuth }: IsAuth): ReactElement {
   }
 
   return (
-    <Box maxW="var(--maxPageWitdth)" m="auto">
+    <Box maxW="var(--maxPageWitdth)" m={['1rem', null, '1rem 2rem']}>
       <CustomTable
         Headers={clientFields.map((header) => {
           return <Th key={header.name}>{header.label}</Th>;

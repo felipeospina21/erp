@@ -16,9 +16,7 @@ export function Layout({ children, hasNav = true }: LayoutProps): JSX.Element {
       <Provider store={store}>
         <ChakraProvider theme={theme}>
           {hasNav && <SideNav />}
-          <Box as="main" m="1rem 2rem">
-            {children}
-          </Box>
+          <Box as="main">{children}</Box>
         </ChakraProvider>
       </Provider>
     </>

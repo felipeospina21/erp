@@ -1,7 +1,6 @@
 import React, { ReactElement, useEffect } from 'react';
 import { Grid, GridItem, Container, Heading } from '@chakra-ui/react';
 import Image from 'next/image';
-import loginImg from '@/assets/login.png';
 import { CustomForm, Layout } from '@/components/Shared';
 import { useLoginMutation, UserBody } from '@/redux/services/userApi';
 import { loginFields } from '@/components/Login';
@@ -30,31 +29,65 @@ export default function Login(): JSX.Element {
   }, [isSuccess, error, router, dispatch, data?.user]);
 
   return (
-    <Grid templateColumns="repeat(2, 1fr)" gap={6} alignItems="flex-start">
-      <GridItem>
-        <Heading as="h1" mt="4rem" textAlign="center">
-          Login
-        </Heading>
+    <>
+      <Heading
+        display={['inherit', null, 'none']}
+        as="h1"
+        mt={['1rem', '2rem', '4rem']}
+        textAlign="center"
+      >
+        Login
+      </Heading>
 
-        <Container marginTop="10rem" bgColor="var(--bgColor-light)">
-          <CustomForm
-            onSubmit={loginUser}
-            isLoading={isLoading}
-            buttonText="Login"
-            fields={loginFields}
+      <Grid
+        templateColumns={['repeat(1, 1fr)', null, 'repeat(2, 1fr)']}
+        gap={[2, null, 6]}
+        alignItems="flex-start"
+      >
+        <GridItem rowStart={[2, null, 1]}>
+          <Heading
+            display={['none', null, 'inherit']}
+            as="h1"
+            mt={['1rem', '4rem']}
+            textAlign="center"
+          >
+            Login
+          </Heading>
+
+          <Container
+            margin={['2rem 0', null, '10rem auto']}
+            p={['0', 'auto']}
+            bgColor="var(--bgColor-light)"
+          >
+            <CustomForm
+              onSubmit={loginUser}
+              isLoading={isLoading}
+              buttonText="Login"
+              fields={loginFields}
+              button={{ width: '100%', margin: ['4rem auto', '3rem auto'] }}
+            />
+          </Container>
+        </GridItem>
+        <GridItem
+          w={['70%', '60%', '100%']}
+          h="100%"
+          m="auto"
+          display="flex"
+          flexDir="column"
+          justifyContent="center"
+          borderRadius="10%"
+          bg={['none', null, ' linear-gradient(-45deg, #c9e1f1 20%, var(--bgColor-light))']}
+        >
+          <Image
+            src="/blobanimation.svg"
+            alt="doodle"
+            width={400}
+            height={400}
+            layout="responsive"
           />
-        </Container>
-      </GridItem>
-      <GridItem w="100%" h="90%">
-        <Image
-          src={loginImg}
-          alt="doodle"
-          layout="responsive"
-          objectFit="scale-down"
-          objectPosition={'right top'}
-        />
-      </GridItem>
-    </Grid>
+        </GridItem>
+      </Grid>
+    </>
   );
 }
 
