@@ -62,4 +62,9 @@ export const saleApi = createApi({
   }),
 });
 
-export const { useGetSalesQuery, useSaveSaleMutation } = saleApi;
+export const {
+  useGetSalesQuery,
+  useSaveSaleMutation,
+  util: { getRunningOperationPromises: getSaleRunningOperationPromises },
+} = saleApi;
+export const { getSales, saveSale } = saleApi.endpoints;

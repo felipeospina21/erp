@@ -13,7 +13,7 @@ export interface NewClientPayload {
 }
 
 const initialState: ClientsState = {
-  status: undefined,
+  status: 'idle',
   newClient: {
     name: '',
     addres1: '',

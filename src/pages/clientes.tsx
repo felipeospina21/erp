@@ -11,13 +11,14 @@ import { Box, Th } from '@chakra-ui/react';
 import { ReactElement, useState, useEffect } from 'react';
 import { FaPlus } from 'react-icons/fa';
 import { IsAuth } from '../utils';
-import { useRouter } from 'next/router';
+import Router from 'next/router';
+import dynamic from 'next/dynamic';
+const LoginPage = dynamic(() => import('@/pages/login'));
 
 export default function ClientesPage({ isAuth }: IsAuth): ReactElement {
   const [displayModal, setDisplayModal] = useState(false);
   const { data: clients } = useGetClientsQuery();
   const [createClient, { isLoading }] = useCreateClientMutation();
-  const router = useRouter();
 
   function onSubmit(data: ClientFormValues): void {
     const transformedData = { ...data, discount: Number(data.discount) };
@@ -26,13 +27,12 @@ export default function ClientesPage({ isAuth }: IsAuth): ReactElement {
   }
 
   useEffect(() => {
-    if (!isAuth) {
-      router.push('/login');
-    }
-  }, [isAuth, router]);
+    if (isAuth) return; // do nothing if the user is logged in
+    Router.replace('/clientes', '/login', { shallow: true });
+  }, [isAuth]);
 
   if (!isAuth) {
-    return <>Not authorized</>;
+    return <LoginPage />;
   }
 
   return (
@@ -68,14 +68,14 @@ ClientesPage.getLayout = function getLayout(page: ReactElement): JSX.Element {
   return <Layout>{page}</Layout>;
 };
 
-ClientesPage.getInitialProps = async () => {
-  if (typeof window !== 'undefined') {
-    const isAuth = sessionStorage.getItem('isAuth');
-    if (isAuth) {
-      return { isAuth: true };
-    } else {
-      return { isAuth: false };
-    }
-  }
-  return {};
-};
+// ClientesPage.getInitialProps = async () => {
+//   if (typeof window !== 'undefined') {
+//     const isAuth = sessionStorage.getItem('isAuth');
+//     if (isAuth) {
+//       return { isAuth: true };
+//     } else {
+//       return { isAuth: false };
+//     }
+//   }
+//   return {};
+// };

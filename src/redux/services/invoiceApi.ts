@@ -25,4 +25,9 @@ export const invoiceApi = createApi({
   }),
 });
 
-export const { useUpdateInvoiceCountMutation } = invoiceApi;
+export const {
+  useUpdateInvoiceCountMutation,
+  util: { getRunningOperationPromises: getInvoiceRunningOperationPromises },
+} = invoiceApi;
+
+export const { updateInvoiceCount } = invoiceApi.endpoints;

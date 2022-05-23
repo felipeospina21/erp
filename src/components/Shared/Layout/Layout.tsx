@@ -1,8 +1,6 @@
 import React from 'react';
 import { Box, ChakraProvider } from '@chakra-ui/react';
 import SideNav from './SideNav';
-import { Provider } from 'react-redux';
-import { store } from '@/redux/store';
 import theme from '@/styles/theme';
 
 export interface LayoutProps {
@@ -11,14 +9,14 @@ export interface LayoutProps {
 }
 
 export function Layout({ children, hasNav = true }: LayoutProps): JSX.Element {
+  const isAuth = children.props?.isAuth;
+  const shouldHaveNav = hasNav && isAuth;
   return (
     <>
-      <Provider store={store}>
-        <ChakraProvider theme={theme}>
-          {hasNav && <SideNav />}
-          <Box as="main">{children}</Box>
-        </ChakraProvider>
-      </Provider>
+      <ChakraProvider theme={theme}>
+        {shouldHaveNav && <SideNav />}
+        <Box as="main">{children}</Box>
+      </ChakraProvider>
     </>
   );
 }
