@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { axiosBaseQuery } from './customBaseQuery';
-
+import { HYDRATE } from 'next-redux-wrapper';
 export interface DocumentId {
   _id: string;
 }
@@ -27,6 +27,11 @@ export const clientApi = createApi({
   baseQuery: axiosBaseQuery({
     baseUrl: `${process.env.NEXT_PUBLIC_API_URL}/clients`,
   }),
+  extractRehydrationInfo(action, { reducerPath }) {
+    if (action.type === HYDRATE) {
+      return action.payload[reducerPath];
+    }
+  },
   tagTypes: ['Client'],
   endpoints: (build) => ({
     getClients: build.query<Client[], void>({
@@ -70,4 +75,8 @@ export const {
   useCreateClientMutation,
   useUpdateClientMutation,
   useDeleteClientMutation,
+  util: { getRunningOperationPromises: getClientRunningOperationPromises },
 } = clientApi;
+
+export const { getClients, getClientById, createClient, updateClient, deleteClient } =
+  clientApi.endpoints;

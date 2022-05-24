@@ -4,15 +4,17 @@ import { CardSkeleton, CustomForm, CustomModal, Layout } from '@/components/Shar
 import { useCreateProductMutation, useGetProductsQuery } from '@/redux/services';
 import { IsAuth } from '@/utils/auth';
 import { Flex, Skeleton } from '@chakra-ui/react';
-import { useRouter } from 'next/router';
+import dynamic from 'next/dynamic';
 import { ReactElement, useEffect, useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
+import Router from 'next/router';
+const LoginPage = dynamic(() => import('@/pages/login'));
 
 export default function ProductosPage({ isAuth }: IsAuth): ReactElement {
   const [displayModal, setDisplayModal] = useState(false);
-  const { data: products, isLoading: areProductsLoading, isError, error } = useGetProductsQuery();
+  const result = useGetProductsQuery();
+  const { data: products, isLoading: areProductsLoading, isError, error } = result;
   const [createProduct] = useCreateProductMutation();
-  const router = useRouter();
 
   function createNewProduct(data: any): void {
     const newProduct = new FormData();
@@ -28,17 +30,12 @@ export default function ProductosPage({ isAuth }: IsAuth): ReactElement {
   }
 
   useEffect(() => {
-    if (!isAuth) {
-      router.push('/login');
-    }
-  }, [isAuth, router]);
+    if (isAuth) return; // do nothing if the user is logged in
+    Router.replace('/productos', '/login', { shallow: true });
+  }, [isAuth]);
 
   if (!isAuth) {
-    return <>Not authorized</>;
-  }
-
-  if (isError) {
-    return <>{JSON.stringify(error)}</>;
+    return <LoginPage />;
   }
 
   if (areProductsLoading) {
@@ -53,6 +50,10 @@ export default function ProductosPage({ isAuth }: IsAuth): ReactElement {
         </Flex>
       </Flex>
     );
+  }
+
+  if (isError) {
+    return <>{JSON.stringify(error)}</>;
   }
 
   return (
@@ -83,16 +84,4 @@ export default function ProductosPage({ isAuth }: IsAuth): ReactElement {
 
 ProductosPage.getLayout = function getLayout(page: ReactElement): JSX.Element {
   return <Layout>{page}</Layout>;
-};
-
-ProductosPage.getInitialProps = async () => {
-  if (typeof window !== 'undefined') {
-    const isAuth = sessionStorage.getItem('isAuth');
-    if (isAuth) {
-      return { isAuth: true };
-    } else {
-      return { isAuth: false };
-    }
-  }
-  return {};
 };

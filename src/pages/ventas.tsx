@@ -3,9 +3,11 @@ import { Layout } from '@/components/Shared';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { updateSalesData } from '@/redux/slices/salesSlice';
 import { Divider } from '@chakra-ui/react';
-import { useRouter } from 'next/router';
 import React, { ReactElement, useEffect, useMemo, useState } from 'react';
 import { IsAuth } from '../utils';
+import Router from 'next/router';
+import dynamic from 'next/dynamic';
+const LoginPage = dynamic(() => import('@/pages/login'));
 
 export interface RowData {
   id: number;
@@ -33,7 +35,6 @@ export default function VentasPage({ isAuth }: IsAuth): ReactElement {
   const [isSalesBtnDisabled, setSalesBtnDisabled] = useState(true);
   const salesData = useAppSelector((state) => state.sales);
   const dispatch = useAppDispatch();
-  const router = useRouter();
 
   const header = useMemo(
     () => [
@@ -70,10 +71,9 @@ export default function VentasPage({ isAuth }: IsAuth): ReactElement {
   );
 
   useEffect(() => {
-    if (!isAuth) {
-      router.push('/login');
-    }
-  }, [isAuth, router]);
+    if (isAuth) return; // do nothing if the user is logged in
+    Router.replace('/ventas', '/login', { shallow: true });
+  }, [isAuth]);
 
   useEffect(() => {
     const filteredRows = rowsData.filter(
@@ -110,7 +110,7 @@ export default function VentasPage({ isAuth }: IsAuth): ReactElement {
   }, [salesData.newSaleData.subtotal, salesData.newSaleData.tax, dispatch]);
 
   if (!isAuth) {
-    return <>Not authorized</>;
+    return <LoginPage />;
   }
 
   return (
