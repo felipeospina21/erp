@@ -9,6 +9,7 @@
     "lint": "next lint",
     "lint:fix": "eslint \"**/*.{ts,tsx}\" --fix",
     "test": "jest",
+    "test:w": "jest --watch",
     "test-cover": "jest --coverage",
     "prepare": "husky install",
     "tsc": "tsc --watch"
@@ -40,6 +41,7 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.1.2",
+    "@testing-library/user-event": "^14.2.0",
     "@types/bcrypt": "^5.0.0",
     "@types/cookie": "^0.5.1",
     "@types/cookies": "^0.7.7",

@@ -25,12 +25,12 @@ export interface Fields {
   required: boolean;
 }
 
-export interface ClientsFormProps {
+export interface CustomFormProps {
   buttonText: string;
+  fields: Fields[];
+  isLoading: boolean;
   controlled?: boolean;
   data?: Client | Product;
-  isLoading: boolean;
-  fields: Fields[];
   inputSize?: string;
   button?: {
     width?: string | string[];
@@ -47,7 +47,7 @@ export function CustomForm({
   button,
   inputSize = 'lg',
   controlled = false,
-}: ClientsFormProps): JSX.Element {
+}: CustomFormProps): JSX.Element {
   const {
     register,
     handleSubmit,
