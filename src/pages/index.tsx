@@ -1,18 +1,19 @@
 import React, { ReactElement, useEffect } from 'react';
 import { Heading, Flex } from '@chakra-ui/react';
 import { Layout } from '@/components/Shared';
-import { useAppSelector } from '@/redux/hooks';
-import { useRouter } from 'next/router';
-
-export default function Home(): ReactElement {
-  const user = useAppSelector((state) => state.user);
-  const router = useRouter();
-
+import { IsAuth } from '../utils';
+import dynamic from 'next/dynamic';
+import Router from 'next/router';
+const LoginPage = dynamic(() => import('@/pages/login'));
+export default function Home({ isAuth }: IsAuth): ReactElement {
   useEffect(() => {
-    if (!user.isLoggedin) {
-      router.push('/login');
-    }
-  }, [user.isLoggedin, router]);
+    if (isAuth) return; // do nothing if the user is logged in
+    Router.replace('/', '/login', { shallow: true });
+  }, [isAuth]);
+
+  if (!isAuth) {
+    return <LoginPage />;
+  }
 
   return (
     <Flex flexDir="column" align="center" justify="space-around" minH="100vh">

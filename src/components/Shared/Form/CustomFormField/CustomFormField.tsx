@@ -32,7 +32,7 @@ export function CustomFormField({
       bgColor="inherit"
     >
       {children}
-      {isError && <FormErrorMessage>{errorMessage}</FormErrorMessage>}
+      {isError && <FormErrorMessage role="alert">{errorMessage}</FormErrorMessage>}
       {helperText && <FormHelperText>{helperText}</FormHelperText>}
       <FormLabel htmlFor={id}>{label}</FormLabel>
     </FormControl>

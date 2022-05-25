@@ -2,10 +2,10 @@ import { Fields } from '@/components/Shared';
 
 export const mockFormFields: Fields[] = [
   {
-    name: 'name',
+    name: 'firstname',
     type: 'string',
-    placeholder: 'name',
-    label: 'name',
+    placeholder: 'firstname',
+    label: 'firstname',
     required: true,
   },
   {
