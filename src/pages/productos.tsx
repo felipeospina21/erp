@@ -2,12 +2,12 @@ import { CardsContainer } from '@/components/Products';
 import { productsFields } from '@/components/Products/ProductForm/fields/productFields';
 import { CardSkeleton, CustomForm, CustomModal, Layout } from '@/components/Shared';
 import { useCreateProductMutation, useGetProductsQuery } from '@/redux/services';
-import { IsAuth } from '@/utils/auth';
+import { checkAuth, IsAuth } from '@/utils/auth';
 import { Flex, Skeleton } from '@chakra-ui/react';
 import dynamic from 'next/dynamic';
+import Router from 'next/router';
 import { ReactElement, useEffect, useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
-import Router from 'next/router';
 const LoginPage = dynamic(() => import('@/pages/login'));
 
 export default function ProductosPage({ isAuth }: IsAuth): ReactElement {
@@ -85,3 +85,5 @@ export default function ProductosPage({ isAuth }: IsAuth): ReactElement {
 ProductosPage.getLayout = function getLayout(page: ReactElement): JSX.Element {
   return <Layout>{page}</Layout>;
 };
+
+ProductosPage.getInitialProps = checkAuth;

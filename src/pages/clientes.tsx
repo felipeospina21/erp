@@ -1,18 +1,18 @@
 import { clientFields, ClientRow } from '@/components/Clients';
 import {
-  CustomModal,
-  CustomTable,
   ClientFormValues,
   CustomForm,
+  CustomModal,
+  CustomTable,
   Layout,
 } from '@/components/Shared';
 import { useCreateClientMutation, useGetClientsQuery } from '@/redux/services';
+import { checkAuth, IsAuth } from '@/utils/auth';
 import { Box, Th } from '@chakra-ui/react';
-import { ReactElement, useState, useEffect } from 'react';
-import { FaPlus } from 'react-icons/fa';
-import { IsAuth } from '../utils';
-import Router from 'next/router';
 import dynamic from 'next/dynamic';
+import Router from 'next/router';
+import { ReactElement, useEffect, useState } from 'react';
+import { FaPlus } from 'react-icons/fa';
 const LoginPage = dynamic(() => import('@/pages/login'));
 
 export default function ClientesPage({ isAuth }: IsAuth): ReactElement {
@@ -68,14 +68,4 @@ ClientesPage.getLayout = function getLayout(page: ReactElement): JSX.Element {
   return <Layout>{page}</Layout>;
 };
 
-// ClientesPage.getInitialProps = async () => {
-//   if (typeof window !== 'undefined') {
-//     const isAuth = sessionStorage.getItem('isAuth');
-//     if (isAuth) {
-//       return { isAuth: true };
-//     } else {
-//       return { isAuth: false };
-//     }
-//   }
-//   return {};
-// };
+ClientesPage.getInitialProps = checkAuth;

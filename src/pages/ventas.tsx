@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { updateSalesData } from '@/redux/slices/salesSlice';
 import { Divider } from '@chakra-ui/react';
 import React, { ReactElement, useEffect, useMemo, useState } from 'react';
-import { IsAuth } from '../utils';
+import { checkAuth, IsAuth } from '@/utils/auth';
 import Router from 'next/router';
 import dynamic from 'next/dynamic';
 const LoginPage = dynamic(() => import('@/pages/login'));
@@ -141,14 +141,4 @@ VentasPage.getLayout = function getLayout(page: ReactElement): JSX.Element {
   return <Layout>{page}</Layout>;
 };
 
-VentasPage.getInitialProps = async () => {
-  if (typeof window !== 'undefined') {
-    const isAuth = sessionStorage.getItem('isAuth');
-    if (isAuth) {
-      return { isAuth: true };
-    } else {
-      return { isAuth: false };
-    }
-  }
-  return {};
-};
+VentasPage.getInitialProps = checkAuth;

@@ -1,9 +1,9 @@
-import React, { ReactElement, useEffect } from 'react';
-import { Heading, Flex } from '@chakra-ui/react';
 import { Layout } from '@/components/Shared';
-import { IsAuth } from '../utils';
+import { checkAuth, IsAuth } from '@/utils/auth';
+import { Flex, Heading } from '@chakra-ui/react';
 import dynamic from 'next/dynamic';
 import Router from 'next/router';
+import React, { ReactElement, useEffect } from 'react';
 const LoginPage = dynamic(() => import('@/pages/login'));
 export default function Home({ isAuth }: IsAuth): ReactElement {
   useEffect(() => {
@@ -27,3 +27,5 @@ export default function Home({ isAuth }: IsAuth): ReactElement {
 Home.getLayout = function getLayout(page: ReactElement): JSX.Element {
   return <Layout>{page}</Layout>;
 };
+
+Home.getInitialProps = checkAuth;

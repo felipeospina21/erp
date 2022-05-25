@@ -1,7 +1,7 @@
 import { render, screen } from '@/utils/test-utils';
 import preloadAll from 'jest-next-dynamic';
 import React from 'react';
-import HomePage from '../index';
+import HomePage from '../src/pages/index';
 
 jest.mock('next/router', () => require('next-router-mock'));
 

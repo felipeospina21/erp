@@ -2,8 +2,7 @@ export interface IsAuth {
   isAuth: boolean;
 }
 
-// FIXME: Not working on SSR
-export function checkAuth() {
+export async function checkAuth(): Promise<IsAuth | Record<string, never>> {
   if (typeof window !== 'undefined') {
     const isAuth = sessionStorage.getItem('isAuth');
     if (isAuth) {
