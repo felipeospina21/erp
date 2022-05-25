@@ -1,6 +1,7 @@
 import { Edit } from '@/assets/icons';
 import { CardSkeleton, ConfirmationAlert, CustomForm, CustomModal } from '@/components/Shared';
 import { DeleteButton } from '@/components/Shared/IconButtons';
+import { ProductDataForm } from '@/pages/productos';
 import {
   Product,
   useDeleteProductMutation,
@@ -31,7 +32,7 @@ export function Card({ product, locale }: CardProps): JSX.Element {
     return await deleteProduct({ _id: product._id ?? '' });
   }
 
-  function onSubmit(values: any): void | SubmitHandler<Product> {
+  function onSubmit(values: ProductDataForm): void | SubmitHandler<Product> {
     const updatedProduct = new FormData();
 
     updatedProduct.append('_id', product._id);
@@ -39,7 +40,9 @@ export function Card({ product, locale }: CardProps): JSX.Element {
     updatedProduct.append('name', values.name);
     updatedProduct.append('price', values.price);
     updatedProduct.append('stock', values.stock);
-    updatedProduct.append('image', values.image[0]);
+    if (values.image) {
+      updatedProduct.append('image', values.image[0]);
+    }
 
     updateProduct(updatedProduct);
     setDisplayModal(false);

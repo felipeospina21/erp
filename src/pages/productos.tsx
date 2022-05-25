@@ -1,7 +1,7 @@
 import { CardsContainer } from '@/components/Products';
 import { productsFields } from '@/components/Products/ProductForm/fields/productFields';
 import { CardSkeleton, CustomForm, CustomModal, Layout } from '@/components/Shared';
-import { useCreateProductMutation, useGetProductsQuery } from '@/redux/services';
+import { Product, useCreateProductMutation, useGetProductsQuery } from '@/redux/services';
 import { checkAuth, IsAuth } from '@/utils/auth';
 import { Flex, Skeleton } from '@chakra-ui/react';
 import dynamic from 'next/dynamic';
@@ -10,20 +10,26 @@ import { ReactElement, useEffect, useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
 const LoginPage = dynamic(() => import('@/pages/login'));
 
+export interface ProductDataForm extends Omit<Product, 'price' | 'stock'> {
+  price: string | Blob;
+  stock: string | Blob;
+}
 export default function ProductosPage({ isAuth }: IsAuth): ReactElement {
   const [displayModal, setDisplayModal] = useState(false);
   const result = useGetProductsQuery();
   const { data: products, isLoading: areProductsLoading, isError, error } = result;
   const [createProduct] = useCreateProductMutation();
 
-  function createNewProduct(data: any): void {
+  function createNewProduct(data: ProductDataForm): void {
     const newProduct = new FormData();
 
     newProduct.append('alias', data.alias);
     newProduct.append('name', data.name);
     newProduct.append('price', data.price);
     newProduct.append('stock', data.stock);
-    newProduct.append('image', data.image[0]);
+    if (data.image) {
+      newProduct.append('image', data.image[0]);
+    }
 
     createProduct(newProduct);
     setDisplayModal(false);
