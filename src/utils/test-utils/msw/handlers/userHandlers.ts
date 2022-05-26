@@ -27,6 +27,15 @@ export const userHandlers = [
       );
     }
 
+    if (email?.toLowerCase().includes('nonetwork')) {
+      return res(
+        ctx.status(500),
+        ctx.json({
+          message: undefined,
+        })
+      );
+    }
+
     return res(
       ctx.status(200),
       ctx.json({
