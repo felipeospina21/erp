@@ -7,15 +7,18 @@ import { loginFields } from '@/components/Login';
 import Router from 'next/router';
 import { setUser } from '@/redux/slices/userSlice';
 import { useAppDispatch } from '@/redux/hooks';
+import type { CustomError } from '@/redux/services/customBaseQuery';
 
 export interface LoginProps {
   token: string;
 }
 export default function Login(): JSX.Element {
   const [login, result] = useLoginMutation();
-  const { data, isLoading, isSuccess, isError } = result;
+  const { data, isLoading, isSuccess, isError, error } = result;
   const dispatch = useAppDispatch();
   const toast = useToast();
+  const err = error as CustomError | undefined;
+  const errMsg = err?.data.message ?? 'network error, please try again';
 
   function loginUser(data: UserBody): void {
     login(data);
@@ -29,13 +32,16 @@ export default function Login(): JSX.Element {
     } else if (isError) {
       toast({
         title: 'Login Error',
-        description: 'There was a problem, please try again',
+        description: `${errMsg}`,
         status: 'error',
         duration: 9000,
         isClosable: true,
       });
     }
-  }, [isSuccess, isError, toast, dispatch, data?.user]);
+    return () => {
+      toast.closeAll();
+    };
+  }, [isSuccess, isError, errMsg, toast, dispatch, data?.user]);
 
   return (
     <>
