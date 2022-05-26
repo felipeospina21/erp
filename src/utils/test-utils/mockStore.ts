@@ -17,7 +17,7 @@ export const reducer = {
   [invoiceApi.reducerPath]: invoiceApi.reducer,
 };
 
-export const store = configureStore({
+export const mockStore = configureStore({
   reducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -27,5 +27,5 @@ export const store = configureStore({
       userApi.middleware
     ),
 });
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+export type RootState = ReturnType<typeof mockStore.getState>;
+export type AppDispatch = typeof mockStore.dispatch;

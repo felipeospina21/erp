@@ -1,2 +1,2 @@
-export * from './test-utils';
-export * from './testStore';
+export * from './customRender';
+export * from './mockStore';

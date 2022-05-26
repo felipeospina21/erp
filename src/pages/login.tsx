@@ -1,10 +1,10 @@
 import React, { ReactElement, useEffect } from 'react';
-import { Grid, GridItem, Container, Heading } from '@chakra-ui/react';
+import { Grid, GridItem, Container, Heading, useToast } from '@chakra-ui/react';
 import Image from 'next/image';
 import { CustomForm, Layout } from '@/components/Shared';
 import { useLoginMutation, UserBody } from '@/redux/services/userApi';
 import { loginFields } from '@/components/Login';
-import { useRouter } from 'next/router';
+import Router from 'next/router';
 import { setUser } from '@/redux/slices/userSlice';
 import { useAppDispatch } from '@/redux/hooks';
 
@@ -12,9 +12,10 @@ export interface LoginProps {
   token: string;
 }
 export default function Login(): JSX.Element {
-  const [login, { data, isLoading, isSuccess, error }] = useLoginMutation();
-  const router = useRouter();
+  const [login, result] = useLoginMutation();
+  const { data, isLoading, isSuccess, isError } = result;
   const dispatch = useAppDispatch();
+  const toast = useToast();
 
   function loginUser(data: UserBody): void {
     login(data);
@@ -22,14 +23,23 @@ export default function Login(): JSX.Element {
 
   useEffect(() => {
     if (isSuccess && data?.user) {
-      router.push('/');
       sessionStorage.setItem('isAuth', 'true');
       dispatch(setUser(data?.user));
+      Router.push('/');
+    } else if (isError) {
+      toast({
+        title: 'Login Error',
+        description: 'There was a problem, please try again',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      });
     }
-  }, [isSuccess, error, router, dispatch, data?.user]);
+  }, [isSuccess, isError, toast, dispatch, data?.user]);
 
   return (
     <>
+      {/* Mobile Heading */}
       <Heading
         display={['inherit', null, 'none']}
         as="h1"

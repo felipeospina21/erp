@@ -3,11 +3,11 @@ import { render, RenderOptions } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { ChakraProvider } from '@chakra-ui/react';
 import theme from '@/styles/theme';
-import { store } from '@/utils/test-utils';
+import { mockStore } from '@/utils/test-utils';
 
 const AllTheProviders: FC = ({ children }) => {
   return (
-    <Provider store={store}>
+    <Provider store={mockStore}>
       <ChakraProvider theme={theme}>{children}</ChakraProvider>
     </Provider>
   );
