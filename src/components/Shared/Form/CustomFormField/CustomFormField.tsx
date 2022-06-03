@@ -28,7 +28,7 @@ export function CustomFormField({
       isInvalid={isError}
       isRequired={isRequired}
       id={id}
-      mt="1rem"
+      mt="1.5rem"
       bgColor="inherit"
     >
       {children}

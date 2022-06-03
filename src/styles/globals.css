@@ -1,4 +1,5 @@
 :root {
+  --bgColor: #fff1e6;
   --bgColor-light: #ecf2fe;
   --boxShadow: 0px 8px 16px rgba(143, 149, 178, 0.15);
   --border-50: 1px solid #ecf2fe;
@@ -25,5 +26,5 @@ a {
 }
 
 body.chakra-ui-light {
-  background-color: var(--bgColor-light)
+  background-color: var(--bgColor)
 }

@@ -2,7 +2,6 @@ import { SalesFooter, SalesHeader, TableContainer } from '@/components/Sales';
 import { Layout } from '@/components/Shared';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { updateSalesData } from '@/redux/slices/salesSlice';
-import { Divider } from '@chakra-ui/react';
 import React, { ReactElement, useEffect, useMemo, useState } from 'react';
 import { checkAuth, IsAuth } from '@/utils/auth';
 import Router from 'next/router';
@@ -116,7 +115,6 @@ export default function VentasPage({ isAuth }: IsAuth): ReactElement {
   return (
     <>
       <SalesHeader pageMaxW={'var(--maxPageWitdth)'} />
-      <Divider w="90%" m="auto" />
       <TableContainer
         pageMaxW={'var(--maxPageWitdth)'}
         header={header}

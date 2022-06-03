@@ -12,7 +12,7 @@ test('input value should chage when typing', async () => {
   const user = userEvent.setup();
   render(
     <CustomForm
-      buttonText="submit"
+      button={{ text: 'submit' }}
       isLoading={false}
       fields={mockFormFields}
       onSubmit={mockSubmission}
@@ -28,7 +28,7 @@ test('should validate all required fields', async () => {
   const user = userEvent.setup();
   render(
     <CustomForm
-      buttonText="submit"
+      button={{ text: 'submit' }}
       isLoading={false}
       fields={mockFormFields}
       onSubmit={mockSubmission}
@@ -44,7 +44,7 @@ test('when required fields are correct it should submit form', async () => {
   const user = userEvent.setup();
   render(
     <CustomForm
-      buttonText="submit"
+      button={{ text: 'submit' }}
       isLoading={false}
       fields={mockFormFields}
       onSubmit={mockSubmission}

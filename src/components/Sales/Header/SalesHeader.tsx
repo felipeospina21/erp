@@ -35,11 +35,15 @@ export function SalesHeader({ pageMaxW }: SalesHeaderProps): JSX.Element {
     <Flex
       maxW={pageMaxW}
       spacing="30px"
-      m="2rem auto"
-      p="1rem"
+      m={['2rem 2rem', null, null, null, null, '2rem auto']}
+      w={[null, null, null, null, null, '95%']}
+      p="1rem 0"
       justify="space-evenly"
-      flexDir={['column', 'row', 'row']}
-      wrap={['nowrap', 'nowrap', 'wrap']}
+      flexDir={['column', 'row']}
+      wrap={['nowrap', 'wrap']}
+      bgColor="brand.bgLight"
+      borderRadius="3xl"
+      boxShadow={'var(--boxShadow)'}
     >
       <CustomSelect
         name="clientName"

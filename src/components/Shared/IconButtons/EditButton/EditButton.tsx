@@ -12,10 +12,11 @@ export function EditButton({
 }: IconButtonProps): JSX.Element {
   return (
     <IconButton
-      aria-label="Edit"
+      aria-label="editar"
+      role="button"
       icon={<Edit />}
       size={size}
-      color={`brand.green.${colorVariant}`}
+      color={`custom.green.${colorVariant}`}
       variant={variant}
       isLoading={isLoading}
       onClick={onClick}

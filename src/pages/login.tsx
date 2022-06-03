@@ -13,8 +13,7 @@ export interface LoginProps {
   token: string;
 }
 export default function Login(): JSX.Element {
-  const [login, result] = useLoginMutation();
-  const { data, isLoading, isSuccess, isError, error } = result;
+  const [login, { data, isLoading, isSuccess, isError, error }] = useLoginMutation();
   const dispatch = useAppDispatch();
   const toast = useToast();
   const err = error as CustomError | undefined;
@@ -73,14 +72,13 @@ export default function Login(): JSX.Element {
           <Container
             margin={['2rem 0', null, '10rem auto']}
             p={['0', 'auto']}
-            bgColor="var(--bgColor-light)"
+            bgColor="var(--bgColor)"
           >
             <CustomForm
               onSubmit={loginUser}
               isLoading={isLoading}
-              buttonText="Login"
               fields={loginFields}
-              button={{ width: '100%', margin: ['4rem auto', '3rem auto'] }}
+              button={{ text: 'Login', width: '100%', margin: ['4rem auto', '3rem auto'] }}
             />
           </Container>
         </GridItem>

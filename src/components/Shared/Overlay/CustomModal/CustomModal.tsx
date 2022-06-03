@@ -8,25 +8,24 @@ import {
   ModalCloseButton,
   Button,
   useDisclosure,
-  IconButton,
 } from '@chakra-ui/react';
+import { Sizes, ButtonVariants } from '@/styles/types';
 
 export interface CustomModalProps {
-  button: {
-    icon?: JSX.Element;
-    text?: string;
-    bgColor?: string;
-    color?: string;
-    size?: 'lg' | 'md' | 'sm' | 'xs';
-    variant?: 'ghost' | 'outline' | 'solid' | 'link' | 'unstyled';
-  };
   title: string;
   children: JSX.Element | JSX.Element[];
+  button?: {
+    text?: string;
+    size?: Sizes;
+    variant?: ButtonVariants;
+  };
+  iconButton?: JSX.Element;
   isDisplayed?: boolean;
   setDisplayModal?: Dispatch<SetStateAction<boolean>>;
 }
 export function CustomModal({
   button,
+  iconButton,
   title,
   children,
   isDisplayed,
@@ -41,18 +40,16 @@ export function CustomModal({
 
   return (
     <>
-      {button?.icon ? (
-        <IconButton
-          icon={button?.icon}
-          onClick={setDisplayModal ? handleDisplay : onOpen}
-          bgColor={button?.bgColor}
-          color={button?.color}
-          variant={button?.variant}
-          size={button?.size ?? 'lg'}
-          aria-label={title}
-        />
+      {!!iconButton ? (
+        iconButton
       ) : (
-        <Button onClick={setDisplayModal ? handleDisplay : onOpen}>{button?.text}</Button>
+        <Button
+          size={button?.size}
+          variant={button?.variant}
+          onClick={setDisplayModal ? handleDisplay : onOpen}
+        >
+          {button?.text}
+        </Button>
       )}
 
       <Modal
@@ -62,7 +59,7 @@ export function CustomModal({
         onClose={setDisplayModal ? handleDisplay : onClose}
       >
         <ModalOverlay />
-        <ModalContent py="2rem">
+        <ModalContent py="2rem" data-testid="custom-modal">
           <ModalHeader py="0">{title}</ModalHeader>
           <ModalCloseButton />
           <ModalBody bgColor="white">{children}</ModalBody>

@@ -1,6 +1,5 @@
-import { Edit } from '@/assets/icons';
 import { CardSkeleton, ConfirmationAlert, CustomForm, CustomModal } from '@/components/Shared';
-import { DeleteButton } from '@/components/Shared/IconButtons';
+import { DeleteButton, EditButton } from '@/components/Shared/IconButtons';
 import { ProductDataForm } from '@/pages/productos';
 import {
   Product,
@@ -57,7 +56,7 @@ export function Card({ product, locale }: CardProps): JSX.Element {
   }, [confirmDelete]);
 
   if (areProductsFetching) {
-    return <CardSkeleton />;
+    return <CardSkeleton data-testid="update-card-skeleton" />;
   }
 
   return (
@@ -72,6 +71,7 @@ export function Card({ product, locale }: CardProps): JSX.Element {
       w="300px"
       m="1rem"
       p="0.5rem 1rem"
+      bgColor="brand.bgLight"
     >
       <Box borderRadius="xl" width="100%" overflow="hidden">
         <Image
@@ -97,18 +97,12 @@ export function Card({ product, locale }: CardProps): JSX.Element {
           title="Actualizar Producto"
           isDisplayed={displayModal}
           setDisplayModal={setDisplayModal}
-          button={{
-            text: 'actualizar',
-            icon: <Edit />,
-            variant: 'ghost',
-            color: 'brand.green.500',
-            size: 'md',
-          }}
+          iconButton={<EditButton size="md" onClick={(): void => setDisplayModal(true)} />}
         >
           <CustomForm
             data={product}
             onSubmit={onSubmit}
-            buttonText="modificar"
+            button={{ text: 'modificar' }}
             fields={productsFields}
             isLoading={isUpdateLoading}
             controlled
