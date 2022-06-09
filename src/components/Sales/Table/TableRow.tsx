@@ -1,7 +1,6 @@
 import { IconButton, Td, Tr, useToast } from '@chakra-ui/react';
-import React, { useContext } from 'react';
+import React from 'react';
 import { MdClear } from 'react-icons/md';
-import { TableStylesContext } from '../../../context/TableStylesContext';
 import type { RowData } from '@/pages/ventas';
 import { NewSaleOrderedProduct, useGetProductsQuery } from '@/redux/services';
 import { numberToCurrency } from '@/utils/index';
@@ -25,7 +24,6 @@ export function TableRow({
   setRowsData,
   removeRow,
 }: TableRowProps): JSX.Element {
-  const [cellStyles] = useContext(TableStylesContext);
   const { data: products } = useGetProductsQuery();
   const toast = useToast();
   const dispatch = useAppDispatch();
@@ -84,6 +82,8 @@ export function TableRow({
         discount: row.discount,
         quantity: row.quantity,
         subtotal: row.subtotal,
+        price: row.price,
+        name: row.item,
       };
       orderedProducts = [...orderedProducts, orderedProduct];
     });
@@ -100,7 +100,6 @@ export function TableRow({
           onChangeFn={handleSelectChange}
           size="sm"
           borderRadius="md"
-          fontSize={['sm', 'md']}
           options={products?.map((prod) => ({ id: prod._id, name: prod.name }))}
         />
       </Td>
@@ -111,14 +110,16 @@ export function TableRow({
         <InputCell
           id="quantity"
           handleInputChange={handleInputChange}
-          textAlign={cellStyles.textAlign}
+          textAlign="center"
+          variant="outline"
         />
       </TableCellBody>
       <TableCellBody>
         <InputCell
           id="discount"
           handleInputChange={handleInputChange}
-          textAlign={cellStyles.textAlign}
+          textAlign="center"
+          variant="outline"
         />
       </TableCellBody>
       <TableCellBody>{numberToCurrency(rowData.subtotal)}</TableCellBody>

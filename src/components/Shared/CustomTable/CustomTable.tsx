@@ -1,29 +1,23 @@
 import React from 'react';
 import { TableContainer, Table, Thead, Tbody, Tr } from '@chakra-ui/react';
+import { Sizes, TableVariants } from '@/styles/types';
 
 export interface CustomTableProps {
   Headers: JSX.Element | JSX.Element[];
   Rows: JSX.Element | JSX.Element[] | undefined;
-  variant?: 'simple' | 'striped' | 'unstyled';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: TableVariants;
+  size?: Exclude<Sizes, 'xs'>;
 }
 
 export function CustomTable({
   Headers,
   Rows,
-  size,
+  size = 'md',
   variant = 'simple',
 }: CustomTableProps): JSX.Element {
   return (
-    <TableContainer
-      overflow="auto"
-      mb="1rem"
-      border="1px solid"
-      borderColor="brand.grey.50"
-      borderRadius="xl"
-      p="2rem"
-    >
-      <Table variant={variant} maxW="1900px" m={['auto']} size={size}>
+    <TableContainer overflow="auto" mb="1rem" p="2rem">
+      <Table variant={variant} m={['auto']} size={size} colorScheme="blackAlpha">
         <Thead fontSize={['sm', 'md']}>
           <Tr>{Headers}</Tr>
         </Thead>

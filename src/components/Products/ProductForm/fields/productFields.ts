@@ -1,6 +1,6 @@
-import { Fields } from '@/components/Shared/Form';
+import { InputField } from '@/components/Shared/Form';
 
-export const productsFields: Fields[] = [
+export const productFields: Array<InputField> = [
   {
     name: 'name',
     type: 'text',
@@ -9,11 +9,12 @@ export const productsFields: Fields[] = [
     required: true,
   },
   {
-    name: 'alias',
-    type: 'text',
-    placeholder: 'alias',
-    label: 'Alias',
+    name: 'category',
+    type: 'select',
+    placeholder: 'category',
+    label: 'Category',
     required: true,
+    options: [],
   },
   {
     name: 'price',

@@ -2,18 +2,22 @@ import { CustomButton } from '@/components/Shared';
 import { RowData } from '@/pages/ventas';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import {
+  InvoiceResponse,
   NewSaleResponse,
   Product,
   useSaveSaleMutation,
-  useUpdateProductMutation,
+  useUpdateInvoiceCountMutation,
+  useUpdateProductStockMutation,
 } from '@/redux/services';
 import { resetSale } from '@/redux/slices/salesSlice';
+import { createPdf } from '@/utils/utils';
 import { Box, Flex, useToast } from '@chakra-ui/react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import TaxPicker from './TaxPicker';
 import ValueContainer from './ValueContainer';
 
 export interface SalesFooterProps {
+  pageMaxW: string;
   initialRowSate: RowData;
   isSalesBtnDisabled: boolean;
   rowsData: RowData[];
@@ -21,12 +25,15 @@ export interface SalesFooterProps {
 }
 
 export function SalesFooter({
+  pageMaxW,
   initialRowSate,
   isSalesBtnDisabled,
   rowsData,
   setRowsData,
 }: SalesFooterProps): JSX.Element {
-  const [updateProduct] = useUpdateProductMutation();
+  const [invoiceNum, setInvoiceNum] = useState<undefined | number>(undefined);
+  const [updateInvoiceCount, { data: invoice }] = useUpdateInvoiceCountMutation();
+  const [updateProductStock] = useUpdateProductStockMutation();
   const [
     saveSale,
     { isLoading: isSaveSaleLoading, isError: isSaveSaleError, error: saveSaleError },
@@ -44,16 +51,17 @@ export function SalesFooter({
 
   async function handleNewSale(): Promise<void> {
     async function saveNewSale(): Promise<any> {
-      const promises: Promise<NewSaleResponse | Product>[] = [];
+      const promises: Promise<NewSaleResponse | Product | InvoiceResponse>[] = [];
 
       promises.push(saveSale(salesData.newSaleData).unwrap());
+      promises.push(updateInvoiceCount().unwrap());
 
       rowsData.forEach((row) => {
         const newStock = row.stock - row.quantity;
         promises.push(
-          updateProduct({
+          updateProductStock({
             _id: row.productId,
-            update: { stock: newStock },
+            stock: newStock,
           }).unwrap()
         );
       });
@@ -63,6 +71,7 @@ export function SalesFooter({
 
     if (!isSaveSaleLoading && !isSaveSaleError) {
       await saveNewSale();
+      await createPdf(salesData.newSaleData, invoiceNum);
       resetInputs();
       toast({
         title: 'Success',
@@ -71,7 +80,7 @@ export function SalesFooter({
         duration: 9000,
         isClosable: true,
       });
-    } else {
+    } else if (isSaveSaleError) {
       toast({
         title: 'Error',
         description: "oops! something didn't work as expected. Try later",
@@ -83,8 +92,14 @@ export function SalesFooter({
     }
   }
 
+  useEffect(() => {
+    if (invoice?.count) {
+      setInvoiceNum(invoice.count + 1);
+    }
+  }, [invoice?.count]);
+
   return (
-    <Flex flexDir="column" align="flex-end" mr="2rem">
+    <Flex maxW={pageMaxW} flexDir="column" align="flex-end" mr="2rem">
       <Flex flexDir="column" justifyItems="center" alignItems="stretch" m="0 2.5rem" minW="400px">
         <ValueContainer name="subtotal" value={salesData.newSaleData.subtotal} />
         <TaxPicker />
@@ -92,10 +107,15 @@ export function SalesFooter({
       </Flex>
 
       <Box mt="1rem">
-        <CustomButton variant="accept" status={isSalesBtnDisabled} onClick={handleNewSale}>
+        <CustomButton
+          fontSize="sm"
+          variant="accept"
+          status={isSalesBtnDisabled}
+          onClick={handleNewSale}
+        >
           Vender
         </CustomButton>
-        <CustomButton variant="reject" onClick={resetInputs}>
+        <CustomButton fontSize="sm" variant="reject" onClick={resetInputs}>
           Borrar
         </CustomButton>
       </Box>

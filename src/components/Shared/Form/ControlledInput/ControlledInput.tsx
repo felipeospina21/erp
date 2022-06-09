@@ -1,7 +1,8 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, useRef, useLayoutEffect, ChangeEvent } from 'react';
 import { Input } from '@chakra-ui/react';
 import { UseFormRegister } from 'react-hook-form';
 import { FormValues } from '@/components/Shared/Form';
+import { Sizes } from '@/styles/types';
 
 export interface ControlledInputProps {
   register: UseFormRegister<any>;
@@ -10,7 +11,7 @@ export interface ControlledInputProps {
   type: string;
   value?: string;
   placeholder?: string;
-  size?: string;
+  size?: Sizes;
 }
 export function ControlledInput({
   register,
@@ -21,8 +22,24 @@ export function ControlledInput({
   size = 'lg',
   value: passedValue,
 }: ControlledInputProps): JSX.Element {
+  const inputRef = useRef<HTMLInputElement>(null);
   const [value, setValue] = useState(passedValue ?? '');
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => setValue(event.target.value);
+
+  useLayoutEffect(() => {
+    const { current } = inputRef;
+    const addStyle = (): void => current?.classList.add('valid');
+    const removeStyle = (): void => current?.classList.remove('valid');
+
+    current?.addEventListener('focus', addStyle);
+    if (current?.value) {
+      addStyle();
+    }
+
+    return () => {
+      current?.removeEventListener('focus', removeStyle);
+    };
+  }, []);
 
   return (
     <>
@@ -34,6 +51,9 @@ export function ControlledInput({
         placeholder={placeholder ?? ''}
         size={size}
         variant={type === 'file' ? 'flushed' : 'outline'}
+        // className={value || type === 'file' ? 'valid' : undefined}
+        bgColor="brand.bgLight"
+        ref={inputRef}
       />
     </>
   );

@@ -5,7 +5,7 @@ export interface InputCellProps {
   handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   id: string;
   textAlign: ResponsiveValue<any> | undefined;
-  variant?: string;
+  variant?: 'outline' | 'filled' | 'flushed' | 'unstyled';
 }
 export function InputCell({
   id,
@@ -18,6 +18,8 @@ export function InputCell({
       id={id}
       onChange={handleInputChange}
       textAlign={textAlign}
+      borderColor="brand.grey.100"
+      borderRadius="md"
       size="sm"
       variant={variant ?? 'unstyled'}
     />

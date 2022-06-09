@@ -1,8 +1,11 @@
 :root {
+  --bgColor: #fff1e6;
+  --bgColor-light: #ecf2fe;
   --boxShadow: 0px 8px 16px rgba(143, 149, 178, 0.15);
   --border-50: 1px solid #ecf2fe;
   --border-100: 1px solid #d3d8e1;
   --borderRadius-card: 16px;
+  --maxPageWitdth: 1800px
 }
 
 html,
@@ -23,5 +26,5 @@ a {
 }
 
 body.chakra-ui-light {
-  background-color: #ecf2fe;
+  background-color: var(--bgColor)
 }

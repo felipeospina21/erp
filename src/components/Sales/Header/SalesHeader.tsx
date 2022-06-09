@@ -1,12 +1,16 @@
 import React from 'react';
 import { nanoid } from '@reduxjs/toolkit';
-import { Wrap, WrapItem } from '@chakra-ui/react';
-import { CustomSelect, CustomFormField } from '@/components/Shared';
+import { Flex } from '@chakra-ui/react';
+import { CustomSelect } from '@/components/Shared';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { SalesData, updateSalesData } from '@/redux/slices/salesSlice';
-import { useGetClientsQuery } from '@/redux/services';
+import { Client, useGetClientsQuery } from '@/redux/services';
 
-export function SalesHeader(): JSX.Element {
+export interface SalesHeaderProps {
+  pageMaxW: string;
+}
+
+export function SalesHeader({ pageMaxW }: SalesHeaderProps): JSX.Element {
   const { data: clients } = useGetClientsQuery();
   const newSaleData = useAppSelector((state) => state.sales.newSaleData);
   const dispatch = useAppDispatch();
@@ -14,61 +18,83 @@ export function SalesHeader(): JSX.Element {
   const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>): void => {
     const { name, value } = event.target;
     if (name === 'clientName') {
-      const clientId = clients?.filter(
+      const filteredClient = clients?.filter(
         (client) => client.name.toLowerCase() === value.toLowerCase()
-      )[0]?._id;
-      dispatch(updateSalesData({ clientInfo: clientId }));
+      )[0];
+      dispatch(
+        updateSalesData({
+          clientId: filteredClient?._id,
+          clientInfo: { ...filteredClient } as Client,
+        })
+      );
     }
     dispatch(updateSalesData({ [name as keyof SalesData]: value }));
   };
 
   return (
-    <Wrap spacing="30px" m="2rem auto" justify="space-evenly">
-      <WrapItem w="20rem">
-        <CustomFormField label="Cliente" id="client">
-          <CustomSelect
-            name="clientName"
-            placeholder="Cliente"
-            options={clients?.map((client) => ({
-              id: client._id ?? nanoid(),
-              name: client.name,
-            }))}
-            size="lg"
-            onChangeFn={handleSelect}
-            value={newSaleData.clientName}
-          />
-        </CustomFormField>
-      </WrapItem>
-      <WrapItem w="20rem">
-        <CustomFormField label="Ciudad" id="ciudad">
-          <CustomSelect
-            name="deliveryCity"
-            placeholder="Ciudad"
-            options={[
-              { id: nanoid(), name: 'Medellín' },
-              { id: nanoid(), name: 'Bogota' },
-            ]}
-            size="lg"
-            onChangeFn={handleSelect}
-            value={newSaleData.deliveryCity}
-          />
-        </CustomFormField>
-      </WrapItem>
-      <WrapItem w="20rem">
-        <CustomFormField label="Canal" id="channel">
-          <CustomSelect
-            name="salesChannel"
-            placeholder="Canal"
-            options={[
-              { id: nanoid(), name: 'Directo' },
-              { id: nanoid(), name: 'Tercero' },
-            ]}
-            size="lg"
-            onChangeFn={handleSelect}
-            value={newSaleData.salesChannel}
-          />
-        </CustomFormField>
-      </WrapItem>
-    </Wrap>
+    <Flex
+      maxW={pageMaxW}
+      spacing="30px"
+      m={['2rem 2rem', null, null, null, null, '2rem auto']}
+      w={[null, null, null, null, null, '95%']}
+      p="1rem 0"
+      justify="space-evenly"
+      flexDir={['column', 'row']}
+      wrap={['nowrap', 'wrap']}
+      bgColor="brand.bgLight"
+      borderRadius="3xl"
+      boxShadow={'var(--boxShadow)'}
+    >
+      <CustomSelect
+        name="clientName"
+        placeholder="Cliente"
+        options={clients?.map((client) => ({
+          id: client._id ?? nanoid(),
+          name: client.name,
+        }))}
+        size="md"
+        onChangeFn={handleSelect}
+        value={newSaleData.clientName}
+        maxW="18rem"
+        minW="10rem"
+        fontSize="sm"
+        label="Cliente"
+        container={{ width: ['12rem', null, '15rem'], margin: '0.5rem auto' }}
+      />
+
+      <CustomSelect
+        name="deliveryCity"
+        placeholder="Ciudad"
+        options={[
+          { id: nanoid(), name: 'Medellín' },
+          { id: nanoid(), name: 'Bogota' },
+        ]}
+        size="md"
+        onChangeFn={handleSelect}
+        value={newSaleData.deliveryCity}
+        maxW="18rem"
+        minW="10rem"
+        fontSize="sm"
+        label="Ciudad"
+        container={{ width: ['12rem', null, '15rem'], margin: '0.5rem auto' }}
+      />
+
+      <CustomSelect
+        name="salesChannel"
+        placeholder="Canal"
+        options={[
+          { id: nanoid(), name: 'Directo' },
+          { id: nanoid(), name: 'Tercero' },
+        ]}
+        size="md"
+        onChangeFn={handleSelect}
+        value={newSaleData.salesChannel}
+        maxW="18rem"
+        minW="10rem"
+        fontSize="sm"
+        label="Canal"
+        container={{ width: ['12rem', null, '15rem'], margin: '0.5rem auto' }}
+      />
+    </Flex>
   );
 }

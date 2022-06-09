@@ -1,6 +1,6 @@
-import { Fields } from '@/components/Shared/Form';
+import { InputField } from '@/components/Shared/Form';
 
-export const clientFields: Fields[] = [
+export const clientFields: InputField[] = [
   {
     name: 'name',
     type: 'text',
