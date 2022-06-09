@@ -51,7 +51,7 @@ describe('New product creation', () => {
     await user.click(await screen.findByRole('button', {name: /agregar/i}))
     await screen.findByTestId('custom-modal')
     await user.type( screen.getByLabelText(/nombre/i), 'test name')
-    await user.type( screen.getByLabelText(/alias/i), 'test alias')
+    await user.selectOptions( screen.getByLabelText(/category/i), 'test category')
     await user.type( screen.getByLabelText(/precio/i), '10000')
     await user.type( screen.getByLabelText(/inventario/i), '10')
     await user.click(screen.getByRole('button', {name:/crear/i}))
