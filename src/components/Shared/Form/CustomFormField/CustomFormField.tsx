@@ -28,13 +28,13 @@ export function CustomFormField({
       isInvalid={isError}
       isRequired={isRequired}
       id={id}
-      mt="1rem"
+      mt="1.5rem"
       bgColor="inherit"
     >
-      {children}
-      {isError && <FormErrorMessage>{errorMessage}</FormErrorMessage>}
-      {helperText && <FormHelperText>{helperText}</FormHelperText>}
       <FormLabel htmlFor={id}>{label}</FormLabel>
+      {children}
+      {isError && <FormErrorMessage role="alert">{errorMessage}</FormErrorMessage>}
+      {helperText && <FormHelperText>{helperText}</FormHelperText>}
     </FormControl>
   );
 }

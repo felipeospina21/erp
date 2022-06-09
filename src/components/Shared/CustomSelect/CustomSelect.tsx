@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, FormLabel, Select } from '@chakra-ui/react';
+import { Sizes } from '@/styles/types';
 
 export interface CustomSelectProps {
   borderRadius?: string;
@@ -13,7 +14,7 @@ export interface CustomSelectProps {
   options: { id: string; name: string }[] | undefined;
   onChangeFn: (event: React.ChangeEvent<HTMLSelectElement>) => void;
   placeholder: string;
-  size: string;
+  size: Sizes;
   value?: string;
   label?: string;
   container?: {

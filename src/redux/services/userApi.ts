@@ -55,4 +55,10 @@ export const userApi = createApi({
   }),
 });
 
-export const { useCreateUserMutation, useLoginMutation, useLogoutMutation } = userApi;
+export const {
+  useCreateUserMutation,
+  useLoginMutation,
+  useLogoutMutation,
+  util: { getRunningOperationPromises: getUserProductRunningOperationPromises },
+} = userApi;
+export const { createUser, login, logout } = userApi.endpoints;

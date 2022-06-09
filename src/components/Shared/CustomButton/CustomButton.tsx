@@ -1,21 +1,10 @@
 import React from 'react';
 import { Button } from '@chakra-ui/react';
+import { ButtonVariants } from '@/styles/types';
 
 export interface CustomButtonProps {
   status?: boolean;
-  variant:
-    | 'accept'
-    | 'accept_light'
-    | 'accept_dark'
-    | 'reject'
-    | 'reject'
-    | 'reject_light'
-    | 'reject_dark'
-    | 'accept_outline'
-    | 'accept_dark_outline'
-    | 'reject_outline'
-    | 'reject_light_outline'
-    | 'reject_dark_outline';
+  variant: ButtonVariants;
   children: string;
   margin?: string;
   width?: string;

@@ -16,7 +16,7 @@ export function DeleteButton({
         aria-label="eliminar"
         icon={<Delete />}
         size={size}
-        color={`brand.red.${colorVariant}`}
+        color={`custom.red.${colorVariant}`}
         variant={variant}
         isLoading={isLoading}
         onClick={onClick}

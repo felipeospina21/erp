@@ -2,6 +2,7 @@ import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
 import type { ReactElement } from 'react';
 import type { NextPage } from 'next';
+import { wrapper } from '@/redux/store';
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactElement;
@@ -9,21 +10,12 @@ type NextPageWithLayout = NextPage & {
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
+  isAuth: boolean;
 };
 
-function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
-  const getLayout = Component.getLayout ?? ((page) => page);
-
-  return getLayout(<Component {...pageProps} />);
-  // return (
-  //   <Provider store={store}>
-  //     <ChakraProvider theme={theme}>
-  //       <Layout>
-  //         <Component {...pageProps} />
-  //       </Layout>
-  //     </ChakraProvider>
-  //   </Provider>
-  // );
+function MyApp({ Component, isAuth, pageProps }: AppPropsWithLayout): JSX.Element {
+  const getLayout = Component.getLayout ?? ((page): JSX.Element => page);
+  return getLayout(<Component isAuth={isAuth} {...pageProps} />);
 }
 
-export default MyApp;
+export default wrapper.withRedux(MyApp);

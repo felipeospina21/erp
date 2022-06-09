@@ -57,16 +57,18 @@ export function TableContainer({
   };
 
   return (
-    <Flex flexDir="column" align="flex-start" m="auto" maxW={pageMaxW} overflow="auto" mb="1rem">
-      <TableWrapper
-        border="1px solid"
-        borderColor="brand.grey.50"
-        borderRadius="xl"
-        p="2rem 0.5rem"
-        w="100%"
-        display="flex"
-        justifyContent="center"
-      >
+    <Flex
+      flexDir="column"
+      align="flex-start"
+      m={['2rem 2rem', null, null, null, null, '2rem auto']}
+      w={[null, null, null, null, null, '95%']}
+      maxW={pageMaxW}
+      overflow="auto"
+      bgColor="brand.bgLight"
+      borderRadius="3xl"
+      boxShadow={'var(--boxShadow)'}
+    >
+      <TableWrapper p="2rem 0" w="100%" display="flex" justifyContent="center">
         <Table variant="simple" w="90%" m={['auto']} colorScheme="blackAlpha">
           <Thead fontSize={['sm', 'md']}>
             <Tr>
