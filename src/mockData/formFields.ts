@@ -1,6 +1,6 @@
-import { Fields } from '@/components/Shared';
+import { InputField } from '@/components/Shared';
 
-export const mockFormFields: Fields[] = [
+export const mockFormFields: InputField[] = [
   {
     name: 'firstname',
     type: 'string',

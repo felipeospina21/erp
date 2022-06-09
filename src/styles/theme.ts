@@ -1,8 +1,8 @@
 import { extendTheme } from '@chakra-ui/react';
 
-const activeLabelStyles = {
-  transform: 'scale(0.85) translateY(-25px)',
-};
+// const activeLabelStyles = {
+//   transform: 'scale(0.85) translateY(-25px)',
+// };
 
 export const theme = extendTheme({
   colors: {
@@ -13,7 +13,8 @@ export const theme = extendTheme({
       green: '#988c24',
       purple: '#a16586',
       bg: '#fff1e6',
-      bgLight: '#ecf2fe',
+      bgLight: '#FEFEFE',
+      // bgLight: '#ecf2fe',
     },
     custom: {
       grey: {
@@ -141,30 +142,30 @@ export const theme = extendTheme({
         },
       },
     },
-    Form: {
-      variants: {
-        floating: {
-          container: {
-            'input:focus + label,input.valid + label': {
-              ...activeLabelStyles,
-            },
-            label: {
-              top: 0,
-              left: 0,
-              zIndex: 2,
-              position: 'absolute',
-              backgroundColor: 'inherit',
-              pointerEvents: 'none',
-              mx: 3,
-              px: 1,
-              my: 2,
-              transformOrigin: 'left top',
-              borderRadius: '6px',
-            },
-          },
-        },
-      },
-    },
+    // Form: {
+    //   variants: {
+    //     floating: {
+    //       container: {
+    //         'input:focus + label,input.valid + label, div + label ': {
+    //           ...activeLabelStyles,
+    //         },
+    //         label: {
+    //           top: 0,
+    //           left: 0,
+    //           zIndex: 2,
+    //           position: 'absolute',
+    //           backgroundColor: 'inherit',
+    //           pointerEvents: 'none',
+    //           mx: 3,
+    //           px: 1,
+    //           my: 2,
+    //           transformOrigin: 'left top',
+    //           borderRadius: '6px',
+    //         },
+    //       },
+    //     },
+    //   },
+    // },
   },
 });
 

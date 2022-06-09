@@ -31,10 +31,10 @@ export function CustomFormField({
       mt="1.5rem"
       bgColor="inherit"
     >
+      <FormLabel htmlFor={id}>{label}</FormLabel>
       {children}
       {isError && <FormErrorMessage role="alert">{errorMessage}</FormErrorMessage>}
       {helperText && <FormHelperText>{helperText}</FormHelperText>}
-      <FormLabel htmlFor={id}>{label}</FormLabel>
     </FormControl>
   );
 }

@@ -1,8 +1,13 @@
 import { CardsContainer } from '@/components/Products';
-import { productsFields } from '@/components/Products/ProductForm/fields/productFields';
+import { productFields } from '@/components/Products/ProductForm/fields/productFields';
 import { CardSkeleton, CustomForm, CustomModal, Layout } from '@/components/Shared';
 import { AddButton } from '@/components/Shared/IconButtons/AddButton/AddButton';
-import { Product, useCreateProductMutation, useGetProductsQuery } from '@/redux/services';
+import {
+  Product,
+  useCreateProductMutation,
+  useGetCategoriesQuery,
+  useGetProductsQuery,
+} from '@/redux/services';
 import { checkAuth, IsAuth } from '@/utils/auth';
 import { Flex, Skeleton, useToast } from '@chakra-ui/react';
 import dynamic from 'next/dynamic';
@@ -16,6 +21,7 @@ export interface ProductDataForm extends Omit<Product, 'price' | 'stock'> {
 }
 export default function ProductosPage({ isAuth }: IsAuth): JSX.Element {
   const [displayModal, setDisplayModal] = useState(false);
+  const { data: categories } = useGetCategoriesQuery();
   const { data: products, isLoading: areProductsLoading, isError, error } = useGetProductsQuery();
   const [
     createProduct,
@@ -30,17 +36,25 @@ export default function ProductosPage({ isAuth }: IsAuth): JSX.Element {
   function createNewProduct(data: ProductDataForm): void {
     const newProduct = new FormData();
 
-    newProduct.append('alias', data.alias);
+    newProduct.append('category', data.category);
     newProduct.append('name', data.name);
     newProduct.append('price', data.price);
     newProduct.append('stock', data.stock);
-    if (data.image) {
+    if (data.image?.length) {
       newProduct.append('image', data.image[0]);
     }
 
     createProduct(newProduct);
     setDisplayModal(false);
   }
+
+  useEffect(() => {
+    productFields.map((field) => {
+      if (field.name === 'category' && categories) {
+        field.options = [...categories];
+      }
+    });
+  }, [categories]);
 
   useEffect(() => {
     if (isCreateProductSuccess) {
@@ -122,7 +136,7 @@ export default function ProductosPage({ isAuth }: IsAuth): JSX.Element {
           onSubmit={createNewProduct}
           isLoading={false}
           button={{ text: 'crear' }}
-          fields={productsFields}
+          fields={productFields}
         />
       </CustomModal>
       <CardsContainer data={products ?? []} />

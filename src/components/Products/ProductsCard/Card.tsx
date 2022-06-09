@@ -12,7 +12,7 @@ import { Box, Flex, Heading, Text } from '@chakra-ui/react';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { SubmitHandler } from 'react-hook-form';
-import { productsFields } from '../ProductForm';
+import { productFields } from '../ProductForm';
 
 export interface CardProps {
   product: Product;
@@ -35,11 +35,11 @@ export function Card({ product, locale }: CardProps): JSX.Element {
     const updatedProduct = new FormData();
 
     updatedProduct.append('_id', product._id);
-    updatedProduct.append('alias', values.alias);
+    updatedProduct.append('category', values.category);
     updatedProduct.append('name', values.name);
     updatedProduct.append('price', values.price);
     updatedProduct.append('stock', values.stock);
-    if (values.image) {
+    if (values.image?.length) {
       updatedProduct.append('image', values.image[0]);
     }
 
@@ -75,12 +75,12 @@ export function Card({ product, locale }: CardProps): JSX.Element {
     >
       <Box borderRadius="xl" width="100%" overflow="hidden">
         <Image
-          src={product.image ?? ''}
+          src={product.image ?? '/img-placeholder.png'}
           alt="product image"
           width="100%"
           height="80px"
           layout="responsive"
-          objectFit={'cover'}
+          objectFit={'scale-down'}
         />
       </Box>
       <Flex flexDir="column" justify="center" align="center" mt="1rem" w="100%">
@@ -103,7 +103,7 @@ export function Card({ product, locale }: CardProps): JSX.Element {
             data={product}
             onSubmit={onSubmit}
             button={{ text: 'modificar' }}
-            fields={productsFields}
+            fields={productFields}
             isLoading={isUpdateLoading}
             controlled
           />

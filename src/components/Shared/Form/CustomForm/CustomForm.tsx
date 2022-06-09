@@ -2,9 +2,9 @@ import { CustomFormField, ControlledInput } from '@/components/Shared';
 import { Client, Product, UpdateClient, UpdateClientValues } from '@/redux/services';
 import { UserBody } from '@/redux/services/userApi';
 import { Sizes } from '@/styles/types';
-import { Button, Container, Input } from '@chakra-ui/react';
+import { Button, Container, Input, Select } from '@chakra-ui/react';
 import { nanoid } from '@reduxjs/toolkit';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 
 export interface ClientFormValues extends Omit<Client, 'discount'> {
   discount: string;
@@ -18,16 +18,17 @@ export type FormValues =
   | UpdateClientValues
   | UserBody;
 
-export interface Fields {
+export interface InputField {
   name: string;
   type: string;
   placeholder: string;
   label: string;
   required: boolean;
+  options?: Array<undefined | { _id: string; name: string }>;
 }
 
 export interface CustomFormProps {
-  fields: Fields[];
+  fields: Array<InputField>;
   isLoading: boolean;
   controlled?: boolean;
   data?: Client | Product;
@@ -51,6 +52,7 @@ export function CustomForm({
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm<FormValues>();
 
@@ -61,6 +63,41 @@ export function CustomForm({
           const inputValue = data?.[field.name as keyof FormValues]
             ? String(data?.[field.name as keyof FormValues])
             : undefined;
+
+          const FormInput = controlled ? (
+            <ControlledInput
+              register={register}
+              name={field.name}
+              required={field.required}
+              type={field.type}
+              value={field.type !== 'file' ? inputValue : ''}
+              size={inputSize}
+            />
+          ) : (
+            <Input
+              {...register(field.name as keyof FormValues, { required: field.required })}
+              type={field.type}
+              variant={field.type === 'file' ? 'flushed' : 'outline'}
+              size={inputSize}
+              bgColor="brand.bgLight"
+            />
+          );
+
+          const SelectInput = (
+            <Controller
+              name={field.name as keyof FormValues}
+              control={control}
+              render={({ field: selectField }): JSX.Element => (
+                <Select {...selectField}>
+                  {field.options?.map((option) => (
+                    <option key={option?._id} value={option?._id}>
+                      {option?.name}
+                    </option>
+                  ))}
+                </Select>
+              )}
+            />
+          );
           return (
             <CustomFormField
               key={nanoid()}
@@ -71,24 +108,7 @@ export function CustomForm({
               errorMessage="This field is required"
               variant={'floating'}
             >
-              {controlled ? (
-                <ControlledInput
-                  register={register}
-                  name={field.name}
-                  required={field.required}
-                  type={field.type}
-                  value={field.type !== 'file' ? inputValue : ''}
-                  size={inputSize}
-                />
-              ) : (
-                <Input
-                  {...register(field.name as keyof FormValues, { required: field.required })}
-                  type={field.type}
-                  variant={field.type === 'file' ? 'flushed' : 'outline'}
-                  size={inputSize}
-                  bgColor="brand.bgLight"
-                />
-              )}
+              {field.type === 'select' ? SelectInput : FormInput}
             </CustomFormField>
           );
         })}
