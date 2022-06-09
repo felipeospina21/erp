@@ -1,12 +1,22 @@
 import { extendTheme } from '@chakra-ui/react';
 
-const activeLabelStyles = {
-  transform: 'scale(0.85) translateY(-24px)',
-};
+// const activeLabelStyles = {
+//   transform: 'scale(0.85) translateY(-25px)',
+// };
 
 export const theme = extendTheme({
   colors: {
     brand: {
+      pink: '#ffbcb1',
+      yellow: '#f1dd3d',
+      teal: '#62a495',
+      green: '#988c24',
+      purple: '#a16586',
+      bg: '#fff1e6',
+      bgLight: '#FEFEFE',
+      // bgLight: '#ecf2fe',
+    },
+    custom: {
       grey: {
         50: '#ecf2fe',
         100: '#d3d8e1',
@@ -60,99 +70,102 @@ export const theme = extendTheme({
   components: {
     Button: {
       variants: {
+        primary: {
+          bg: 'brand.teal',
+          color: 'white',
+        },
+        primary_ghost: {
+          bg: 'brand.teal',
+          color: 'white',
+          border: 'none',
+        },
         accept: {
-          bg: 'brand.green.500',
+          bg: 'custom.green.500',
           color: 'white',
         },
         accept_light: {
-          bg: 'brand.green.400',
+          bg: 'custom.green.400',
           color: 'white',
         },
         accept_dark: {
-          bg: 'brand.green.600',
+          bg: 'custom.green.600',
           color: 'white',
         },
         reject: {
-          bg: 'brand.red.400',
+          bg: 'custom.red.400',
           color: 'white',
         },
         reject_light: {
-          bg: 'brand.red.300',
+          bg: 'custom.red.300',
           color: 'white',
         },
         reject_dark: {
-          bg: 'brand.red.500',
+          bg: 'custom.red.500',
           color: 'white',
         },
 
         accept_outline: {
           bg: 'transparent',
-          color: 'brand.green.500',
+          color: 'custom.green.500',
           border: '1px solid',
-          borderColor: 'brand.green.500',
+          borderColor: 'custom.green.500',
         },
         accept_light_outline: {
           bg: 'transparent',
-          color: 'brand.green.400',
+          color: 'custom.green.400',
           border: '1px solid',
-          borderColor: 'brand.green.400',
+          borderColor: 'custom.green.400',
         },
         accept_dark_outline: {
           bg: 'transparent',
-          color: 'brand.green.600',
+          color: 'custom.green.600',
           border: '1px solid',
-          borderColor: 'brand.green.600',
+          borderColor: 'custom.green.600',
         },
         reject_outline: {
           bg: 'transparent',
-          color: 'brand.red.400',
+          color: 'custom.red.400',
           border: '1px solid',
-          borderColor: 'brand.red.400',
+          borderColor: 'custom.red.400',
         },
         reject_light_outline: {
           bg: 'transparent',
-          color: 'brand.red.300',
+          color: 'custom.red.300',
           border: '1px solid',
-          borderColor: 'brand.red.300',
+          borderColor: 'custom.red.300',
         },
         reject_dark_outline: {
           bg: 'transparent',
-          color: 'brand.red.500',
+          color: 'custom.red.500',
           border: '1px solid',
-          borderColor: 'brand.red.500',
+          borderColor: 'custom.red.500',
         },
       },
     },
-    Form: {
-      variants: {
-        floating: {
-          container: {
-            // _focusWithin: {
-            //   label: {
-            //     ...activeLabelStyles,
-            //   },
-            // },
-
-            'input:focus + label,input.valid + label': {
-              ...activeLabelStyles,
-            },
-            label: {
-              top: 0,
-              left: 0,
-              zIndex: 2,
-              position: 'absolute',
-              backgroundColor: 'inherit',
-              pointerEvents: 'none',
-              mx: 3,
-              px: 1,
-              my: 2,
-              transformOrigin: 'left top',
-              borderRadius: '6px',
-            },
-          },
-        },
-      },
-    },
+    // Form: {
+    //   variants: {
+    //     floating: {
+    //       container: {
+    //         'input:focus + label,input.valid + label, div + label ': {
+    //           ...activeLabelStyles,
+    //         },
+    //         label: {
+    //           top: 0,
+    //           left: 0,
+    //           zIndex: 2,
+    //           position: 'absolute',
+    //           backgroundColor: 'inherit',
+    //           pointerEvents: 'none',
+    //           mx: 3,
+    //           px: 1,
+    //           my: 2,
+    //           transformOrigin: 'left top',
+    //           borderRadius: '6px',
+    //         },
+    //       },
+    //     },
+    //   },
+    // },
   },
 });
 

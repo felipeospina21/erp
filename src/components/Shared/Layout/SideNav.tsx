@@ -38,7 +38,7 @@ export function SideNav(): JSX.Element {
     }
   }, [isSuccess, router]);
   return (
-    <Box p="1rem" bg={'brand.grey.600'}>
+    <Box p="1rem" bg={'custom.grey.600'}>
       <Flex align="center" justify="space-between">
         <Box w="12rem">
           <IconButton
@@ -50,7 +50,12 @@ export function SideNav(): JSX.Element {
             onClick={onOpen}
           />
         </Box>
-        <Heading as="h1" fontSize={['md', '2xl', '3xl']} color="brand.grey.200" letterSpacing="5px">
+        <Heading
+          as="h1"
+          fontSize={['md', '2xl', '3xl']}
+          color="custom.grey.200"
+          letterSpacing="5px"
+        >
           {currPage.toLocaleUpperCase()}
         </Heading>
         <UserMenu user={user} menuItemClickFn={{ handleLogout }} />

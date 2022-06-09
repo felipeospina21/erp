@@ -1,18 +1,18 @@
 import { clientFields, ClientRow } from '@/components/Clients';
 import {
-  CustomModal,
-  CustomTable,
   ClientFormValues,
   CustomForm,
+  CustomModal,
+  CustomTable,
   Layout,
 } from '@/components/Shared';
+import { AddButton } from '@/components/Shared/IconButtons/AddButton/AddButton';
 import { useCreateClientMutation, useGetClientsQuery } from '@/redux/services';
+import { checkAuth, IsAuth } from '@/utils/auth';
 import { Box, Th } from '@chakra-ui/react';
-import { ReactElement, useState, useEffect } from 'react';
-import { FaPlus } from 'react-icons/fa';
-import { IsAuth } from '../utils';
-import Router from 'next/router';
 import dynamic from 'next/dynamic';
+import Router from 'next/router';
+import { ReactElement, useEffect, useState } from 'react';
 const LoginPage = dynamic(() => import('@/pages/login'));
 
 export default function ClientesPage({ isAuth }: IsAuth): ReactElement {
@@ -36,14 +36,22 @@ export default function ClientesPage({ isAuth }: IsAuth): ReactElement {
   }
 
   return (
-    <Box maxW="var(--maxPageWitdth)" m={['1rem', null, '1rem 2rem']}>
+    <Box
+      maxW="var(--maxPageWitdth)"
+      m={['1rem', null, '1rem 2rem']}
+      bgColor="brand.bgLight"
+      borderRadius="3xl"
+      boxShadow={'var(--boxShadow)'}
+    >
       <CustomTable
-        Headers={clientFields.map((header) => {
-          return <Th key={header.name}>{header.label}</Th>;
-        })}
-        Rows={clients?.map((dataRow) => {
-          return <ClientRow key={dataRow._id} client={dataRow} />;
-        })}
+        Headers={clientFields.map((header) => (
+          <Th key={header.name} textAlign="center" p="1rem">
+            {header.label}
+          </Th>
+        ))}
+        Rows={clients?.map((dataRow) => (
+          <ClientRow key={dataRow._id} client={dataRow} />
+        ))}
         variant="simple"
         size="sm"
       />
@@ -51,12 +59,14 @@ export default function ClientesPage({ isAuth }: IsAuth): ReactElement {
         title="Crear Cliente"
         isDisplayed={displayModal}
         setDisplayModal={setDisplayModal}
-        button={{ icon: <FaPlus />, bgColor: 'brand.green.100', size: 'sm' }}
+        iconButton={
+          <AddButton size="sm" margin="1.5rem" onClick={(): void => setDisplayModal(true)} />
+        }
       >
         <CustomForm
           onSubmit={onSubmit}
           isLoading={isLoading}
-          buttonText="crear"
+          button={{ text: 'crear' }}
           fields={clientFields}
         />
       </CustomModal>
@@ -68,14 +78,4 @@ ClientesPage.getLayout = function getLayout(page: ReactElement): JSX.Element {
   return <Layout>{page}</Layout>;
 };
 
-// ClientesPage.getInitialProps = async () => {
-//   if (typeof window !== 'undefined') {
-//     const isAuth = sessionStorage.getItem('isAuth');
-//     if (isAuth) {
-//       return { isAuth: true };
-//     } else {
-//       return { isAuth: false };
-//     }
-//   }
-//   return {};
-// };
+ClientesPage.getInitialProps = checkAuth;

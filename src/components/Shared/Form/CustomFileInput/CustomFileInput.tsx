@@ -3,7 +3,7 @@ import React, { useRef } from 'react';
 export function CustomFileInput(): JSX.Element {
   const fileRef = useRef(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const file = e.target.files?.[0];
     console.log(file);
   };
@@ -18,7 +18,7 @@ export function CustomFileInput(): JSX.Element {
   return (
     <div>
       <button
-        onClick={() => {
+        onClick={(): void => {
           return;
         }}
       >

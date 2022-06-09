@@ -9,13 +9,14 @@ import {
 } from '@/redux/services';
 import { CustomForm } from '@/components/Shared/Form';
 import { clientFields } from '../ClientForm';
-import { DeleteButton } from '@/components/Shared/IconButtons';
-import { Edit } from '@/assets/icons';
+import { DeleteButton, EditButton } from '@/components/Shared/IconButtons';
 import { ConfirmationAlert } from '@/components/Shared/Overlay/ConfirmationAlert/ConfirmationAlert';
 import { SubmitHandler } from 'react-hook-form';
+
 export interface ClientRowProps {
   client: Client;
 }
+
 export function ClientRow({ client }: ClientRowProps): JSX.Element {
   const [displayModal, setDisplayModal] = useState(false);
   const [displayAlert, setDisplayAlert] = useState(false);
@@ -69,18 +70,12 @@ export function ClientRow({ client }: ClientRowProps): JSX.Element {
           title="Actualizar Cliente"
           isDisplayed={displayModal}
           setDisplayModal={setDisplayModal}
-          button={{
-            text: 'actualizar',
-            icon: <Edit />,
-            variant: 'ghost',
-            color: 'brand.green.500',
-            size: 'md',
-          }}
+          iconButton={<EditButton size="md" onClick={(): void => setDisplayModal(true)} />}
         >
           <CustomForm
             data={client}
             onSubmit={onSubmit}
-            buttonText="modificar"
+            button={{ text: 'modificar' }}
             fields={clientFields}
             isLoading={isLoading}
             controlled

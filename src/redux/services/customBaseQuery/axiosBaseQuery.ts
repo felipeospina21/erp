@@ -1,6 +1,12 @@
 import { BaseQueryFn } from '@reduxjs/toolkit/query';
 import axios, { AxiosRequestConfig, AxiosError } from 'axios';
 
+export interface CustomError {
+  status: number;
+  data: {
+    message: string;
+  };
+}
 export const axiosBaseQuery =
   (
     { baseUrl }: { baseUrl: string } = { baseUrl: '' }
@@ -30,7 +36,7 @@ export const axiosBaseQuery =
       });
       return { data: result.data };
     } catch (axiosError) {
-      const err = axiosError as AxiosError;
+      const err = axiosError as AxiosError<CustomError>;
       return {
         error: {
           status: err.response?.status,

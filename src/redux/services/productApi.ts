@@ -3,7 +3,7 @@ import type { DocumentId } from './clientApi';
 import { axiosBaseQuery } from './customBaseQuery';
 import { HYDRATE } from 'next-redux-wrapper';
 export interface Product extends DocumentId {
-  alias: string;
+  category: string;
   name: string;
   price: number;
   stock: number;

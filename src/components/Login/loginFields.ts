@@ -1,6 +1,6 @@
-import { Fields } from '@/components/Shared/Form';
+import { InputField } from '@/components/Shared/Form';
 
-export const loginFields: Fields[] = [
+export const loginFields: InputField[] = [
   {
     name: 'email',
     type: 'email',
