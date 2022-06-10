@@ -88,7 +88,7 @@ export function CustomForm({
               name={field.name as keyof FormValues}
               control={control}
               render={({ field: selectField }): JSX.Element => (
-                <Select {...selectField}>
+                <Select {...selectField} placeholder="Select option">
                   {field.options?.map((option) => (
                     <option key={option?._id} value={option?._id}>
                       {option?.name}

@@ -18,7 +18,7 @@ export const invoiceApi = createApi({
       query: () => ({
         url: '/',
         method: 'PUT',
-        data: { _id: '62857596dc8d577f73f91f28' },
+        data: { _id: process.env.NEXT_PUBLIC_COUNT_ID },
       }),
       invalidatesTags: [{ type: 'Invoice' }],
     }),
