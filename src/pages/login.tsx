@@ -84,20 +84,20 @@ export default function Login(): JSX.Element {
         </GridItem>
         <GridItem
           w={['70%', '60%', '100%']}
-          h="100%"
+          h="100vh"
           m="auto"
           display="flex"
           flexDir="column"
           justifyContent="center"
-          borderRadius="10%"
-          bg={['none', null, ' linear-gradient(-45deg, #c9e1f1 20%, var(--bgColor-light))']}
+          bg={['none', null, ' #fefefe']}
         >
           <Image
-            src="/blobanimation.svg"
+            src="/logo.png"
             alt="doodle"
             width={400}
             height={400}
             layout="responsive"
+            objectFit={'scale-down'}
           />
         </GridItem>
       </Grid>
