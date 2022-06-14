@@ -23,8 +23,9 @@ const TaxPicker = (): JSX.Element => {
       <CustomSelect
         id="tax-picker"
         options={[
-          { id: nanoid(), name: '19' },
+          { id: nanoid(), name: '0' },
           { id: nanoid(), name: '16' },
+          { id: nanoid(), name: '19' },
         ]}
         size="sm"
         margin="0"

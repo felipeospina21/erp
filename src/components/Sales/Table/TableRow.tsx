@@ -54,6 +54,8 @@ export function TableRow({
 
     newRowsData.map((row) => {
       const product = products?.filter((product) => product._id === row.productId)[0];
+      let discount = 0;
+
       if (event.target.id === 'quantity' && row.id === id) {
         row.quantity = parseInt(value);
         const prodStock = product?.stock ?? 0;
@@ -67,13 +69,14 @@ export function TableRow({
           });
         }
       } else if (event.target.id === 'discount' && row.id === id) {
-        const value = Number(event.target.value) / 100;
-        const price = product?.price ?? 0;
-        const netSubtotal = price * row.quantity;
-        const grossSubTotal = netSubtotal - netSubtotal * value;
-        row.discount = value;
-        row.subtotal = grossSubTotal;
+        discount = Number(event.target.value) / 100 ?? 0;
       }
+      const price = product?.price ?? 0;
+      const netSubtotal = price * row.quantity;
+      const grossSubTotal = netSubtotal - netSubtotal * discount;
+
+      row.discount = discount;
+      row.subtotal = grossSubTotal;
       setRowsData(newRowsData);
 
       const orderedProduct = {
