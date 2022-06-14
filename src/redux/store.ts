@@ -24,6 +24,7 @@ export const middlewares = [
   productApi.middleware,
   saleApi.middleware,
   userApi.middleware,
+  invoiceApi.middleware,
   categoryApi.middleware,
 ];
 

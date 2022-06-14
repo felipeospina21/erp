@@ -5,6 +5,7 @@ import {
   InvoiceResponse,
   NewSaleResponse,
   Product,
+  useGetInvoiceCountQuery,
   useSaveSaleMutation,
   useUpdateInvoiceCountMutation,
   useUpdateProductStockMutation,
@@ -12,7 +13,7 @@ import {
 import { resetSale } from '@/redux/slices/salesSlice';
 import { createPdf } from '@/utils/utils';
 import { Box, Flex, useToast } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import TaxPicker from './TaxPicker';
 import ValueContainer from './ValueContainer';
 
@@ -31,8 +32,8 @@ export function SalesFooter({
   rowsData,
   setRowsData,
 }: SalesFooterProps): JSX.Element {
-  const [invoiceNum, setInvoiceNum] = useState<undefined | number>(undefined);
-  const [updateInvoiceCount, { data: invoice }] = useUpdateInvoiceCountMutation();
+  const { data: invoice } = useGetInvoiceCountQuery();
+  const [updateInvoiceCount] = useUpdateInvoiceCountMutation();
   const [updateProductStock] = useUpdateProductStockMutation();
   const [
     saveSale,
@@ -70,6 +71,7 @@ export function SalesFooter({
     }
 
     if (!isSaveSaleLoading && !isSaveSaleError) {
+      const invoiceNum = invoice?.count ? invoice?.count + 1 : undefined;
       await saveNewSale();
       await createPdf(salesData.newSaleData, invoiceNum);
       resetInputs();
@@ -91,12 +93,6 @@ export function SalesFooter({
       throw saveSaleError;
     }
   }
-
-  useEffect(() => {
-    if (invoice?.count) {
-      setInvoiceNum(invoice.count + 1);
-    }
-  }, [invoice?.count]);
 
   return (
     <Flex maxW={pageMaxW} flexDir="column" align="flex-end" mr="2rem">
