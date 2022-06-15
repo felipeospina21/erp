@@ -1,9 +1,9 @@
 import { PDFDocument, StandardFonts, grayscale } from 'pdf-lib';
 import download from 'downloadjs';
-import { Client, NewSaleOrderedProduct, SaleInfo } from '../redux/services';
+import { Client, NewSaleOrderedProduct, CheckoutData } from '../redux/services';
 import { numberToCurrency, formatDate } from './';
 
-export interface CreatePdfData extends SaleInfo {
+export interface CreatePdfData extends CheckoutData {
   clientInfo: Client;
   orderedProducts: Array<NewSaleOrderedProduct>;
 }
@@ -112,7 +112,8 @@ export async function createPdf(data: CreatePdfData, invoice?: number): Promise<
     const props = { ...fontStyles, y: height - newLineY };
     orderedProducts.forEach((product) => {
       const price = product.price ?? 0;
-      const discountedPrice = price - price * product.discount;
+      const discount = product.discount / 100;
+      const discountedPrice = price - price * discount;
       newLineY += lineHeight;
       props.y = height - newLineY;
       page.drawText(product.name ?? '', {
@@ -127,7 +128,7 @@ export async function createPdf(data: CreatePdfData, invoice?: number): Promise<
         ...props,
         x: tablePositionX.col3,
       });
-      page.drawText(numberToCurrency(product.subtotal), {
+      page.drawText(numberToCurrency(product.rowTotal), {
         ...props,
         x: tablePositionX.col4,
       });

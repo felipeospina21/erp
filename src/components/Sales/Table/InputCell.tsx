@@ -5,11 +5,13 @@ export interface InputCellProps {
   handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   id: string;
   textAlign: ResponsiveValue<any> | undefined;
+  value: string;
   variant?: 'outline' | 'filled' | 'flushed' | 'unstyled';
 }
 export function InputCell({
   id,
   textAlign,
+  value,
   variant,
   handleInputChange,
 }: InputCellProps): JSX.Element {
@@ -22,6 +24,7 @@ export function InputCell({
       borderRadius="md"
       size="sm"
       variant={variant ?? 'unstyled'}
+      value={value}
     />
   );
 }

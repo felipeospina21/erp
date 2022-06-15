@@ -64,4 +64,19 @@ export const clientFields: InputField[] = [
     label: 'descuento',
     required: true,
   },
+  {
+    name: 'paymentTerm',
+    type: 'select',
+    placeholder: 'pago',
+    label: 'pago',
+    required: true,
+    options: [],
+  },
+  {
+    name: 'retailer',
+    type: 'checkbox',
+    placeholder: 'distribuidor',
+    label: 'distribuidor',
+    required: true,
+  },
 ];

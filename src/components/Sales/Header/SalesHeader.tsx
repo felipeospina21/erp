@@ -3,8 +3,12 @@ import { nanoid } from '@reduxjs/toolkit';
 import { Flex } from '@chakra-ui/react';
 import { CustomSelect } from '@/components/Shared';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { SalesData, updateSalesData } from '@/redux/slices/salesSlice';
-import { Client, useGetClientsQuery } from '@/redux/services';
+import {
+  addNewSaleClient,
+  updateCheckoutData,
+  updateClientPaymentTerm,
+} from '@/redux/slices/salesSlice';
+import { PaymentOptions, useGetClientsQuery } from '@/redux/services';
 
 export interface SalesHeaderProps {
   pageMaxW: string;
@@ -12,23 +16,26 @@ export interface SalesHeaderProps {
 
 export function SalesHeader({ pageMaxW }: SalesHeaderProps): JSX.Element {
   const { data: clients } = useGetClientsQuery();
-  const newSaleData = useAppSelector((state) => state.sales.newSaleData);
+  const salesData = useAppSelector((state) => state.sales);
   const dispatch = useAppDispatch();
 
-  const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>): void => {
-    const { name, value } = event.target;
-    if (name === 'clientName') {
-      const filteredClient = clients?.filter(
-        (client) => client.name.toLowerCase() === value.toLowerCase()
-      )[0];
-      dispatch(
-        updateSalesData({
-          clientId: filteredClient?._id,
-          clientInfo: { ...filteredClient } as Client,
-        })
-      );
+  const handleClientSelect = (event: React.ChangeEvent<HTMLSelectElement>): void => {
+    const { value } = event.target;
+    if (clients) {
+      const selectedClient = clients.filter((client) => client.name === value)[0];
+      dispatch(dispatch(addNewSaleClient({ ...selectedClient })));
+      dispatch(dispatch(updateClientPaymentTerm(selectedClient.paymentTerm)));
     }
-    dispatch(updateSalesData({ [name as keyof SalesData]: value }));
+  };
+
+  const handleCitySelect = (event: React.ChangeEvent<HTMLSelectElement>): void => {
+    const { value } = event.target;
+    dispatch(updateCheckoutData({ key: 'deliveryCity', value }));
+  };
+
+  const handlePaymentSelect = (event: React.ChangeEvent<HTMLSelectElement>): void => {
+    const { value } = event.target;
+    dispatch(updateClientPaymentTerm(value as PaymentOptions));
   };
 
   return (
@@ -53,8 +60,8 @@ export function SalesHeader({ pageMaxW }: SalesHeaderProps): JSX.Element {
           name: client.name,
         }))}
         size="md"
-        onChangeFn={handleSelect}
-        value={newSaleData.clientName}
+        onChangeFn={handleClientSelect}
+        value={salesData.client?.name}
         maxW="18rem"
         minW="10rem"
         fontSize="sm"
@@ -70,8 +77,8 @@ export function SalesHeader({ pageMaxW }: SalesHeaderProps): JSX.Element {
           { id: nanoid(), name: 'Bogota' },
         ]}
         size="md"
-        onChangeFn={handleSelect}
-        value={newSaleData.deliveryCity}
+        onChangeFn={handleCitySelect}
+        value={salesData.checkoutData?.deliveryCity}
         maxW="18rem"
         minW="10rem"
         fontSize="sm"
@@ -80,19 +87,21 @@ export function SalesHeader({ pageMaxW }: SalesHeaderProps): JSX.Element {
       />
 
       <CustomSelect
-        name="salesChannel"
-        placeholder="Canal"
+        name="paymentTerm"
+        placeholder="Pago"
         options={[
-          { id: nanoid(), name: 'Directo' },
-          { id: nanoid(), name: 'Tercero' },
+          { id: nanoid(), name: 'Contado' },
+          { id: nanoid(), name: '15' },
+          { id: nanoid(), name: '30' },
+          { id: nanoid(), name: '60' },
         ]}
         size="md"
-        onChangeFn={handleSelect}
-        value={newSaleData.salesChannel}
+        onChangeFn={handlePaymentSelect}
+        value={String(salesData.checkoutData?.paymentTerm)}
         maxW="18rem"
         minW="10rem"
         fontSize="sm"
-        label="Canal"
+        label="Pago"
         container={{ width: ['12rem', null, '15rem'], margin: '0.5rem auto' }}
       />
     </Flex>
