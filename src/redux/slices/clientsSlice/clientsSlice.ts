@@ -22,6 +22,8 @@ const initialState: ClientsState = {
     discount: 0,
     idNumber: '',
     idType: '',
+    paymentTerm: '15',
+    retailer: true,
   },
 };
 
