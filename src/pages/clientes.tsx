@@ -27,6 +27,19 @@ export default function ClientesPage({ isAuth }: IsAuth): ReactElement {
   }
 
   useEffect(() => {
+    clientFields.map((field) => {
+      if (field.name === 'paymentTerm') {
+        field.options = [
+          { _id: 'contado', name: 'contado' },
+          { _id: '15', name: '15' },
+          { _id: '30', name: '30' },
+          { _id: '60', name: '60' },
+        ];
+      }
+    });
+  }, []);
+
+  useEffect(() => {
     if (isAuth) return; // do nothing if the user is logged in
     Router.replace('/clientes', '/login', { shallow: true });
   }, [isAuth]);

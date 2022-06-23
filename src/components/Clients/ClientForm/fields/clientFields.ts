@@ -74,7 +74,7 @@ export const clientFields: InputField[] = [
   },
   {
     name: 'retailer',
-    type: 'checkbox',
+    type: 'radio',
     placeholder: 'distribuidor',
     label: 'distribuidor',
     required: true,

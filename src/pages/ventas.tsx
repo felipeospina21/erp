@@ -19,8 +19,7 @@ export interface RowData {
   productId: string;
 }
 
-//FIXME: remive isAuth value
-export default function VentasPage({ isAuth = true }: IsAuth): ReactElement {
+export default function VentasPage({ isAuth }: IsAuth): ReactElement {
   const initialRowSate: RowData = {
     id: 1,
     item: '',

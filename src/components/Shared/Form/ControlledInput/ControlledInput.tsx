@@ -1,10 +1,11 @@
 import React, { useState, useRef, useLayoutEffect, ChangeEvent } from 'react';
 import { Input } from '@chakra-ui/react';
-import { UseFormRegister } from 'react-hook-form';
+import { ControllerRenderProps, UseFormRegister } from 'react-hook-form';
 import { FormValues } from '@/components/Shared/Form';
 import { Sizes } from '@/styles/types';
 
 export interface ControlledInputProps {
+  controller: ControllerRenderProps<FormValues, never>;
   register: UseFormRegister<any>;
   required: boolean;
   name: string;
@@ -14,6 +15,7 @@ export interface ControlledInputProps {
   size?: Sizes;
 }
 export function ControlledInput({
+  controller,
   register,
   required,
   name,
@@ -44,6 +46,7 @@ export function ControlledInput({
   return (
     <>
       <Input
+        {...controller}
         {...register(name as keyof FormValues, { required: required })}
         type={type}
         value={value}

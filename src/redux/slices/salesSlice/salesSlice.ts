@@ -1,52 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-// import { createPdf } from "../../../utils";
 import { RootState } from '@/redux/store';
-import type { CheckoutData, Client, NewSale, NewSaleOrderedProduct } from '@/redux/services';
-
-export interface SalesData extends NewSale {
-  clientId: string; //client id
-  clientName: string;
-  clientInfo: Client;
-}
+import type { CheckoutData, Client, NewSaleOrderedProduct } from '@/redux/services';
 
 export interface SalesState {
-  // newSaleData: SalesData;
   productsList?: NewSaleOrderedProduct[];
   client: Client;
   checkoutData: CheckoutData;
 }
 
 const initialState: SalesState = {
-  // newSaleData: {
-  //   clientId: '',
-  //   clientName: '',
-  //   clientInfo: {
-  //     addres1: '',
-  //     city: '',
-  //     department: '',
-  //     discount: 0,
-  //     idNumber: '',
-  //     idType: '',
-  //     name: '',
-  //   },
-  //   orderedProducts: [
-  //     {
-  //       itemId: '',
-  //       rowId: '',
-  //       discount: 0,
-  //       quantity: 0,
-  //       rowTotal: 0,
-  //       price: 0,
-  //       stock:0,
-  //       name: ''
-  //     },
-  //   ],
-  //   deliveryCity: '',
-  //   paymentTerm: '',
-  //   tax: 0,
-  //   subtotal: 0,
-  //   total: 0,
-  // },
   productsList: [],
   client: {
     addres1: '',
@@ -75,9 +37,7 @@ const salesSlice = createSlice({
     resetSale: () => {
       return initialState;
     },
-    // updateSalesData: (state, action: PayloadAction<Partial<SalesData>>) => {
-    //   state.newSaleData = { ...state.newSaleData, ...action.payload };
-    // },
+
     updateProductsList: (state, action: PayloadAction<Partial<NewSaleOrderedProduct>>) => {
       const { payload } = action;
 

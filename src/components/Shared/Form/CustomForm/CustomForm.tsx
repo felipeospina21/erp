@@ -2,7 +2,7 @@ import { CustomFormField, ControlledInput } from '@/components/Shared';
 import { Client, Product, UpdateClient, UpdateClientValues } from '@/redux/services';
 import { UserBody } from '@/redux/services/userApi';
 import { Sizes } from '@/styles/types';
-import { Button, Container, Input, Select } from '@chakra-ui/react';
+import { Button, Container, Input, Radio, RadioGroup, Select, Stack } from '@chakra-ui/react';
 import { nanoid } from '@reduxjs/toolkit';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 
@@ -65,21 +65,35 @@ export function CustomForm({
             : undefined;
 
           const FormInput = controlled ? (
-            <ControlledInput
-              register={register}
-              name={field.name}
-              required={field.required}
-              type={field.type}
-              value={field.type !== 'file' ? inputValue : ''}
-              size={inputSize}
+            <Controller
+              name={field.name as keyof FormValues}
+              control={control}
+              render={({ field: inputField }): JSX.Element => (
+                <ControlledInput
+                  controller={inputField}
+                  register={register}
+                  name={field.name}
+                  required={field.required}
+                  type={field.type}
+                  value={field.type !== 'file' ? inputValue : ''}
+                  size={inputSize}
+                />
+              )}
             />
           ) : (
-            <Input
-              {...register(field.name as keyof FormValues, { required: field.required })}
-              type={field.type}
-              variant={field.type === 'file' ? 'flushed' : 'outline'}
-              size={inputSize}
-              bgColor="brand.bgLight"
+            <Controller
+              name={field.name as keyof FormValues}
+              control={control}
+              render={({ field: inputField }): JSX.Element => (
+                <Input
+                  {...inputField}
+                  {...register(field.name as keyof FormValues, { required: field.required })}
+                  type={field.type}
+                  variant={field.type === 'file' ? 'flushed' : 'outline'}
+                  size={inputSize}
+                  bgColor="brand.bgLight"
+                />
+              )}
             />
           );
 
@@ -98,6 +112,21 @@ export function CustomForm({
               )}
             />
           );
+
+          const RadioInput = (
+            <Controller
+              name={field.name as keyof FormValues}
+              control={control}
+              render={({ field: radioField }): JSX.Element => (
+                <RadioGroup {...radioField}>
+                  <Stack direction="row">
+                    <Radio value="si">Si</Radio>
+                    <Radio value="no">No</Radio>
+                  </Stack>
+                </RadioGroup>
+              )}
+            />
+          );
           return (
             <CustomFormField
               key={nanoid()}
@@ -108,7 +137,9 @@ export function CustomForm({
               errorMessage="This field is required"
               variant={'floating'}
             >
-              {field.type === 'select' ? SelectInput : FormInput}
+              {field.type === 'select' ? SelectInput : <></>}
+              {field.type === 'radio' ? RadioInput : <></>}
+              {field.type !== 'select' && field.type !== 'radio' ? FormInput : <></>}
             </CustomFormField>
           );
         })}
