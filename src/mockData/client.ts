@@ -11,4 +11,6 @@ export const clientMock: Client = {
   idNumber: '123456890',
   idType: 'nit',
   name: 'test client',
+  paymentTerm: '15',
+  retailer: true,
 };

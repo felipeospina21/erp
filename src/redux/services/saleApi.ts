@@ -3,37 +3,40 @@ import type { Client, DocumentId } from './clientApi';
 import type { Product } from './productApi';
 import { axiosBaseQuery } from './customBaseQuery';
 
-export interface OrderInfo {
-  discount: number;
-  listId: string;
-  quantity: number;
-  subtotal: number;
+export interface RowInfo {
+  rowId: number;
+  rowTotal: number;
 }
 
-export interface SaleInfo {
+export interface OrderedProduct extends RowInfo {
+  item: Product;
+}
+
+export interface NewSaleOrderedProduct extends RowInfo {
+  item: string;
+  name: string;
+  price: number;
+  stock: number;
+  quantity: number;
+  discount: number;
+}
+
+export interface CheckoutData {
   deliveryCity: string;
-  salesChannel: string;
+  paymentTerm: string;
   subtotal: number;
   tax: number;
   total: number;
 }
-export interface OrderedProduct extends OrderInfo {
-  item: Product;
-}
-
-export interface NewSaleOrderedProduct extends OrderInfo {
-  item: string;
-  price?: number;
-  name?: string;
-}
-
-export interface NewSale extends SaleInfo {
+export interface NewSale extends CheckoutData {
   clientId: string;
-  orderedProducts: NewSaleOrderedProduct[];
+  orderedProducts: Array<
+    Pick<NewSaleOrderedProduct, 'item' | 'discount' | 'quantity' | 'rowTotal'>
+  >;
 }
-export interface SaleResponse extends SaleInfo {
+export interface SaleResponse extends CheckoutData {
   clientInfo: Client;
-  orderedProducts: OrderedProduct[];
+  orderedProducts: NewSaleOrderedProduct[];
 }
 
 export interface NewSaleResponse extends SaleResponse, DocumentId {}
@@ -49,8 +52,7 @@ export const saleApi = createApi({
       query: () => ({ url: '/', method: 'GET', withCredentials: true }),
       providesTags: [{ type: 'Sale' }],
     }),
-    saveSale: build.mutation<NewSaleResponse, Partial<NewSale>>({
-      // TODO: Check body type, not to be partial but required
+    saveSale: build.mutation<NewSaleResponse, NewSale>({
       query: (body) => ({
         url: '/',
         method: 'post',

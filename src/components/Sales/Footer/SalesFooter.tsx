@@ -5,6 +5,7 @@ import {
   InvoiceResponse,
   NewSaleResponse,
   Product,
+  useGetInvoiceCountQuery,
   useSaveSaleMutation,
   useUpdateInvoiceCountMutation,
   useUpdateProductStockMutation,
@@ -12,7 +13,7 @@ import {
 import { resetSale } from '@/redux/slices/salesSlice';
 import { createPdf } from '@/utils/utils';
 import { Box, Flex, useToast } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import TaxPicker from './TaxPicker';
 import ValueContainer from './ValueContainer';
 
@@ -20,7 +21,6 @@ export interface SalesFooterProps {
   pageMaxW: string;
   initialRowSate: RowData;
   isSalesBtnDisabled: boolean;
-  rowsData: RowData[];
   setRowsData: React.Dispatch<React.SetStateAction<RowData[]>>;
 }
 
@@ -28,17 +28,18 @@ export function SalesFooter({
   pageMaxW,
   initialRowSate,
   isSalesBtnDisabled,
-  rowsData,
   setRowsData,
 }: SalesFooterProps): JSX.Element {
-  const [invoiceNum, setInvoiceNum] = useState<undefined | number>(undefined);
-  const [updateInvoiceCount, { data: invoice }] = useUpdateInvoiceCountMutation();
+  const { data: invoice } = useGetInvoiceCountQuery();
+  const [updateInvoiceCount] = useUpdateInvoiceCountMutation();
   const [updateProductStock] = useUpdateProductStockMutation();
   const [
     saveSale,
     { isLoading: isSaveSaleLoading, isError: isSaveSaleError, error: saveSaleError },
   ] = useSaveSaleMutation();
   const salesData = useAppSelector((state) => state.sales);
+  const { productsList, client, checkoutData } = salesData;
+  const { subtotal, total } = useAppSelector((state) => state.sales.checkoutData);
   const dispatch = useAppDispatch();
   const toast = useToast();
 
@@ -53,15 +54,23 @@ export function SalesFooter({
     async function saveNewSale(): Promise<any> {
       const promises: Promise<NewSaleResponse | Product | InvoiceResponse>[] = [];
 
-      promises.push(saveSale(salesData.newSaleData).unwrap());
+      const orderedProducts =
+        productsList?.map(({ item, discount, quantity, rowTotal }) => ({
+          item,
+          discount,
+          quantity,
+          rowTotal,
+        })) ?? [];
+      promises.push(
+        saveSale({ clientId: client?._id ?? '', ...checkoutData, orderedProducts }).unwrap()
+      );
       promises.push(updateInvoiceCount().unwrap());
 
-      rowsData.forEach((row) => {
-        const newStock = row.stock - row.quantity;
+      productsList?.forEach(({ stock, quantity, item }) => {
         promises.push(
           updateProductStock({
-            _id: row.productId,
-            stock: newStock,
+            _id: item,
+            stock: stock - quantity,
           }).unwrap()
         );
       });
@@ -70,8 +79,12 @@ export function SalesFooter({
     }
 
     if (!isSaveSaleLoading && !isSaveSaleError) {
+      const invoiceNum = invoice?.count ? invoice?.count + 1 : undefined;
       await saveNewSale();
-      await createPdf(salesData.newSaleData, invoiceNum);
+      await createPdf(
+        { clientInfo: client, ...checkoutData, orderedProducts: productsList ?? [] },
+        invoiceNum
+      );
       resetInputs();
       toast({
         title: 'Success',
@@ -92,18 +105,12 @@ export function SalesFooter({
     }
   }
 
-  useEffect(() => {
-    if (invoice?.count) {
-      setInvoiceNum(invoice.count + 1);
-    }
-  }, [invoice?.count]);
-
   return (
     <Flex maxW={pageMaxW} flexDir="column" align="flex-end" mr="2rem">
       <Flex flexDir="column" justifyItems="center" alignItems="stretch" m="0 2.5rem" minW="400px">
-        <ValueContainer name="subtotal" value={salesData.newSaleData.subtotal} />
+        <ValueContainer name="subtotal" value={subtotal} />
         <TaxPicker />
-        <ValueContainer name="total" value={salesData.newSaleData.total} />
+        <ValueContainer name="total" value={total} />
       </Flex>
 
       <Box mt="1rem">

@@ -24,13 +24,14 @@ export const middlewares = [
   productApi.middleware,
   saleApi.middleware,
   userApi.middleware,
+  invoiceApi.middleware,
   categoryApi.middleware,
 ];
 
 export const store = () =>
   configureStore({
     reducer,
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(middlewares),
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(...middlewares),
   });
 
 export type AppStore = ReturnType<typeof store>;

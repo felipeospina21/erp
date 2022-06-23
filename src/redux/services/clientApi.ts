@@ -4,6 +4,9 @@ import { HYDRATE } from 'next-redux-wrapper';
 export interface DocumentId {
   _id: string;
 }
+
+export type PaymentOptions = 'contado' | '15' | '30' | '60';
+
 export interface Client {
   _id?: string;
   addres1: string;
@@ -15,6 +18,8 @@ export interface Client {
   idNumber: string;
   idType: string;
   name: string;
+  paymentTerm: PaymentOptions;
+  retailer: boolean;
 }
 
 export type UpdateClientValues = Omit<Client, '_id' | 'idNumber' | 'idType'>;

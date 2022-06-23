@@ -1,7 +1,7 @@
 import { SalesFooter, SalesHeader, TableContainer } from '@/components/Sales';
 import { Layout } from '@/components/Shared';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { updateSalesData } from '@/redux/slices/salesSlice';
+import { updateCheckoutData } from '@/redux/slices/salesSlice';
 import React, { ReactElement, useEffect, useMemo, useState } from 'react';
 import { checkAuth, IsAuth } from '@/utils/auth';
 import Router from 'next/router';
@@ -19,20 +19,22 @@ export interface RowData {
   productId: string;
 }
 
-export default function VentasPage({ isAuth }: IsAuth): ReactElement {
+//FIXME: remive isAuth value
+export default function VentasPage({ isAuth = true }: IsAuth): ReactElement {
   const initialRowSate: RowData = {
     id: 1,
     item: '',
+    discount: 0,
     subtotal: 0,
     stock: 0,
     quantity: 0,
     productId: '',
     price: 0,
-    discount: 0,
   };
   const [rowsData, setRowsData] = useState<RowData[]>([initialRowSate]);
   const [isSalesBtnDisabled, setSalesBtnDisabled] = useState(true);
-  const salesData = useAppSelector((state) => state.sales);
+  const { subtotal, tax } = useAppSelector((state) => state.sales.checkoutData);
+  const productsList = useAppSelector((state) => state.sales.productsList);
   const dispatch = useAppDispatch();
 
   const header = useMemo(
@@ -75,38 +77,28 @@ export default function VentasPage({ isAuth }: IsAuth): ReactElement {
   }, [isAuth]);
 
   useEffect(() => {
-    const filteredRows = rowsData.filter(
-      (row) => row.quantity > row.stock || isNaN(row.discount ?? 0) || isNaN(row.quantity)
-    );
-    if (filteredRows.length > 0 && !isSalesBtnDisabled) {
+    //TODO: Add proper validation
+    const quantityArr = productsList?.map(({ quantity }) => quantity).filter((q) => q < 1);
+
+    if (quantityArr?.length) {
       setSalesBtnDisabled(true);
-    } else if (filteredRows.length === 0 && isSalesBtnDisabled) {
+    } else {
       setSalesBtnDisabled(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowsData, isSalesBtnDisabled]);
+  }, [productsList]);
 
   useEffect(() => {
-    let newSubtotal = 0;
-    rowsData.forEach((row) => {
-      const rowSubtotal = row?.subtotal ?? 0;
-      return (newSubtotal = newSubtotal + rowSubtotal);
-    });
-    dispatch(
-      updateSalesData({
-        subtotal: newSubtotal,
-      })
+    const newSubtotal = productsList?.reduce(
+      (accumulator, product) => accumulator + product.rowTotal,
+      0
     );
-  }, [rowsData, dispatch]);
+    dispatch(updateCheckoutData({ key: 'subtotal', value: newSubtotal ?? 0 }));
+  }, [productsList, dispatch]);
 
   useEffect(() => {
-    const newTotal = salesData.newSaleData.subtotal * (1 + salesData.newSaleData.tax);
-    dispatch(
-      updateSalesData({
-        total: newTotal,
-      })
-    );
-  }, [salesData.newSaleData.subtotal, salesData.newSaleData.tax, dispatch]);
+    const newTotal = subtotal * (1 + tax);
+    dispatch(updateCheckoutData({ key: 'total', value: newTotal }));
+  }, [subtotal, tax, dispatch]);
 
   if (!isAuth) {
     return <LoginPage />;
@@ -128,7 +120,6 @@ export default function VentasPage({ isAuth }: IsAuth): ReactElement {
         pageMaxW={'var(--maxPageWitdth)'}
         initialRowSate={initialRowSate}
         isSalesBtnDisabled={isSalesBtnDisabled}
-        rowsData={rowsData}
         setRowsData={setRowsData}
       />
     </>

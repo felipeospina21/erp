@@ -79,16 +79,7 @@ export function TableContainer({
           </Thead>
           <Tbody fontSize={['xs', 'sm']}>
             {rowsData.map((row) => {
-              return (
-                <TableRow
-                  key={row.id}
-                  id={row.id ?? 0}
-                  removeRow={removeRow}
-                  rowsData={rowsData}
-                  setRowsData={setRowsData}
-                  rowData={row}
-                />
-              );
+              return <TableRow key={row.id} id={row.id ?? 0} removeRow={removeRow} />;
             })}
           </Tbody>
         </Table>

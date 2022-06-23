@@ -14,6 +14,13 @@ export const invoiceApi = createApi({
   }),
   tagTypes: ['Invoice'],
   endpoints: (build) => ({
+    getInvoiceCount: build.query<InvoiceResponse, void>({
+      query: () => ({
+        url: `/${process.env.NEXT_PUBLIC_COUNT_ID}`,
+        method: 'GET',
+      }),
+      providesTags: [{ type: 'Invoice' }],
+    }),
     updateInvoiceCount: build.mutation<InvoiceResponse, void>({
       query: () => ({
         url: '/',
@@ -27,7 +34,8 @@ export const invoiceApi = createApi({
 
 export const {
   useUpdateInvoiceCountMutation,
+  useGetInvoiceCountQuery,
   util: { getRunningOperationPromises: getInvoiceRunningOperationPromises },
 } = invoiceApi;
 
-export const { updateInvoiceCount } = invoiceApi.endpoints;
+export const { updateInvoiceCount, getInvoiceCount } = invoiceApi.endpoints;

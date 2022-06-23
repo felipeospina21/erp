@@ -1,24 +1,24 @@
 import { PDFDocument, StandardFonts, grayscale } from 'pdf-lib';
 import download from 'downloadjs';
-import { Client, NewSaleOrderedProduct, SaleInfo } from '../redux/services';
+import { Client, NewSaleOrderedProduct, CheckoutData } from '../redux/services';
 import { numberToCurrency, formatDate } from './';
 
-export interface CreatePdfData extends SaleInfo {
+export interface CreatePdfData extends CheckoutData {
   clientInfo: Client;
   orderedProducts: Array<NewSaleOrderedProduct>;
 }
 export async function createPdf(data: CreatePdfData, invoice?: number): Promise<void> {
   const pdfDoc = await PDFDocument.create();
   const page = pdfDoc.addPage();
-  const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
+  const timesRomanFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const {
     clientInfo: { name: clientName, idType, idNumber, addres1, addres2, city, department },
     orderedProducts,
   } = data;
   const pageConfig = {
     width: 545,
-    height: 400,
-    leftColX: 40,
+    height: 350,
+    leftColX: 60,
     rightColX: 335,
     lineHeight: 15,
   };
@@ -45,17 +45,17 @@ export async function createPdf(data: CreatePdfData, invoice?: number): Promise<
     page.drawText(`Cuenta de cobro N° ${invoice}`, {
       ...fontStyles,
       x: rightColX,
-      y: height - 20,
+      y: height - 25,
     });
     page.drawText(`Fecha: ${formatedInvoiceDate}`, {
       ...fontStyles,
       x: rightColX,
-      y: height - 35,
+      y: height - 40,
     });
     page.drawText(`Vence: ${formatedDueDate}`, {
       ...fontStyles,
       x: rightColX,
-      y: height - 50,
+      y: height - 55,
     });
   }
 
@@ -87,32 +87,33 @@ export async function createPdf(data: CreatePdfData, invoice?: number): Promise<
     page.drawText('PRODUCTO', {
       ...fontStyles,
       x: tablePositionX.col1,
-      y: height - 180,
+      y: height - 185,
     });
     page.drawText('CANTIDAD', {
       ...fontStyles,
       x: tablePositionX.col2,
-      y: height - 180,
+      y: height - 185,
     });
     page.drawText('PRECIO', {
       ...fontStyles,
       x: tablePositionX.col3,
-      y: height - 180,
+      y: height - 185,
     });
     page.drawText('TOTAL', {
       ...fontStyles,
       x: tablePositionX.col4,
-      y: height - 180,
+      y: height - 185,
     });
   }
-  let newLineY = 180;
+  let newLineY = 185;
 
   function addProducts(): void {
     addTableHeader();
     const props = { ...fontStyles, y: height - newLineY };
     orderedProducts.forEach((product) => {
       const price = product.price ?? 0;
-      const discountedPrice = price - price * product.discount;
+      const discount = product.discount / 100;
+      const discountedPrice = price - price * discount;
       newLineY += lineHeight;
       props.y = height - newLineY;
       page.drawText(product.name ?? '', {
@@ -127,7 +128,7 @@ export async function createPdf(data: CreatePdfData, invoice?: number): Promise<
         ...props,
         x: tablePositionX.col3,
       });
-      page.drawText(numberToCurrency(product.subtotal), {
+      page.drawText(numberToCurrency(product.rowTotal), {
         ...props,
         x: tablePositionX.col4,
       });
@@ -138,12 +139,12 @@ export async function createPdf(data: CreatePdfData, invoice?: number): Promise<
     page.drawText('Observaciones:', {
       ...fontStyles,
       x: leftColX,
-      y: newLineY - orderedProducts.length * 30,
+      y: 80,
     });
     page.drawText('Recibido Por:', {
       ...fontStyles,
       x: rightColX,
-      y: newLineY - orderedProducts.length * 30,
+      y: 80,
     });
     page.drawText(
       'DE LA TIERRA - Cll 6 sur # 50 - 30. Medellín - Cel. 304 4070005 - WP 305 4806327',
@@ -159,8 +160,8 @@ export async function createPdf(data: CreatePdfData, invoice?: number): Promise<
   addFooter();
   page.drawRectangle({
     x: leftColX,
-    y: 210 - orderedProducts.length * 15,
-    width: width - 150,
+    y: 155 - orderedProducts.length * 15,
+    width: width - 140,
     height: 25 + orderedProducts.length * 15,
     borderWidth: 1,
     borderColor: grayscale(0.5),
@@ -168,14 +169,15 @@ export async function createPdf(data: CreatePdfData, invoice?: number): Promise<
     borderOpacity: 0.75,
   });
 
-  const jpgUrl = 'https://pdf-lib.js.org/assets/cat_riding_unicorn.jpg';
-  const jpgImageBytes = await fetch(jpgUrl).then((res) => res.arrayBuffer());
-  const jpgImage = await pdfDoc.embedJpg(jpgImageBytes);
+  const pngUrl =
+    'https://res.cloudinary.com/felipeospina21/image/upload/v1654880464/logo_negro_ex0drc.png';
+  const pngImageBytes = await fetch(pngUrl).then((res) => res.arrayBuffer());
+  const jpgImage = await pdfDoc.embedPng(pngImageBytes);
   page.drawImage(jpgImage, {
     x: leftColX,
-    y: height - 70,
-    width: 100,
-    height: 60,
+    y: height - 80,
+    width: 80,
+    height: 70,
     opacity: 0.75,
   });
 
