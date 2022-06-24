@@ -30,11 +30,11 @@ export const productFields: Array<InputField> = [
     label: 'Inventario',
     required: true,
   },
-  {
-    name: 'image',
-    type: 'file',
-    placeholder: 'imagen',
-    label: 'Imagen',
-    required: false,
-  },
+  // {
+  //   name: 'image',
+  //   type: 'file',
+  //   placeholder: 'imagen',
+  //   label: 'Imagen',
+  //   required: false,
+  // },
 ];

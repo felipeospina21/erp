@@ -10,13 +10,7 @@ export interface ClientFormValues extends Omit<Client, 'discount'> {
   discount: string;
 }
 
-export type FormValues =
-  | ClientFormValues
-  | Omit<Product, 'image'>
-  | UpdateClient
-  | FormData
-  | UpdateClientValues
-  | UserBody;
+export type FormValues = ClientFormValues | UpdateClient | UpdateClientValues | UserBody;
 
 export interface InputField {
   name: string;
@@ -62,7 +56,7 @@ export function CustomForm({
         {fields.map((field) => {
           const inputValue = data?.[field.name as keyof FormValues]
             ? String(data?.[field.name as keyof FormValues])
-            : undefined;
+            : '';
 
           const FormInput = controlled ? (
             <Controller
@@ -84,12 +78,13 @@ export function CustomForm({
             <Controller
               name={field.name as keyof FormValues}
               control={control}
+              // defaultValue={inputValue ?? ''}
+              rules={{ required: field.required }}
               render={({ field: inputField }): JSX.Element => (
                 <Input
                   {...inputField}
-                  {...register(field.name as keyof FormValues, { required: field.required })}
                   type={field.type}
-                  variant={field.type === 'file' ? 'flushed' : 'outline'}
+                  variant="outline"
                   size={inputSize}
                   bgColor="brand.bgLight"
                 />

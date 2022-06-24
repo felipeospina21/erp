@@ -1,6 +1,6 @@
 import { CardsContainer } from '@/components/Products';
-import { productFields } from '@/components/Products/ProductForm/fields/productFields';
-import { CardSkeleton, CustomForm, CustomModal, Layout } from '@/components/Shared';
+import ProductForm from '@/components/Products/ProductForm/ProductForm';
+import { CardSkeleton, CustomModal, Layout } from '@/components/Shared';
 import { AddButton } from '@/components/Shared/IconButtons/AddButton/AddButton';
 import {
   Product,
@@ -15,9 +15,10 @@ import Router from 'next/router';
 import { ReactElement, useEffect, useState } from 'react';
 const LoginPage = dynamic(() => import('@/pages/login'));
 
-export interface ProductDataForm extends Omit<Product, 'price' | 'stock'> {
+export interface ProductDataForm extends Omit<Product, 'price' | 'stock' | 'category'> {
   price: string | Blob;
   stock: string | Blob;
+  category: string;
 }
 export default function ProductosPage({ isAuth }: IsAuth): JSX.Element {
   const [displayModal, setDisplayModal] = useState(false);
@@ -47,14 +48,6 @@ export default function ProductosPage({ isAuth }: IsAuth): JSX.Element {
     createProduct(newProduct);
     setDisplayModal(false);
   }
-
-  useEffect(() => {
-    productFields.map((field) => {
-      if (field.name === 'category' && categories) {
-        field.options = [...categories];
-      }
-    });
-  }, [categories]);
 
   useEffect(() => {
     if (isCreateProductSuccess) {
@@ -132,12 +125,7 @@ export default function ProductosPage({ isAuth }: IsAuth): JSX.Element {
           <AddButton size="sm" margin="1.5rem" onClick={(): void => setDisplayModal(true)} />
         }
       >
-        <CustomForm
-          onSubmit={createNewProduct}
-          isLoading={false}
-          button={{ text: 'crear' }}
-          fields={productFields}
-        />
+        <ProductForm buttonText="Crear" categories={categories ?? []} onSubmit={createNewProduct} />
       </CustomModal>
       <CardsContainer data={products ?? []} />
     </Flex>

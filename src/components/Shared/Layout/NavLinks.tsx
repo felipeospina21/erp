@@ -13,6 +13,7 @@ export function NavLinks({ onClose }: NavLinksProps): JSX.Element {
       <StyledLink href="/clientes" text="Clientes" onClose={onClose} />
       <StyledLink href="/productos" text="Productos" onClose={onClose} />
       <StyledLink href="/ventas" text="Ventas" onClose={onClose} />
+      <StyledLink href="/costos" text="Test" onClose={onClose} />
     </List>
   );
 }

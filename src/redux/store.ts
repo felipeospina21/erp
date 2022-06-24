@@ -1,6 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { createWrapper } from 'next-redux-wrapper';
-import { clientApi, productApi, saleApi, userApi, invoiceApi, categoryApi } from './services';
+import {
+  clientApi,
+  productApi,
+  saleApi,
+  userApi,
+  invoiceApi,
+  categoryApi,
+  citiesApi,
+} from './services';
 import productsReducer from './slices/productsSlice';
 import clientsReducer from './slices/clientsSlice';
 import salesReducer from './slices/salesSlice';
@@ -17,6 +25,7 @@ export const reducer = {
   [userApi.reducerPath]: userApi.reducer,
   [invoiceApi.reducerPath]: invoiceApi.reducer,
   [categoryApi.reducerPath]: categoryApi.reducer,
+  [citiesApi.reducerPath]: citiesApi.reducer,
 };
 
 export const middlewares = [
@@ -26,6 +35,7 @@ export const middlewares = [
   userApi.middleware,
   invoiceApi.middleware,
   categoryApi.middleware,
+  citiesApi.middleware,
 ];
 
 export const store = () =>
