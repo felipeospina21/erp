@@ -87,7 +87,7 @@ export function TableRow({ id, removeRow }: TableRowProps): JSX.Element {
           onChangeFn={handleSelectChange}
           size="sm"
           borderRadius="md"
-          options={products?.map((prod) => ({ id: prod._id, name: prod.name }))}
+          options={products?.map((prod) => ({ _id: prod._id, name: prod.name }))}
         />
       </Td>
 

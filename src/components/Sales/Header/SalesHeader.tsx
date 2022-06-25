@@ -56,7 +56,7 @@ export function SalesHeader({ pageMaxW }: SalesHeaderProps): JSX.Element {
         name="clientName"
         placeholder="Cliente"
         options={clients?.map((client) => ({
-          id: client._id ?? nanoid(),
+          _id: client._id ?? nanoid(),
           name: client.name,
         }))}
         size="md"
@@ -73,8 +73,8 @@ export function SalesHeader({ pageMaxW }: SalesHeaderProps): JSX.Element {
         name="deliveryCity"
         placeholder="Ciudad"
         options={[
-          { id: nanoid(), name: 'Medellín' },
-          { id: nanoid(), name: 'Bogota' },
+          { _id: nanoid(), name: 'Medellín' },
+          { _id: nanoid(), name: 'Bogota' },
         ]}
         size="md"
         onChangeFn={handleCitySelect}
@@ -90,10 +90,10 @@ export function SalesHeader({ pageMaxW }: SalesHeaderProps): JSX.Element {
         name="paymentTerm"
         placeholder="Pago"
         options={[
-          { id: nanoid(), name: 'Contado' },
-          { id: nanoid(), name: '15' },
-          { id: nanoid(), name: '30' },
-          { id: nanoid(), name: '60' },
+          { _id: nanoid(), name: 'Contado' },
+          { _id: nanoid(), name: '15' },
+          { _id: nanoid(), name: '30' },
+          { _id: nanoid(), name: '60' },
         ]}
         size="md"
         onChangeFn={handlePaymentSelect}

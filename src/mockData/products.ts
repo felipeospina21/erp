@@ -3,7 +3,7 @@ import { Product } from '@/redux/services';
 export const mockProducts: Product[] = [
   {
     _id: 'abc',
-    category: 'test prod',
+    category: { _id: '1', name: 'test prod' },
     name: 'test prod 1',
     price: 1000,
     stock: 100,
@@ -12,7 +12,7 @@ export const mockProducts: Product[] = [
   },
   {
     _id: 'def',
-    category: 'test prod',
+    category: { _id: '2', name: 'test prod 2' },
     name: 'test prod 2',
     price: 1000,
     stock: 100,

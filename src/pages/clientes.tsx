@@ -7,7 +7,11 @@ import {
   Layout,
 } from '@/components/Shared';
 import { AddButton } from '@/components/Shared/IconButtons/AddButton/AddButton';
-import { useCreateClientMutation, useGetClientsQuery } from '@/redux/services';
+import {
+  useCreateClientMutation,
+  useGetDepartmentsQuery,
+  useGetClientsQuery,
+} from '@/redux/services';
 import { checkAuth, IsAuth } from '@/utils/auth';
 import { Box, Th } from '@chakra-ui/react';
 import dynamic from 'next/dynamic';
@@ -18,6 +22,7 @@ const LoginPage = dynamic(() => import('@/pages/login'));
 export default function ClientesPage({ isAuth }: IsAuth): ReactElement {
   const [displayModal, setDisplayModal] = useState(false);
   const { data: clients } = useGetClientsQuery();
+  const { data: departments } = useGetDepartmentsQuery();
   const [createClient, { isLoading }] = useCreateClientMutation();
 
   function onSubmit(data: ClientFormValues): void {
@@ -25,6 +30,34 @@ export default function ClientesPage({ isAuth }: IsAuth): ReactElement {
     createClient(transformedData);
     setDisplayModal(false);
   }
+
+  useEffect(() => {
+    clientFields.map((field) => {
+      if (field.name === 'paymentTerm') {
+        field.options = [
+          { _id: 'contado', name: 'contado' },
+          { _id: '15', name: '15' },
+          { _id: '30', name: '30' },
+          { _id: '60', name: '60' },
+        ];
+      } else if (field.name === 'idType') {
+        field.options = [
+          { _id: 'cc', name: 'CC' },
+          { _id: 'nit', name: 'NIT' },
+          { _id: 'passport', name: 'Pasaporte' },
+          { _id: 'other', name: 'Otro' },
+        ];
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    clientFields.map((field) => {
+      if (field.name === 'department') {
+        field.options = departments;
+      }
+    });
+  }, [departments]);
 
   useEffect(() => {
     if (isAuth) return; // do nothing if the user is logged in

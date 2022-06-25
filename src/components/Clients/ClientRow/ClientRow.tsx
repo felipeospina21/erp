@@ -40,14 +40,35 @@ export function ClientRow({ client }: ClientRowProps): JSX.Element {
   return (
     <Tr>
       <Td fontSize="13px">{client.name}</Td>
-      <Td fontSize="13px">{client.idType}</Td>
-      <Td fontSize="13px">{client.idNumber}</Td>
-      <Td fontSize="13px">{client.addres1}</Td>
-      <Td fontSize="13px">{client.addres2}</Td>
-      <Td fontSize="13px">{client.city}</Td>
-      <Td fontSize="13px">{client.department}</Td>
-      <Td fontSize="13px">{client.email}</Td>
-      <Td fontSize="13px">{`${client.discount}%`}</Td>
+      <Td fontSize="13px" textAlign="center">
+        {client.idType}
+      </Td>
+      <Td fontSize="13px" textAlign="center">
+        {client.idNumber}
+      </Td>
+      <Td fontSize="13px" textAlign="center">
+        {client.addres1}
+      </Td>
+      <Td fontSize="13px" textAlign="center">
+        {client.addres2}
+      </Td>
+      <Td fontSize="13px" textAlign="center">
+        {client.city}
+      </Td>
+      <Td fontSize="13px" textAlign="center">
+        {client.department}
+      </Td>
+      <Td fontSize="13px" textAlign="center">
+        {client.email}
+      </Td>
+      <Td fontSize="13px" textAlign="center">{`${client.discount}%`}</Td>
+      <Td fontSize="13px" textAlign="center">
+        {client.paymentTerm}
+      </Td>
+      <Td fontSize="13px" textAlign="center">
+        {client.retailer ? 'si' : 'no'}
+      </Td>
+
       <Td display="flex">
         <ConfirmationAlert
           header="Desea Eliminar?"
