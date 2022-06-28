@@ -1,6 +1,6 @@
 import { clientFields, ClientRow } from '@/components/Clients';
-import ClientForm from '@/components/Clients/ClientForm/ClientForm';
-import { ClientFormValues, CustomModal, CustomTable, Layout } from '@/components/Shared';
+import ClientForm, { ClientFormValues } from '@/components/Clients/ClientForm/ClientForm';
+import { CustomModal, CustomTable, Layout } from '@/components/Shared';
 import { AddButton } from '@/components/Shared/IconButtons/AddButton/AddButton';
 import { useCreateClientMutation, useGetClientsQuery } from '@/redux/services';
 import { checkAuth, IsAuth } from '@/utils/auth';

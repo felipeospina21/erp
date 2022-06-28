@@ -8,7 +8,7 @@ export const productHandlers = [
 
   rest.post(`${process.env.NEXT_PUBLIC_API_URL}/products`, (req, res, ctx) => {
     const newProduct = {
-      alias: 'test alias',
+      category: { _id: '3', name: 'test prod 3' },
       name: 'test name',
       price: 10000,
       stock: 10,

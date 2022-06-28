@@ -1,4 +1,4 @@
-import { ClientFormValues, CustomFormField } from '@/components/Shared';
+import { CustomFormField } from '@/components/Shared';
 import { Client, useGetCitiesQuery, useGetDepartmentsQuery } from '@/redux/services';
 import { Button, Container, Input, Radio, RadioGroup, Select, Stack } from '@chakra-ui/react';
 import React from 'react';
@@ -8,9 +8,14 @@ export interface ClientFormProps {
   buttonText: string;
   idTypes: Array<{ _id: string; name: string }>;
   paymentTerm: Array<{ _id: string; name: string }>;
+  update?: boolean;
   defaultValues?: Client;
   isLoading?: boolean;
   onSubmit: (data: ClientFormValues) => void;
+}
+
+export interface ClientFormValues extends Omit<Client, 'discount'> {
+  discount: string;
 }
 
 export default function ClientForm({
@@ -20,6 +25,7 @@ export default function ClientForm({
   defaultValues,
   isLoading,
   onSubmit,
+  update,
 }: ClientFormProps): JSX.Element {
   const {
     handleSubmit,
@@ -29,7 +35,7 @@ export default function ClientForm({
   } = useForm<ClientFormValues>();
   const watchDepartment = watch('department', '');
   const { data: departments } = useGetDepartmentsQuery();
-  const { data: cities } = useGetCitiesQuery(watchDepartment);
+  const { data: cities } = useGetCitiesQuery(defaultValues?.department ?? watchDepartment);
 
   return (
     <Container>
@@ -56,6 +62,7 @@ export default function ClientForm({
           label="Tipo Doc"
           // isError={!!errors?.category as keyof FormValues}
           isRequired={true}
+          isDisabled={update}
           errorMessage="This field is required"
           variant={'floating'}
         >
@@ -67,7 +74,7 @@ export default function ClientForm({
             render={({ field: inputField }): JSX.Element => (
               <Select placeholder="Select option" {...inputField}>
                 {idTypes.map(({ name, _id }) => (
-                  <option key={_id} value={_id}>
+                  <option key={_id} value={name}>
                     {name}
                   </option>
                 ))}
@@ -81,6 +88,7 @@ export default function ClientForm({
           label="Doc"
           // isError={!!errors?.name}
           isRequired={true}
+          isDisabled={update}
           errorMessage="This field is required"
           variant={'floating'}
         >

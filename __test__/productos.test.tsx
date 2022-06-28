@@ -47,11 +47,10 @@ describe('New product creation', () => {
   test('Success', async () => {
     const user = userEvent.setup();
     render(<ProductosPage isAuth={true} />);
-  
     await user.click(await screen.findByRole('button', {name: /agregar/i}))
     await screen.findByTestId('custom-modal')
     await user.type( screen.getByLabelText(/nombre/i), 'test name')
-    await user.selectOptions( screen.getByLabelText(/category/i), 'test category')
+    await user.selectOptions( screen.getByLabelText(/categoria/i), 'test category')
     await user.type( screen.getByLabelText(/precio/i), '10000')
     await user.type( screen.getByLabelText(/inventario/i), '10')
     await user.click(screen.getByRole('button', {name:/crear/i}))

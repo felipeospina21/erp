@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Tr, Td } from '@chakra-ui/react';
-import { CustomModal, ClientFormValues } from '@/components/Shared';
+import { CustomModal } from '@/components/Shared';
 import {
   Client,
   // UpdateClientValues,
@@ -12,7 +12,7 @@ import {
 import { DeleteButton, EditButton } from '@/components/Shared/IconButtons';
 import { ConfirmationAlert } from '@/components/Shared/Overlay/ConfirmationAlert/ConfirmationAlert';
 import { SubmitHandler } from 'react-hook-form';
-import ClientForm from '../ClientForm/ClientForm';
+import ClientForm, { ClientFormValues } from '../ClientForm/ClientForm';
 
 export interface ClientRowProps {
   client: Client;
@@ -95,9 +95,9 @@ export function ClientRow({ client }: ClientRowProps): JSX.Element {
           iconButton={<EditButton size="md" onClick={(): void => setDisplayModal(true)} />}
         >
           <ClientForm
+            update
             onSubmit={onSubmit}
             isLoading={isLoading}
-            // setDisplayModal={setDisplayModal}
             defaultValues={{ ...client }}
             buttonText="Crear"
             idTypes={[
@@ -113,14 +113,6 @@ export function ClientRow({ client }: ClientRowProps): JSX.Element {
               { _id: '60', name: '60' },
             ]}
           />
-          {/* <CustomForm
-            data={client}
-            onSubmit={onSubmit}
-            button={{ text: 'modificar' }}
-            fields={clientFields}
-            isLoading={isLoading}
-            controlled
-          /> */}
         </CustomModal>
       </Td>
     </Tr>
