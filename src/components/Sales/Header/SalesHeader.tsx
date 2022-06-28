@@ -9,6 +9,7 @@ import {
   updateClientPaymentTerm,
 } from '@/redux/slices/salesSlice';
 import { PaymentOptions, useGetClientsQuery } from '@/redux/services';
+import { paymentTerms } from '@/components/Clients';
 
 export interface SalesHeaderProps {
   pageMaxW: string;
@@ -89,12 +90,7 @@ export function SalesHeader({ pageMaxW }: SalesHeaderProps): JSX.Element {
       <CustomSelect
         name="paymentTerm"
         placeholder="Pago"
-        options={[
-          { _id: nanoid(), name: 'Contado' },
-          { _id: nanoid(), name: '15' },
-          { _id: nanoid(), name: '30' },
-          { _id: nanoid(), name: '60' },
-        ]}
+        options={paymentTerms}
         size="md"
         onChangeFn={handlePaymentSelect}
         value={String(salesData.checkoutData?.paymentTerm)}

@@ -1,4 +1,4 @@
-import { clientFields, ClientRow } from '@/components/Clients';
+import { clientFields, ClientRow, idTypes, paymentTerms } from '@/components/Clients';
 import ClientForm, { ClientFormValues } from '@/components/Clients/ClientForm/ClientForm';
 import { CustomModal, CustomTable, Layout } from '@/components/Shared';
 import { AddButton } from '@/components/Shared/IconButtons/AddButton/AddButton';
@@ -63,18 +63,8 @@ export default function ClientesPage({ isAuth }: IsAuth): ReactElement {
           onSubmit={onSubmit}
           isLoading={isLoading}
           buttonText="Crear"
-          idTypes={[
-            { _id: 'CC', name: 'CC' },
-            { _id: 'NIT', name: 'NIT' },
-            { _id: 'Pasaporte', name: 'Pasaporte' },
-            { _id: 'Otro', name: 'Otro' },
-          ]}
-          paymentTerm={[
-            { _id: 'contado', name: 'contado' },
-            { _id: '15', name: '15' },
-            { _id: '30', name: '30' },
-            { _id: '60', name: '60' },
-          ]}
+          idTypes={idTypes}
+          paymentTerm={paymentTerms}
         />
       </CustomModal>
     </Box>
