@@ -1,17 +1,8 @@
 import { clientFields, ClientRow } from '@/components/Clients';
-import {
-  ClientFormValues,
-  CustomForm,
-  CustomModal,
-  CustomTable,
-  Layout,
-} from '@/components/Shared';
+import ClientForm from '@/components/Clients/ClientForm/ClientForm';
+import { ClientFormValues, CustomModal, CustomTable, Layout } from '@/components/Shared';
 import { AddButton } from '@/components/Shared/IconButtons/AddButton/AddButton';
-import {
-  useCreateClientMutation,
-  useGetDepartmentsQuery,
-  useGetClientsQuery,
-} from '@/redux/services';
+import { useCreateClientMutation, useGetClientsQuery } from '@/redux/services';
 import { checkAuth, IsAuth } from '@/utils/auth';
 import { Box, Th } from '@chakra-ui/react';
 import dynamic from 'next/dynamic';
@@ -22,7 +13,6 @@ const LoginPage = dynamic(() => import('@/pages/login'));
 export default function ClientesPage({ isAuth }: IsAuth): ReactElement {
   const [displayModal, setDisplayModal] = useState(false);
   const { data: clients } = useGetClientsQuery();
-  const { data: departments } = useGetDepartmentsQuery();
   const [createClient, { isLoading }] = useCreateClientMutation();
 
   function onSubmit(data: ClientFormValues): void {
@@ -30,34 +20,6 @@ export default function ClientesPage({ isAuth }: IsAuth): ReactElement {
     createClient(transformedData);
     setDisplayModal(false);
   }
-
-  useEffect(() => {
-    clientFields.map((field) => {
-      if (field.name === 'paymentTerm') {
-        field.options = [
-          { _id: 'contado', name: 'contado' },
-          { _id: '15', name: '15' },
-          { _id: '30', name: '30' },
-          { _id: '60', name: '60' },
-        ];
-      } else if (field.name === 'idType') {
-        field.options = [
-          { _id: 'cc', name: 'CC' },
-          { _id: 'nit', name: 'NIT' },
-          { _id: 'passport', name: 'Pasaporte' },
-          { _id: 'other', name: 'Otro' },
-        ];
-      }
-    });
-  }, []);
-
-  useEffect(() => {
-    clientFields.map((field) => {
-      if (field.name === 'department') {
-        field.options = departments;
-      }
-    });
-  }, [departments]);
 
   useEffect(() => {
     if (isAuth) return; // do nothing if the user is logged in
@@ -96,11 +58,23 @@ export default function ClientesPage({ isAuth }: IsAuth): ReactElement {
           <AddButton size="sm" margin="1.5rem" onClick={(): void => setDisplayModal(true)} />
         }
       >
-        <CustomForm
+        <ClientForm
+          // setDisplayModal={setDisplayModal}
           onSubmit={onSubmit}
           isLoading={isLoading}
-          button={{ text: 'crear' }}
-          fields={clientFields}
+          buttonText="Crear"
+          idTypes={[
+            { _id: 'CC', name: 'CC' },
+            { _id: 'NIT', name: 'NIT' },
+            { _id: 'Pasaporte', name: 'Pasaporte' },
+            { _id: 'Otro', name: 'Otro' },
+          ]}
+          paymentTerm={[
+            { _id: 'contado', name: 'contado' },
+            { _id: '15', name: '15' },
+            { _id: '30', name: '30' },
+            { _id: '60', name: '60' },
+          ]}
         />
       </CustomModal>
     </Box>
