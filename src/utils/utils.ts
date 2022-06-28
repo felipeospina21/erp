@@ -12,7 +12,16 @@ export async function createPdf(data: CreatePdfData, invoice?: number): Promise<
   const page = pdfDoc.addPage();
   const timesRomanFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const {
-    clientInfo: { name: clientName, idType, idNumber, addres1, addres2, city, department },
+    clientInfo: {
+      name: clientName,
+      idType,
+      idNumber,
+      addres1,
+      addres2,
+      city,
+      department,
+      paymentTerm,
+    },
     orderedProducts,
   } = data;
   const pageConfig = {
@@ -39,7 +48,8 @@ export async function createPdf(data: CreatePdfData, invoice?: number): Promise<
   function addInvoiceData(): void {
     const invoiceDate = new Date();
     const dueDate = new Date();
-    dueDate.setDate(invoiceDate.getDate() + 30);
+    const formatedPaymentTerm = paymentTerm === 'contado' ? 0 : Number(paymentTerm);
+    dueDate.setDate(invoiceDate.getDate() + formatedPaymentTerm);
     const formatedInvoiceDate = formatDate(invoiceDate, 'es');
     const formatedDueDate = formatDate(dueDate, 'es');
     page.drawText(`Cuenta de cobro N° ${invoice}`, {
