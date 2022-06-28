@@ -1,5 +1,5 @@
-import { loginFields } from '@/components/Login';
-import { CustomForm, Layout } from '@/components/Shared';
+import LoginForm from '@/components/Login/LoginForm/LoginForm';
+import { Layout } from '@/components/Shared';
 import { useAppDispatch } from '@/redux/hooks';
 import type { CustomError } from '@/redux/services/customBaseQuery';
 import { useLoginMutation, UserBody } from '@/redux/services/userApi';
@@ -74,12 +74,7 @@ export default function Login(): JSX.Element {
             p={['0', 'auto']}
             bgColor="var(--bgColor)"
           >
-            <CustomForm
-              onSubmit={loginUser}
-              isLoading={isLoading}
-              fields={loginFields}
-              button={{ text: 'Login', width: '100%', margin: ['4rem auto', '3rem auto'] }}
-            />
+            <LoginForm onSubmit={loginUser} isLoading={isLoading} buttonText="Login" />
           </Container>
         </GridItem>
         <GridItem

@@ -22,9 +22,9 @@ export interface Client {
   retailer: boolean;
 }
 
-export type UpdateClientValues = Omit<Client, '_id' | 'idNumber' | 'idType'>;
-export interface UpdateClient extends DocumentId {
-  update: UpdateClientValues;
+export type UpdateClientValues = Omit<Client, '_id' | 'idNumber' | 'idType' | 'discount'>;
+export interface UpdateClient extends DocumentId, UpdateClientValues {
+  discount: string;
 }
 
 export const clientApi = createApi({
