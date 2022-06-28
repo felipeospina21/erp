@@ -5,7 +5,7 @@ export const salesData: CreatePdfData = {
   tax: 0.19,
   total: 79658.59999999999,
   deliveryCity: 'Medellin',
-  paymentTerm: 'contado',
+  paymentTerm: '15',
   clientInfo: {
     _id: 'RuE5YEQLvuosfiBPW0eL',
     addres1: 'calle 8 # 25-114',
@@ -16,7 +16,7 @@ export const salesData: CreatePdfData = {
     idNumber: '900720364-1',
     idType: 'nit',
     name: 'Merka lo nuestro',
-    paymentTerm: 'contado',
+    paymentTerm: '30',
     retailer: true,
   },
   orderedProducts: [
