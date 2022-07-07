@@ -5,12 +5,12 @@ import { useGetProductsQuery } from '@/redux/services';
 import { numberToCurrency } from '@/utils/index';
 import { InputCell, TableCellBody } from './';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { updateProductsList } from '@/redux/slices/salesSlice';
+import { addProductToList, updateProductsListItem } from '@/redux/slices/salesSlice';
 import { CustomSelect } from '@/components/Shared';
 
 export interface TableRowProps {
-  id: number;
-  removeRow: (id: number) => void;
+  id: string;
+  removeRow: (id: string) => void;
 }
 
 export function TableRow({ id, removeRow }: TableRowProps): JSX.Element {
@@ -33,17 +33,22 @@ export function TableRow({ id, removeRow }: TableRowProps): JSX.Element {
     if (products) {
       const { _id, price, stock, name } = products?.filter((product) => product.name === value)[0];
       const rowTotal = calculateTotal(price);
-      dispatch(
-        updateProductsList({
-          item: _id,
-          rowId: id,
-          stock,
-          price,
-          name,
-          rowTotal,
-          discount: saleClient.discount,
-        })
-      );
+      const newProduct = {
+        item: _id,
+        rowId: id,
+        stock,
+        price,
+        name,
+        rowTotal,
+        discount: saleClient.discount,
+        quantity: 0,
+      };
+
+      if (!productsList?.length) {
+        dispatch(addProductToList(newProduct));
+      } else {
+        dispatch(updateProductsListItem(newProduct));
+      }
     }
   };
 
@@ -65,15 +70,19 @@ export function TableRow({ id, removeRow }: TableRowProps): JSX.Element {
           });
         }
 
-        const rowTotal = calculateTotal(price, newQuantity, discount);
-        dispatch(updateProductsList({ rowId: id, quantity: newQuantity, rowTotal }));
+        if (newQuantity) {
+          const rowTotal = calculateTotal(price, newQuantity, discount);
+          dispatch(updateProductsListItem({ rowId: id, quantity: newQuantity, rowTotal }));
+        }
       }
 
       if (inputId === 'discount') {
         const newDiscount = Number(value);
         const rowTotal = calculateTotal(price, quantity, newDiscount);
 
-        dispatch(updateProductsList({ rowId: id, discount: newDiscount, rowTotal }));
+        if (newDiscount) {
+          dispatch(updateProductsListItem({ rowId: id, discount: newDiscount, rowTotal }));
+        }
       }
     }
   }

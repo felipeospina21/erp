@@ -112,7 +112,7 @@ export function Card({ product, locale }: CardProps): JSX.Element {
 
         <ConfirmationAlert
           header="Desea Eliminar?"
-          body={`Seguro desea eliminar de forma permanente el cliente ${product.name}?`}
+          body={`Seguro desea eliminar de forma permanente el producto ${product.name}?`}
           button={
             <DeleteButton
               isLoading={isDeleteLoading}

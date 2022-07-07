@@ -28,7 +28,7 @@ export const salesData: CreatePdfData = {
       name: 'Ghee 200 gr',
       price: 200000,
       stock: 100,
-      rowId: 1,
+      rowId: '1',
     },
   ],
 };

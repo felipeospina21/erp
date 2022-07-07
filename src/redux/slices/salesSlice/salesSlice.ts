@@ -37,13 +37,25 @@ const salesSlice = createSlice({
     resetSale: () => {
       return initialState;
     },
+    addProductToList: (state, action: PayloadAction<NewSaleOrderedProduct>) => {
+      state.productsList?.push(action.payload);
+    },
+    removeProductFromList: (state, action: PayloadAction<number>) => {
+      state.productsList?.splice(action.payload, 1);
+    },
 
-    updateProductsList: (state, action: PayloadAction<Partial<NewSaleOrderedProduct>>) => {
+    updateProductList: (state, action: PayloadAction<NewSaleOrderedProduct[]>) => {
+      state.productsList = action.payload;
+    },
+
+    updateProductsListItem: (state, action: PayloadAction<Partial<NewSaleOrderedProduct>>) => {
       const { payload } = action;
 
       if (payload.rowId && state.productsList) {
-        const idx = payload.rowId - 1;
-        state.productsList[idx] = { ...state.productsList[idx], ...payload };
+        const idx = state.productsList?.findIndex(({ rowId }) => rowId === payload.rowId);
+        if (idx >= 0) {
+          state.productsList[idx] = { ...state.productsList[idx], ...payload };
+        }
       }
     },
     addNewSaleClient: (state, action: PayloadAction<Client>) => {
@@ -65,7 +77,10 @@ const salesSlice = createSlice({
 
 export const {
   resetSale,
-  updateProductsList,
+  addProductToList,
+  removeProductFromList,
+  updateProductList,
+  updateProductsListItem,
   addNewSaleClient,
   updateCheckoutData,
   updateClientPaymentTerm,
