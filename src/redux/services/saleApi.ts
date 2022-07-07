@@ -4,7 +4,7 @@ import type { Product } from './productApi';
 import { axiosBaseQuery } from './customBaseQuery';
 
 export interface RowInfo {
-  rowId: number;
+  rowId: string;
   rowTotal: number;
 }
 

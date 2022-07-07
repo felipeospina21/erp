@@ -9,7 +9,7 @@ import dynamic from 'next/dynamic';
 const LoginPage = dynamic(() => import('@/pages/login'));
 
 export interface RowData {
-  id: number;
+  id: string;
   item: string;
   subtotal: number;
   stock: number;
@@ -21,7 +21,7 @@ export interface RowData {
 
 export default function VentasPage({ isAuth }: IsAuth): ReactElement {
   const initialRowSate: RowData = {
-    id: 1,
+    id: '1',
     item: '',
     discount: 0,
     subtotal: 0,
@@ -32,7 +32,10 @@ export default function VentasPage({ isAuth }: IsAuth): ReactElement {
   };
   const [rowsData, setRowsData] = useState<RowData[]>([initialRowSate]);
   const [isSalesBtnDisabled, setSalesBtnDisabled] = useState(true);
-  const { subtotal, tax } = useAppSelector((state) => state.sales.checkoutData);
+  const { subtotal, tax, deliveryCity, paymentTerm } = useAppSelector(
+    (state) => state.sales.checkoutData
+  );
+  const selectedClient = useAppSelector((state) => state.sales.client);
   const productsList = useAppSelector((state) => state.sales.productsList);
   const dispatch = useAppDispatch();
 
@@ -76,15 +79,19 @@ export default function VentasPage({ isAuth }: IsAuth): ReactElement {
   }, [isAuth]);
 
   useEffect(() => {
-    //TODO: Add proper validation
-    const quantityArr = productsList?.map(({ quantity }) => quantity).filter((q) => q < 1);
+    const quantityArr = productsList?.map(({ quantity }) => quantity).filter((q) => q >= 1);
 
-    if (quantityArr?.length) {
-      setSalesBtnDisabled(true);
-    } else {
+    if (
+      selectedClient?._id &&
+      deliveryCity &&
+      paymentTerm &&
+      quantityArr?.length === productsList?.length
+    ) {
       setSalesBtnDisabled(false);
+    } else {
+      setSalesBtnDisabled(true);
     }
-  }, [productsList]);
+  }, [productsList, selectedClient?._id, deliveryCity, paymentTerm]);
 
   useEffect(() => {
     const newSubtotal = productsList?.reduce(

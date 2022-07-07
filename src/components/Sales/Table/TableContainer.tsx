@@ -11,6 +11,9 @@ import {
 import { FaPlusCircle } from 'react-icons/fa';
 import { TableCellHeader, TableRow } from './';
 import { RowData } from '@/pages/ventas';
+import { useAppDispatch } from '@/redux/hooks';
+import { addProductToList, removeProductFromList } from '@/redux/slices/salesSlice';
+import { nanoid } from '@reduxjs/toolkit';
 
 export interface TableContainerProps {
   pageMaxW: string;
@@ -32,28 +35,37 @@ export function TableContainer({
   salesBtnDisabled,
   setSalesBtnDisabled,
 }: TableContainerProps): JSX.Element {
+  const dispatch = useAppDispatch();
+
   const addRow = (): void => {
     salesBtnDisabled ? null : setSalesBtnDisabled(true);
-    const newRowId = rowsData.length + 1;
-    setRowsData([
-      ...rowsData,
-      {
-        id: newRowId,
-        item: '',
-        subtotal: 0,
-        quantity: 0,
-        stock: 0,
-        productId: '',
-        price: 0,
-        discount: 0,
-      },
-    ]);
+    const newRow = {
+      id: nanoid(),
+      subtotal: 0,
+      item: '',
+      price: 0,
+      stock: 0,
+      quantity: 0,
+      discount: 0,
+      productId: '',
+    };
+    setRowsData([...rowsData, newRow]);
+    dispatch(
+      addProductToList({
+        ...newRow,
+        rowId: newRow.id,
+        rowTotal: newRow.subtotal,
+        name: newRow.productId,
+      })
+    );
   };
 
-  const removeRow = (id: number): void => {
+  const removeRow = (id: string): void => {
     const rowId = id;
+    const idx = rowsData.findIndex(({ id }) => id === rowId);
     const newRows = rowsData.filter((row) => row.id !== rowId);
     setRowsData(newRows);
+    dispatch(removeProductFromList(idx));
   };
 
   return (
@@ -79,7 +91,7 @@ export function TableContainer({
           </Thead>
           <Tbody fontSize={['xs', 'sm']}>
             {rowsData.map((row) => {
-              return <TableRow key={row.id} id={row.id ?? 0} removeRow={removeRow} />;
+              return <TableRow key={row.id} id={row.id ?? nanoid()} removeRow={removeRow} />;
             })}
           </Tbody>
         </Table>

@@ -25,7 +25,7 @@ export function SalesHeader({ pageMaxW }: SalesHeaderProps): JSX.Element {
     if (clients) {
       const selectedClient = clients.filter((client) => client.name === value)[0];
       dispatch(dispatch(addNewSaleClient({ ...selectedClient })));
-      dispatch(dispatch(updateClientPaymentTerm(selectedClient.paymentTerm)));
+      dispatch(dispatch(updateClientPaymentTerm(selectedClient?.paymentTerm)));
     }
   };
 
