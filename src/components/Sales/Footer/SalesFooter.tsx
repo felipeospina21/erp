@@ -1,4 +1,4 @@
-import { CustomButton } from '@/components/Shared';
+import { CustomButton, CustomFormField } from '@/components/Shared';
 import { RowData } from '@/pages/ventas';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import {
@@ -10,10 +10,15 @@ import {
   useUpdateInvoiceCountMutation,
   useUpdateProductStockMutation,
 } from '@/redux/services';
-import { resetSale } from '@/redux/slices/salesSlice';
+import {
+  addInvoiceObservations,
+  isInvoiceObservationsTextInvalid,
+  resetSale,
+} from '@/redux/slices/salesSlice';
+import useDebounce from '@/utils/hooks/useDebounce';
 import { createPdf } from '@/utils/utils';
-import { Box, Flex, useToast } from '@chakra-ui/react';
-import React from 'react';
+import { Box, Flex, Textarea, useToast } from '@chakra-ui/react';
+import React, { useEffect } from 'react';
 import TaxPicker from './TaxPicker';
 import ValueContainer from './ValueContainer';
 
@@ -30,6 +35,7 @@ export function SalesFooter({
   isSalesBtnDisabled,
   setRowsData,
 }: SalesFooterProps): JSX.Element {
+  const [textValue, setTextValue] = useDebounce('', 1000);
   const { data: invoice } = useGetInvoiceCountQuery();
   const [updateInvoiceCount] = useUpdateInvoiceCountMutation();
   const [updateProductStock] = useUpdateProductStockMutation();
@@ -38,7 +44,7 @@ export function SalesFooter({
     { isLoading: isSaveSaleLoading, isError: isSaveSaleError, error: saveSaleError },
   ] = useSaveSaleMutation();
   const salesData = useAppSelector((state) => state.sales);
-  const { productsList, client, checkoutData } = salesData;
+  const { productsList, client, checkoutData, invoiceObservations } = salesData;
   const { subtotal, total } = useAppSelector((state) => state.sales.checkoutData);
   const dispatch = useAppDispatch();
   const toast = useToast();
@@ -49,6 +55,11 @@ export function SalesFooter({
     setRowsData([initialRowSate]);
     dispatch(resetSale());
   };
+
+  function handleTextAreaChange(e: React.ChangeEvent<HTMLTextAreaElement>): void {
+    const { value } = e.target;
+    setTextValue(value);
+  }
 
   async function handleNewSale(): Promise<void> {
     async function saveNewSale(): Promise<any> {
@@ -83,7 +94,8 @@ export function SalesFooter({
       await saveNewSale();
       await createPdf(
         { clientInfo: client, ...checkoutData, orderedProducts: productsList ?? [] },
-        invoiceNum
+        invoiceNum,
+        textValue
       );
       resetInputs();
       toast({
@@ -105,27 +117,64 @@ export function SalesFooter({
     }
   }
 
-  return (
-    <Flex maxW={pageMaxW} flexDir="column" align="flex-end" mr="2rem">
-      <Flex flexDir="column" justifyItems="center" alignItems="stretch" m="0 2.5rem" minW="400px">
-        <ValueContainer name="subtotal" value={subtotal} />
-        <TaxPicker />
-        <ValueContainer name="total" value={total} />
-      </Flex>
+  useEffect(() => {
+    dispatch(addInvoiceObservations(textValue));
+  }, [textValue, dispatch]);
 
-      <Box mt="1rem">
-        <CustomButton
-          fontSize="sm"
-          variant="accept"
-          status={isSalesBtnDisabled}
-          onClick={handleNewSale}
+  useEffect(() => {
+    if (textValue.length > 50) {
+      dispatch(isInvoiceObservationsTextInvalid(true));
+    } else {
+      dispatch(isInvoiceObservationsTextInvalid(false));
+    }
+  }, [textValue, dispatch]);
+
+  return (
+    <Flex
+      maxW={pageMaxW}
+      flexDir={['column', null, null, 'row']}
+      justify="space-between"
+      m={['2rem 2rem', null, null, null, null, '2rem auto']}
+      w={[null, null, null, null, null, '95%']}
+    >
+      <Box w={['100%', null, null, '50rem']}>
+        <CustomFormField
+          id="observations"
+          label="Observaciones"
+          isError={invoiceObservations?.areInvalid}
+          errorMessage={`La longitud maxima de caracteres permitida es 50`}
         >
-          Vender
-        </CustomButton>
-        <CustomButton fontSize="sm" variant="reject" onClick={resetInputs}>
-          Borrar
-        </CustomButton>
+          <Textarea
+            isInvalid={invoiceObservations?.areInvalid}
+            focusBorderColor="none"
+            borderRadius="2xl"
+            bgColor="brand.bgLight"
+            onChange={handleTextAreaChange}
+          />
+        </CustomFormField>
       </Box>
+
+      <Flex maxW={pageMaxW} flexDir="column" align="flex-end" mr="2rem">
+        <Flex flexDir="column" justifyItems="center" alignItems="stretch" m="0 2.5rem" minW="400px">
+          <ValueContainer name="subtotal" value={subtotal} />
+          <TaxPicker />
+          <ValueContainer name="total" value={total} />
+        </Flex>
+
+        <Box mt="1rem">
+          <CustomButton
+            fontSize="sm"
+            variant="accept"
+            status={isSalesBtnDisabled}
+            onClick={handleNewSale}
+          >
+            Vender
+          </CustomButton>
+          <CustomButton fontSize="sm" variant="reject" onClick={resetInputs}>
+            Borrar
+          </CustomButton>
+        </Box>
+      </Flex>
     </Flex>
   );
 }

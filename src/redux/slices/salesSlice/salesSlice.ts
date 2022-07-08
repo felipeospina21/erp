@@ -6,6 +6,10 @@ export interface SalesState {
   productsList?: NewSaleOrderedProduct[];
   client: Client;
   checkoutData: CheckoutData;
+  invoiceObservations?: {
+    text: string;
+    areInvalid: boolean;
+  };
 }
 
 const initialState: SalesState = {
@@ -27,6 +31,10 @@ const initialState: SalesState = {
     tax: 0,
     subtotal: 0,
     total: 0,
+  },
+  invoiceObservations: {
+    text: '',
+    areInvalid: false,
   },
 };
 
@@ -72,6 +80,16 @@ const salesSlice = createSlice({
       const { payload } = action;
       state.checkoutData.paymentTerm = payload;
     },
+    addInvoiceObservations: (state, action: PayloadAction<string>) => {
+      if (state.invoiceObservations) {
+        state.invoiceObservations.text = action.payload;
+      }
+    },
+    isInvoiceObservationsTextInvalid: (state, action: PayloadAction<boolean>) => {
+      if (state.invoiceObservations) {
+        state.invoiceObservations.areInvalid = action.payload;
+      }
+    },
   },
 });
 
@@ -84,6 +102,8 @@ export const {
   addNewSaleClient,
   updateCheckoutData,
   updateClientPaymentTerm,
+  addInvoiceObservations,
+  isInvoiceObservationsTextInvalid,
 } = salesSlice.actions;
 export const selectSales = (state: RootState): SalesState => state.sales;
 export default salesSlice.reducer;

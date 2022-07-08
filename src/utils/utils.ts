@@ -7,7 +7,11 @@ export interface CreatePdfData extends CheckoutData {
   clientInfo: Client;
   orderedProducts: Array<NewSaleOrderedProduct>;
 }
-export async function createPdf(data: CreatePdfData, invoice?: number): Promise<void> {
+export async function createPdf(
+  data: CreatePdfData,
+  invoice?: number,
+  observations?: string
+): Promise<void> {
   const pdfDoc = await PDFDocument.create();
   const page = pdfDoc.addPage();
   const timesRomanFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
@@ -146,7 +150,7 @@ export async function createPdf(data: CreatePdfData, invoice?: number): Promise<
   }
 
   function addFooter(): void {
-    page.drawText('Observaciones:', {
+    page.drawText(`Observaciones: \n ${observations}`, {
       ...fontStyles,
       x: leftColX,
       y: 80,

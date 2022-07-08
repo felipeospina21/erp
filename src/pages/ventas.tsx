@@ -35,8 +35,11 @@ export default function VentasPage({ isAuth }: IsAuth): ReactElement {
   const { subtotal, tax, deliveryCity, paymentTerm } = useAppSelector(
     (state) => state.sales.checkoutData
   );
-  const selectedClient = useAppSelector((state) => state.sales.client);
-  const productsList = useAppSelector((state) => state.sales.productsList);
+  const {
+    client: selectedClient,
+    productsList,
+    invoiceObservations,
+  } = useAppSelector((state) => state.sales);
   const dispatch = useAppDispatch();
 
   const header = useMemo(
@@ -85,13 +88,22 @@ export default function VentasPage({ isAuth }: IsAuth): ReactElement {
       selectedClient?._id &&
       deliveryCity &&
       paymentTerm &&
-      quantityArr?.length === productsList?.length
+      productsList &&
+      productsList?.length > 0 &&
+      quantityArr?.length === productsList?.length &&
+      !invoiceObservations?.areInvalid
     ) {
       setSalesBtnDisabled(false);
     } else {
       setSalesBtnDisabled(true);
     }
-  }, [productsList, selectedClient?._id, deliveryCity, paymentTerm]);
+  }, [
+    productsList,
+    deliveryCity,
+    paymentTerm,
+    selectedClient?._id,
+    invoiceObservations?.areInvalid,
+  ]);
 
   useEffect(() => {
     const newSubtotal = productsList?.reduce(

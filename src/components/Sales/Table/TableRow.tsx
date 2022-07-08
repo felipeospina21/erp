@@ -70,7 +70,7 @@ export function TableRow({ id, removeRow }: TableRowProps): JSX.Element {
           });
         }
 
-        if (newQuantity) {
+        if (newQuantity >= 0) {
           const rowTotal = calculateTotal(price, newQuantity, discount);
           dispatch(updateProductsListItem({ rowId: id, quantity: newQuantity, rowTotal }));
         }
@@ -80,7 +80,7 @@ export function TableRow({ id, removeRow }: TableRowProps): JSX.Element {
         const newDiscount = Number(value);
         const rowTotal = calculateTotal(price, quantity, newDiscount);
 
-        if (newDiscount) {
+        if (newDiscount >= 0) {
           dispatch(updateProductsListItem({ rowId: id, discount: newDiscount, rowTotal }));
         }
       }
