@@ -6,6 +6,7 @@ export interface SalesState {
   productsList?: NewSaleOrderedProduct[];
   client: Client;
   checkoutData: CheckoutData;
+  invoiceObservations?: string;
 }
 
 const initialState: SalesState = {
@@ -28,6 +29,7 @@ const initialState: SalesState = {
     subtotal: 0,
     total: 0,
   },
+  invoiceObservations: '',
 };
 
 const salesSlice = createSlice({
@@ -72,6 +74,9 @@ const salesSlice = createSlice({
       const { payload } = action;
       state.checkoutData.paymentTerm = payload;
     },
+    addInvoiceObservations: (state, action: PayloadAction<string>) => {
+      state.invoiceObservations = action.payload;
+    },
   },
 });
 
@@ -84,6 +89,7 @@ export const {
   addNewSaleClient,
   updateCheckoutData,
   updateClientPaymentTerm,
+  addInvoiceObservations,
 } = salesSlice.actions;
 export const selectSales = (state: RootState): SalesState => state.sales;
 export default salesSlice.reducer;
