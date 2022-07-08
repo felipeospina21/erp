@@ -10,11 +10,15 @@ import {
   useUpdateInvoiceCountMutation,
   useUpdateProductStockMutation,
 } from '@/redux/services';
-import { addInvoiceObservations, resetSale } from '@/redux/slices/salesSlice';
+import {
+  addInvoiceObservations,
+  isInvoiceObservationsTextInvalid,
+  resetSale,
+} from '@/redux/slices/salesSlice';
 import useDebounce from '@/utils/hooks/useDebounce';
 import { createPdf } from '@/utils/utils';
 import { Box, Flex, Textarea, useToast } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import TaxPicker from './TaxPicker';
 import ValueContainer from './ValueContainer';
 
@@ -31,7 +35,6 @@ export function SalesFooter({
   isSalesBtnDisabled,
   setRowsData,
 }: SalesFooterProps): JSX.Element {
-  const [isTextAreaInvalid, setIsTextAreaInvalid] = useState(false);
   const [textValue, setTextValue] = useDebounce('', 1000);
   const { data: invoice } = useGetInvoiceCountQuery();
   const [updateInvoiceCount] = useUpdateInvoiceCountMutation();
@@ -41,7 +44,7 @@ export function SalesFooter({
     { isLoading: isSaveSaleLoading, isError: isSaveSaleError, error: saveSaleError },
   ] = useSaveSaleMutation();
   const salesData = useAppSelector((state) => state.sales);
-  const { productsList, client, checkoutData } = salesData;
+  const { productsList, client, checkoutData, invoiceObservations } = salesData;
   const { subtotal, total } = useAppSelector((state) => state.sales.checkoutData);
   const dispatch = useAppDispatch();
   const toast = useToast();
@@ -120,23 +123,29 @@ export function SalesFooter({
 
   useEffect(() => {
     if (textValue.length > 50) {
-      setIsTextAreaInvalid(true);
+      dispatch(isInvoiceObservationsTextInvalid(true));
     } else {
-      setIsTextAreaInvalid(false);
+      dispatch(isInvoiceObservationsTextInvalid(false));
     }
-  }, [textValue]);
+  }, [textValue, dispatch]);
 
   return (
-    <Flex maxW={pageMaxW} align="center" m="auto">
-      <Box w="100%">
+    <Flex
+      maxW={pageMaxW}
+      flexDir={['column', null, null, 'row']}
+      justify="space-between"
+      m={['2rem 2rem', null, null, null, null, '2rem auto']}
+      w={[null, null, null, null, null, '95%']}
+    >
+      <Box w={['100%', null, null, '50rem']}>
         <CustomFormField
           id="observations"
           label="Observaciones"
-          isError={isTextAreaInvalid}
+          isError={invoiceObservations?.areInvalid}
           errorMessage={`La longitud maxima de caracteres permitida es 50`}
         >
           <Textarea
-            isInvalid={isTextAreaInvalid}
+            isInvalid={invoiceObservations?.areInvalid}
             focusBorderColor="none"
             borderRadius="2xl"
             bgColor="brand.bgLight"
