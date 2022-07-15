@@ -45,7 +45,7 @@ export function SalesFooter({
   ] = useSaveSaleMutation();
   const salesData = useAppSelector((state) => state.sales);
   const { productsList, client, checkoutData, invoiceObservations } = salesData;
-  const { subtotal, total } = useAppSelector((state) => state.sales.checkoutData);
+  const { subtotal, total, withholdingTax } = useAppSelector((state) => state.sales.checkoutData);
   const dispatch = useAppDispatch();
   const toast = useToast();
 
@@ -158,6 +158,7 @@ export function SalesFooter({
         <Flex flexDir="column" justifyItems="center" alignItems="stretch" m="0 2.5rem" minW="400px">
           <ValueContainer name="subtotal" value={subtotal} />
           <TaxPicker />
+          {withholdingTax && <ValueContainer name="Rte Fuente" sign="-" value={withholdingTax} />}
           <ValueContainer name="total" value={total} />
         </Flex>
 

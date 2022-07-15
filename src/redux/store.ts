@@ -8,6 +8,7 @@ import {
   invoiceApi,
   categoryApi,
   citiesApi,
+  taxApi,
 } from './services';
 import productsReducer from './slices/productsSlice';
 import clientsReducer from './slices/clientsSlice';
@@ -26,6 +27,7 @@ export const reducer = {
   [invoiceApi.reducerPath]: invoiceApi.reducer,
   [categoryApi.reducerPath]: categoryApi.reducer,
   [citiesApi.reducerPath]: citiesApi.reducer,
+  [taxApi.reducerPath]: taxApi.reducer,
 };
 
 export const middlewares = [
@@ -36,6 +38,7 @@ export const middlewares = [
   invoiceApi.middleware,
   categoryApi.middleware,
   citiesApi.middleware,
+  taxApi.middleware,
 ];
 
 export const store = () =>

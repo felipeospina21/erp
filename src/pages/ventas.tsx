@@ -6,6 +6,7 @@ import React, { ReactElement, useEffect, useMemo, useState } from 'react';
 import { checkAuth, IsAuth } from '@/utils/auth';
 import Router from 'next/router';
 import dynamic from 'next/dynamic';
+import { useGetwithholdingTaxQuery } from '@/redux/services';
 const LoginPage = dynamic(() => import('@/pages/login'));
 
 export interface RowData {
@@ -32,6 +33,7 @@ export default function VentasPage({ isAuth }: IsAuth): ReactElement {
   };
   const [rowsData, setRowsData] = useState<RowData[]>([initialRowSate]);
   const [isSalesBtnDisabled, setSalesBtnDisabled] = useState(true);
+  const { data: withholdingTax } = useGetwithholdingTaxQuery('62d19e8a3a4b06e0eed05d2d');
   const { subtotal, tax, deliveryCity, paymentTerm } = useAppSelector(
     (state) => state.sales.checkoutData
   );
@@ -114,9 +116,13 @@ export default function VentasPage({ isAuth }: IsAuth): ReactElement {
   }, [productsList, dispatch]);
 
   useEffect(() => {
-    const newTotal = subtotal * (1 + tax);
+    const withholding = subtotal * (withholdingTax?.percentage ?? 0);
+    if (withholdingTax && subtotal > withholdingTax?.base) {
+      dispatch(updateCheckoutData({ key: 'withholdingTax', value: withholding }));
+    }
+    const newTotal = subtotal * (1 + tax) - withholding;
     dispatch(updateCheckoutData({ key: 'total', value: newTotal }));
-  }, [subtotal, tax, dispatch]);
+  }, [subtotal, tax, withholdingTax, dispatch]);
 
   if (!isAuth) {
     return <LoginPage />;
