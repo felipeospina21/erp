@@ -27,6 +27,9 @@ export async function createPdf(
       paymentTerm,
     },
     orderedProducts,
+    subtotal,
+    total,
+    withholdingTax,
   } = data;
   const pageConfig = {
     width: 545,
@@ -45,7 +48,7 @@ export async function createPdf(
   };
 
   const fontStyles = {
-    size: 11,
+    size: 10,
     font: timesRomanFont,
   };
 
@@ -101,29 +104,29 @@ export async function createPdf(
     page.drawText('PRODUCTO', {
       ...fontStyles,
       x: tablePositionX.col1,
-      y: height - 185,
+      y: height - 175,
     });
     page.drawText('CANTIDAD', {
       ...fontStyles,
       x: tablePositionX.col2,
-      y: height - 185,
+      y: height - 175,
     });
     page.drawText('PRECIO', {
       ...fontStyles,
       x: tablePositionX.col3,
-      y: height - 185,
+      y: height - 175,
     });
     page.drawText('TOTAL', {
       ...fontStyles,
       x: tablePositionX.col4,
-      y: height - 185,
+      y: height - 175,
     });
   }
-  let newLineY = 185;
+  let newLineY = 175;
 
   function addProducts(): void {
     addTableHeader();
-    const props = { ...fontStyles, y: height - newLineY };
+    const props = { ...fontStyles, size: 9, y: height - newLineY };
     orderedProducts.forEach((product) => {
       const price = product.price ?? 0;
       const discount = product.discount / 100;
@@ -147,22 +150,64 @@ export async function createPdf(
         x: tablePositionX.col4,
       });
     });
+
+    page.drawLine({
+      start: { x: tablePositionX.col3, y: height - newLineY - 10 },
+      end: { x: tablePositionX.col4 + 50, y: height - newLineY - 10 },
+    });
+    newLineY += lineHeight + 5;
+    if (withholdingTax) {
+      // Subtotal
+      props.y = height - newLineY;
+      page.drawText('SUBTOTAL', {
+        ...props,
+        x: tablePositionX.col3,
+      });
+      page.drawText(numberToCurrency(subtotal), {
+        ...props,
+        x: tablePositionX.col4,
+      });
+
+      // RteFuente
+      newLineY += lineHeight;
+      props.y = height - newLineY;
+      page.drawText('Rte Fte', {
+        ...props,
+        x: tablePositionX.col3,
+      });
+      page.drawText(numberToCurrency(-withholdingTax), {
+        ...props,
+        x: tablePositionX.col4,
+      });
+    }
+
+    // Total
+    newLineY += lineHeight;
+    props.y = height - newLineY;
+    page.drawText('TOTAL A PAGAR', {
+      ...props,
+      x: tablePositionX.col3,
+    });
+    page.drawText(numberToCurrency(total), {
+      ...props,
+      x: tablePositionX.col4,
+    });
   }
 
   function addFooter(): void {
     page.drawText(`Observaciones: \n ${observations}`, {
       ...fontStyles,
       x: leftColX,
-      y: 80,
+      y: 50,
     });
     page.drawText('Recibido Por:', {
       ...fontStyles,
       x: rightColX,
-      y: 80,
+      y: 50,
     });
     page.drawText(
       'DE LA TIERRA - Cll 6 sur # 50 - 30. Medellín - Cel. 304 4070005 - WP 305 4806327',
-      { ...fontStyles, size: 9, x: leftColX * 2, y: 30 }
+      { ...fontStyles, size: 9, x: leftColX * 2, y: 15 }
     );
   }
 
@@ -174,9 +219,9 @@ export async function createPdf(
   addFooter();
   page.drawRectangle({
     x: leftColX,
-    y: 155 - orderedProducts.length * 15,
-    width: width - 140,
-    height: 25 + orderedProducts.length * 15,
+    y: 122 - orderedProducts.length * 15,
+    width: width - 130,
+    height: 65 + orderedProducts.length * 15,
     borderWidth: 1,
     borderColor: grayscale(0.5),
     opacity: 0.5,
@@ -192,7 +237,6 @@ export async function createPdf(
     y: height - 80,
     width: 80,
     height: 70,
-    opacity: 0.75,
   });
 
   try {
