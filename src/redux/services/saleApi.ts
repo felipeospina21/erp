@@ -27,6 +27,7 @@ export interface CheckoutData {
   subtotal: number;
   tax: number;
   total: number;
+  withholdingTax?: number;
 }
 export interface NewSale extends CheckoutData {
   clientId: string;

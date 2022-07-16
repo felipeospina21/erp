@@ -5,9 +5,10 @@ import { numberToCurrency } from '@/utils/index';
 export interface ValueContainerProps {
   name: string;
   value: number;
+  sign?: '-' | '+';
 }
 
-const ValueContainer = ({ name, value }: ValueContainerProps): JSX.Element => {
+const ValueContainer = ({ name, value, sign }: ValueContainerProps): JSX.Element => {
   const text = name.replace(/\w\S*/g, (w) => w.replace(/^\w/, (c) => c.toUpperCase()));
 
   return (
@@ -16,7 +17,7 @@ const ValueContainer = ({ name, value }: ValueContainerProps): JSX.Element => {
         {text}
       </Box>
       <Box textAlign="right" mt="1.5rem" w="100%" fontWeight="500">
-        {numberToCurrency(value)}
+        {sign} {numberToCurrency(value)}
       </Box>
     </SimpleGrid>
   );
