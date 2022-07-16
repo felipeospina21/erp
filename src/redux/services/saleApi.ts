@@ -35,6 +35,7 @@ export interface NewSale extends CheckoutData {
   orderedProducts: Array<
     Pick<NewSaleOrderedProduct, 'item' | 'discount' | 'quantity' | 'rowTotal'>
   >;
+  invoiceRef: string;
 }
 export interface SaleResponse extends CheckoutData {
   clientInfo: Client;
