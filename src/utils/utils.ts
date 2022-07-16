@@ -14,7 +14,8 @@ export async function createPdf(
 ): Promise<void> {
   const pdfDoc = await PDFDocument.create();
   const page = pdfDoc.addPage();
-  const timesRomanFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
   const {
     clientInfo: {
       name: clientName,
@@ -49,7 +50,7 @@ export async function createPdf(
 
   const fontStyles = {
     size: 10,
-    font: timesRomanFont,
+    font: helvetica,
   };
 
   function addInvoiceData(): void {
@@ -57,10 +58,19 @@ export async function createPdf(
     const dueDate = new Date();
     const formatedPaymentTerm = paymentTerm === 'contado' ? 0 : Number(paymentTerm);
     dueDate.setDate(invoiceDate.getDate() + formatedPaymentTerm);
-    const formatedInvoiceDate = formatDate(invoiceDate, 'es');
-    const formatedDueDate = formatDate(dueDate, 'es');
-    page.drawText(`Cuenta de cobro N° ${invoice}`, {
+    const formatedInvoiceDate = formatDate(invoiceDate, 'es', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+    const formatedDueDate = formatDate(dueDate, 'es', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+    page.drawText(`CUENTA DE COBRO N° ${invoice}`, {
       ...fontStyles,
+      font: helveticaBold,
       x: rightColX,
       y: height - 25,
     });
@@ -81,11 +91,11 @@ export async function createPdf(
       x: leftColX,
       ...fontStyles,
     };
-    page.drawText('Cliente:', { ...props, y: height - 95 });
-    page.drawText(clientName, { ...props, y: height - 110 });
-    page.drawText(`${idType} ${idNumber}`, { ...props, y: height - 125 });
-    page.drawText(`${addres1}. ${addres2}`, { ...props, y: height - 140 });
-    page.drawText(`${city}, ${department}`, { ...props, y: height - 155 });
+    page.drawText('CLIENTE', { ...props, font: helveticaBold, y: height - 95 });
+    page.drawText(clientName, { ...props, y: height - 107 });
+    page.drawText(`${idType} ${idNumber}`, { ...props, y: height - 119 });
+    page.drawText(`${addres1}. ${addres2}`, { ...props, y: height - 131 });
+    page.drawText(`${city}, ${department}`, { ...props, y: height - 143 });
   }
 
   function addRightHeader(): void {
@@ -93,31 +103,35 @@ export async function createPdf(
       x: rightColX,
       ...fontStyles,
     };
-    page.drawText('Debe A:', { ...props, y: height - 95 });
-    page.drawText('Catalina Restrepo', { ...props, y: height - 110 });
-    page.drawText('CC 1.039.454.392', { ...props, y: height - 125 });
-    page.drawText('Ahorros Bancolombia', { ...props, y: height - 140 });
-    page.drawText('N°693 657 886 85', { ...props, y: height - 155 });
+    page.drawText('DEBE A', { ...props, font: helveticaBold, y: height - 95 });
+    page.drawText('Catalina Restrepo', { ...props, y: height - 107 });
+    page.drawText('CC 1.039.454.392', { ...props, y: height - 119 });
+    page.drawText('Ahorros Bancolombia', { ...props, y: height - 131 });
+    page.drawText('N°693 657 886 85', { ...props, y: height - 143 });
   }
 
   function addTableHeader(): void {
     page.drawText('PRODUCTO', {
       ...fontStyles,
+      font: helveticaBold,
       x: tablePositionX.col1,
       y: height - 175,
     });
     page.drawText('CANTIDAD', {
       ...fontStyles,
+      font: helveticaBold,
       x: tablePositionX.col2,
       y: height - 175,
     });
     page.drawText('PRECIO', {
       ...fontStyles,
+      font: helveticaBold,
       x: tablePositionX.col3,
       y: height - 175,
     });
     page.drawText('TOTAL', {
       ...fontStyles,
+      font: helveticaBold,
       x: tablePositionX.col4,
       y: height - 175,
     });
@@ -195,13 +209,20 @@ export async function createPdf(
   }
 
   function addFooter(): void {
-    page.drawText(`Observaciones: \n ${observations}`, {
+    page.drawText('OBSERVACIONES:', {
       ...fontStyles,
+      font: helveticaBold,
       x: leftColX,
       y: 50,
     });
-    page.drawText('Recibido Por:', {
+    page.drawText(observations ?? '', {
       ...fontStyles,
+      x: leftColX,
+      y: 35,
+    });
+    page.drawText('RECIBIDO POR:', {
+      ...fontStyles,
+      font: helveticaBold,
       x: rightColX,
       y: 50,
     });
