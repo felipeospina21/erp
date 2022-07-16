@@ -24,7 +24,6 @@ const TaxPicker = (): JSX.Element => {
         id="tax-picker"
         options={[
           { _id: nanoid(), name: '0' },
-          { _id: nanoid(), name: '16' },
           { _id: nanoid(), name: '19' },
         ]}
         size="sm"
