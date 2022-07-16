@@ -14,12 +14,14 @@ import productsReducer from './slices/productsSlice';
 import clientsReducer from './slices/clientsSlice';
 import salesReducer from './slices/salesSlice';
 import userReducer from './slices/userSlice';
+import shippingReducer from './slices/shippingSlice';
 
 export const reducer = {
   products: productsReducer,
   sales: salesReducer,
   clients: clientsReducer,
   user: userReducer,
+  shipping: shippingReducer,
   [clientApi.reducerPath]: clientApi.reducer,
   [productApi.reducerPath]: productApi.reducer,
   [saleApi.reducerPath]: saleApi.reducer,

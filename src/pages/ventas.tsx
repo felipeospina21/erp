@@ -67,6 +67,10 @@ export default function VentasPage({ isAuth }: IsAuth): ReactElement {
         id: 'discount',
       },
       {
+        title: 'Transporte (und)',
+        id: 'shipping',
+      },
+      {
         title: 'Total',
         id: 'total',
       },
@@ -116,8 +120,9 @@ export default function VentasPage({ isAuth }: IsAuth): ReactElement {
   }, [productsList, dispatch]);
 
   useEffect(() => {
-    const withholding = subtotal * (withholdingTax?.percentage ?? 0);
+    let withholding = 0;
     if (withholdingTax && subtotal > withholdingTax?.base) {
+      withholding = subtotal * (withholdingTax?.percentage ?? 0);
       dispatch(updateCheckoutData({ key: 'withholdingTax', value: withholding }));
     }
     const newTotal = subtotal * (1 + tax) - withholding;
