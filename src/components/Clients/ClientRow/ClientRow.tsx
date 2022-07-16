@@ -99,7 +99,7 @@ export function ClientRow({ client }: ClientRowProps): JSX.Element {
             onSubmit={onSubmit}
             isLoading={isLoading}
             defaultValues={{ ...client }}
-            buttonText="Crear"
+            buttonText="Actualizar"
             idTypes={[
               { _id: 'CC', name: 'CC' },
               { _id: 'NIT', name: 'NIT' },
