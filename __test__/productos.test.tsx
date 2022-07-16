@@ -65,8 +65,9 @@ test('Click update product and change name', async()=> {
   const user = userEvent.setup();
   render(<ProductosPage isAuth={true} />);
 
-  const buttons = await screen.findAllByRole('button', {name:/editar/i})
-  await user.click(buttons[0])
+  const [modalContainer] = await screen.findAllByTestId('modal-container')
+  const editButton = await within(modalContainer).findByRole('button', {name:/editar/i})
+  await user.click(editButton)
   await screen.findByText(/actualizar producto/i)
   await user.type( screen.getByLabelText(/nombre/i), 'updated test name')
   const modal = screen.getByTestId('custom-modal')

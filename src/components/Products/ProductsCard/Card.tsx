@@ -94,7 +94,14 @@ export function Card({ product, locale }: CardProps): JSX.Element {
           <Text mt="0.5rem">{`Precio: ${numberToCurrency(product.price)}`}</Text>
         </Flex>
       </Flex>
-      <Flex w="100%" borderRadius="2xl" justify={'space-evenly'} align="center" bg="brand.grey.50">
+      <Flex
+        w="100%"
+        borderRadius="2xl"
+        justify={'space-evenly'}
+        align="center"
+        bg="brand.grey.50"
+        data-testid="modal-container"
+      >
         <CustomModal
           title="Actualizar Producto"
           isDisplayed={displayModal}
