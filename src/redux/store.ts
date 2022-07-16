@@ -15,6 +15,7 @@ import clientsReducer from './slices/clientsSlice';
 import salesReducer from './slices/salesSlice';
 import userReducer from './slices/userSlice';
 import shippingReducer from './slices/shippingSlice';
+import { rtkQueryErrorLogger } from './middleware/handleError';
 
 export const reducer = {
   products: productsReducer,
@@ -41,6 +42,7 @@ export const middlewares = [
   categoryApi.middleware,
   citiesApi.middleware,
   taxApi.middleware,
+  rtkQueryErrorLogger,
 ];
 
 export const store = () =>

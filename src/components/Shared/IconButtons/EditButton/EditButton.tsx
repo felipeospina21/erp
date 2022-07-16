@@ -6,6 +6,7 @@ import { IconButtonProps } from '../types';
 export function EditButton({
   isLoading,
   onClick,
+  color,
   size = 'lg',
   colorVariant = 500,
   variant = 'ghost',
@@ -16,7 +17,7 @@ export function EditButton({
       role="button"
       icon={<Edit />}
       size={size}
-      color={`custom.green.${colorVariant}`}
+      color={color ?? `custom.green.${colorVariant}`}
       variant={variant}
       isLoading={isLoading}
       onClick={onClick}

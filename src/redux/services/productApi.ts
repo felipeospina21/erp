@@ -2,6 +2,7 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import type { DocumentId } from './clientApi';
 import { axiosBaseQuery } from './customBaseQuery';
 import { HYDRATE } from 'next-redux-wrapper';
+import { StockFormValues } from '@/components/Products/StockForm/StockForm';
 export interface Product extends DocumentId {
   category: { _id: string; name: string };
   name: string;
@@ -47,6 +48,14 @@ export const productApi = createApi({
       }),
       invalidatesTags: [{ type: 'Product' }],
     }),
+    updateProductStockInBatch: build.mutation<{ message: string }, StockFormValues>({
+      query: (body) => ({
+        url: '/updateStockInBatch',
+        method: 'put',
+        data: { ...body },
+      }),
+      invalidatesTags: [{ type: 'Product' }],
+    }),
     deleteProduct: build.mutation<Product, DocumentId>({
       query: (body) => ({
         url: '/',
@@ -71,10 +80,17 @@ export const {
   useGetProductsQuery,
   useUpdateProductMutation,
   useUpdateProductStockMutation,
+  useUpdateProductStockInBatchMutation,
   useDeleteProductMutation,
   useCreateProductMutation,
   util: { getRunningOperationPromises: getProductRunningOperationPromises },
 } = productApi;
 
-export const { getProducts, updateProduct, updateProductStock, deleteProduct, createProduct } =
-  productApi.endpoints;
+export const {
+  getProducts,
+  updateProduct,
+  updateProductStock,
+  updateProductStockInBatch,
+  deleteProduct,
+  createProduct,
+} = productApi.endpoints;

@@ -6,5 +6,6 @@ export interface IconButtonProps {
   margin?: string | string[];
   size?: Sizes;
   variant?: ButtonVariants;
+  color?: string;
   onClick: () => void;
 }
