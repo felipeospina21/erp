@@ -64,7 +64,7 @@ export function SalesFooter({
   async function handleNewSale(): Promise<void> {
     async function saveNewSale(): Promise<any> {
       const promises: Promise<NewSaleResponse | Product | InvoiceResponse>[] = [];
-
+      const invoiceRef = invoice ? String(invoice.count + 1) : '';
       const orderedProducts =
         productsList?.map(({ item, discount, quantity, rowTotal }) => ({
           item,
@@ -73,7 +73,12 @@ export function SalesFooter({
           rowTotal,
         })) ?? [];
       promises.push(
-        saveSale({ clientId: client?._id ?? '', ...checkoutData, orderedProducts }).unwrap()
+        saveSale({
+          clientId: client?._id ?? '',
+          ...checkoutData,
+          orderedProducts,
+          invoiceRef,
+        }).unwrap()
       );
       promises.push(updateInvoiceCount().unwrap());
 

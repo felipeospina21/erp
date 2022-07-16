@@ -155,11 +155,11 @@ export async function createPdf(
         ...props,
         x: tablePositionX.col2,
       });
-      page.drawText(numberToCurrency(discountedPrice), {
+      page.drawText(discountedPrice.toLocaleString('es-CO'), {
         ...props,
         x: tablePositionX.col3,
       });
-      page.drawText(numberToCurrency(product.rowTotal), {
+      page.drawText(product.rowTotal.toLocaleString('es-CO'), {
         ...props,
         x: tablePositionX.col4,
       });
@@ -177,7 +177,7 @@ export async function createPdf(
         ...props,
         x: tablePositionX.col3,
       });
-      page.drawText(numberToCurrency(subtotal), {
+      page.drawText(subtotal.toLocaleString('es-CO'), {
         ...props,
         x: tablePositionX.col4,
       });
@@ -189,7 +189,7 @@ export async function createPdf(
         ...props,
         x: tablePositionX.col3,
       });
-      page.drawText(numberToCurrency(-withholdingTax), {
+      page.drawText(`- ${withholdingTax.toLocaleString('es-CO')}`, {
         ...props,
         x: tablePositionX.col4,
       });
@@ -209,23 +209,24 @@ export async function createPdf(
   }
 
   function addFooter(): void {
-    page.drawText('OBSERVACIONES:', {
+    page.drawText('RECIBIDO POR:', {
       ...fontStyles,
       font: helveticaBold,
       x: leftColX,
       y: 50,
     });
-    page.drawText(observations ?? '', {
-      ...fontStyles,
-      x: leftColX,
-      y: 35,
-    });
-    page.drawText('RECIBIDO POR:', {
+    page.drawText('OBSERVACIONES:', {
       ...fontStyles,
       font: helveticaBold,
       x: rightColX,
       y: 50,
     });
+    page.drawText(observations ?? '', {
+      ...fontStyles,
+      x: rightColX,
+      y: 35,
+    });
+
     page.drawText(
       'DE LA TIERRA - Cll 6 sur # 50 - 30. Medellín - Cel. 304 4070005 - WP 305 4806327',
       { ...fontStyles, size: 9, x: leftColX * 2, y: 15 }
