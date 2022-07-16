@@ -19,6 +19,7 @@ export interface NewSaleOrderedProduct extends RowInfo {
   stock: number;
   quantity: number;
   discount: number;
+  shipping?: number;
 }
 
 export interface CheckoutData {

@@ -3,6 +3,7 @@ import { Td } from '@chakra-ui/react';
 
 export interface TableCellBodyProps {
   children: string | number | undefined | JSX.Element;
+  id?: string;
 }
 
 export function TableCellBody(props: TableCellBodyProps): JSX.Element {
