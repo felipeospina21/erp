@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom/extend-expect';
+import "whatwg-fetch";
 import { server } from '@/utils/test-utils/msw/mockServer'
 import { mockStore } from '@/utils/test-utils';
 import { userApi } from '@/redux/services';

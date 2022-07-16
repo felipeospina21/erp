@@ -1,15 +1,16 @@
 import { SalesFooter, SalesHeader, TableContainer } from '@/components/Sales';
 import { Layout } from '@/components/Shared';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { updateSalesData } from '@/redux/slices/salesSlice';
+import { updateCheckoutData } from '@/redux/slices/salesSlice';
 import React, { ReactElement, useEffect, useMemo, useState } from 'react';
 import { checkAuth, IsAuth } from '@/utils/auth';
 import Router from 'next/router';
 import dynamic from 'next/dynamic';
+import { useGetwithholdingTaxQuery } from '@/redux/services';
 const LoginPage = dynamic(() => import('@/pages/login'));
 
 export interface RowData {
-  id: number;
+  id: string;
   item: string;
   subtotal: number;
   stock: number;
@@ -21,18 +22,26 @@ export interface RowData {
 
 export default function VentasPage({ isAuth }: IsAuth): ReactElement {
   const initialRowSate: RowData = {
-    id: 1,
+    id: '1',
     item: '',
+    discount: 0,
     subtotal: 0,
     stock: 0,
     quantity: 0,
     productId: '',
     price: 0,
-    discount: 0,
   };
   const [rowsData, setRowsData] = useState<RowData[]>([initialRowSate]);
   const [isSalesBtnDisabled, setSalesBtnDisabled] = useState(true);
-  const salesData = useAppSelector((state) => state.sales);
+  const { data: withholdingTax } = useGetwithholdingTaxQuery('62d19e8a3a4b06e0eed05d2d');
+  const { subtotal, tax, deliveryCity, paymentTerm } = useAppSelector(
+    (state) => state.sales.checkoutData
+  );
+  const {
+    client: selectedClient,
+    productsList,
+    invoiceObservations,
+  } = useAppSelector((state) => state.sales);
   const dispatch = useAppDispatch();
 
   const header = useMemo(
@@ -58,6 +67,10 @@ export default function VentasPage({ isAuth }: IsAuth): ReactElement {
         id: 'discount',
       },
       {
+        title: 'Transporte (und)',
+        id: 'shipping',
+      },
+      {
         title: 'Total',
         id: 'total',
       },
@@ -75,38 +88,46 @@ export default function VentasPage({ isAuth }: IsAuth): ReactElement {
   }, [isAuth]);
 
   useEffect(() => {
-    const filteredRows = rowsData.filter(
-      (row) => row.quantity > row.stock || isNaN(row.discount ?? 0) || isNaN(row.quantity)
-    );
-    if (filteredRows.length > 0 && !isSalesBtnDisabled) {
-      setSalesBtnDisabled(true);
-    } else if (filteredRows.length === 0 && isSalesBtnDisabled) {
+    const quantityArr = productsList?.map(({ quantity }) => quantity).filter((q) => q >= 1);
+
+    if (
+      selectedClient?._id &&
+      deliveryCity &&
+      paymentTerm &&
+      productsList &&
+      productsList?.length > 0 &&
+      quantityArr?.length === productsList?.length &&
+      !invoiceObservations?.areInvalid
+    ) {
       setSalesBtnDisabled(false);
+    } else {
+      setSalesBtnDisabled(true);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowsData, isSalesBtnDisabled]);
+  }, [
+    productsList,
+    deliveryCity,
+    paymentTerm,
+    selectedClient?._id,
+    invoiceObservations?.areInvalid,
+  ]);
 
   useEffect(() => {
-    let newSubtotal = 0;
-    rowsData.forEach((row) => {
-      const rowSubtotal = row?.subtotal ?? 0;
-      return (newSubtotal = newSubtotal + rowSubtotal);
-    });
-    dispatch(
-      updateSalesData({
-        subtotal: newSubtotal,
-      })
+    const newSubtotal = productsList?.reduce(
+      (accumulator, product) => accumulator + product.rowTotal,
+      0
     );
-  }, [rowsData, dispatch]);
+    dispatch(updateCheckoutData({ key: 'subtotal', value: newSubtotal ?? 0 }));
+  }, [productsList, dispatch]);
 
   useEffect(() => {
-    const newTotal = salesData.newSaleData.subtotal * (1 + salesData.newSaleData.tax);
-    dispatch(
-      updateSalesData({
-        total: newTotal,
-      })
-    );
-  }, [salesData.newSaleData.subtotal, salesData.newSaleData.tax, dispatch]);
+    let withholding = 0;
+    if (withholdingTax && subtotal > withholdingTax?.base) {
+      withholding = subtotal * (withholdingTax?.percentage ?? 0);
+      dispatch(updateCheckoutData({ key: 'withholdingTax', value: withholding }));
+    }
+    const newTotal = subtotal * (1 + tax) - withholding;
+    dispatch(updateCheckoutData({ key: 'total', value: newTotal }));
+  }, [subtotal, tax, withholdingTax, dispatch]);
 
   if (!isAuth) {
     return <LoginPage />;
@@ -128,7 +149,6 @@ export default function VentasPage({ isAuth }: IsAuth): ReactElement {
         pageMaxW={'var(--maxPageWitdth)'}
         initialRowSate={initialRowSate}
         isSalesBtnDisabled={isSalesBtnDisabled}
-        rowsData={rowsData}
         setRowsData={setRowsData}
       />
     </>

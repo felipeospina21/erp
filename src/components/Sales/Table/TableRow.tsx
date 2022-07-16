@@ -1,117 +1,125 @@
 import { IconButton, Td, Tr, useToast } from '@chakra-ui/react';
 import React from 'react';
 import { MdClear } from 'react-icons/md';
-import type { RowData } from '@/pages/ventas';
-import { NewSaleOrderedProduct, useGetProductsQuery } from '@/redux/services';
+import { useGetProductsQuery } from '@/redux/services';
 import { numberToCurrency } from '@/utils/index';
 import { InputCell, TableCellBody } from './';
-import { useAppDispatch } from '@/redux/hooks';
-import { updateSalesData } from '@/redux/slices/salesSlice';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { addProductToList, updateProductsListItem } from '@/redux/slices/salesSlice';
 import { CustomSelect } from '@/components/Shared';
 
 export interface TableRowProps {
-  id: number;
-  rowsData: RowData[];
-  rowData: RowData;
-  setRowsData: (rowsData: RowData[]) => void;
-  removeRow: (id: number) => void;
+  id: string;
+  removeRow: (id: string) => void;
 }
 
-export function TableRow({
-  id,
-  rowsData,
-  rowData,
-  setRowsData,
-  removeRow,
-}: TableRowProps): JSX.Element {
+export function TableRow({ id, removeRow }: TableRowProps): JSX.Element {
   const { data: products } = useGetProductsQuery();
+  const deliveryCity = useAppSelector((state) => state.sales.checkoutData.deliveryCity);
+  const bogotaShipping = useAppSelector((state) => state.shipping.bogota);
+  const saleClient = useAppSelector((state) => state.sales.client);
+  const productsList = useAppSelector((state) => state.sales.productsList);
+  const product = productsList?.filter((product) => product.rowId === id)[0];
   const toast = useToast();
   const dispatch = useAppDispatch();
 
-  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
-    const prodIndex = products
-      ?.map((product) => {
-        return product.name;
-      })
-      .indexOf(event.target.value);
+  function calculateTotal(price = 0, quantity = 0, discount = 0, shipping = 0): number {
+    const discountedPrice = price - price * (discount / 100);
+    const grossSubTotal = (discountedPrice + shipping) * quantity;
+    return grossSubTotal;
+  }
 
-    const newRowsData = rowsData?.map((row) => {
-      if (row.id === id) {
-        row.productId = products?.[prodIndex ?? 0]._id ?? '';
-        row.item = products?.[prodIndex ?? 0].name ?? '';
-        row.price = products?.[prodIndex ?? 0].price ?? 0;
-        row.stock = products?.[prodIndex ?? 0].stock ?? 0;
+  function calculateShipping(productId: string, deliveryCity: string): number {
+    if (deliveryCity === 'Bogota') {
+      return bogotaShipping[productId];
+    }
+    return 0;
+  }
+
+  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
+    const { value } = event.target;
+
+    if (products) {
+      const { _id, price, stock, name } = products?.filter((product) => product.name === value)[0];
+      const shipping = calculateShipping(_id, deliveryCity);
+      const rowTotal = calculateTotal(price);
+      const newProduct = {
+        item: _id,
+        rowId: id,
+        stock,
+        price,
+        name,
+        rowTotal,
+        discount: saleClient.discount,
+        quantity: 0,
+        shipping,
+      };
+
+      if (!productsList?.length) {
+        dispatch(addProductToList(newProduct));
+      } else {
+        dispatch(updateProductsListItem(newProduct));
       }
-      return row;
-    });
-    setRowsData(newRowsData);
+    }
   };
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    const value = event.target.value;
-    const newRowsData = [...rowsData];
-    let orderedProducts: NewSaleOrderedProduct[] = [];
+  function handleInputChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    const { value, id: inputId } = event.target;
+    if (product) {
+      const { price, quantity, discount, stock, name, shipping } = product;
 
-    newRowsData.map((row) => {
-      const product = products?.filter((product) => product._id === row.productId)[0];
-      if (event.target.id === 'quantity' && row.id === id) {
-        row.quantity = parseInt(value);
-        const prodStock = product?.stock ?? 0;
-        if (row.quantity > prodStock) {
+      if (inputId === 'quantity') {
+        const newQuantity = Number(value);
+
+        if (newQuantity > stock) {
           toast({
             title: 'Inventario insuficiente',
-            description: `La cantidad a vender de ${product?.name} supera el inventario`,
+            description: `La cantidad a vender de ${name} supera el inventario`,
             status: 'error',
             duration: 8000,
             isClosable: true,
           });
         }
-      } else if (event.target.id === 'discount' && row.id === id) {
-        const value = Number(event.target.value) / 100;
-        const price = product?.price ?? 0;
-        const netSubtotal = price * row.quantity;
-        const grossSubTotal = netSubtotal - netSubtotal * value;
-        row.discount = value;
-        row.subtotal = grossSubTotal;
+
+        if (newQuantity >= 0) {
+          const rowTotal = calculateTotal(price, newQuantity, discount, shipping);
+          dispatch(updateProductsListItem({ rowId: id, quantity: newQuantity, rowTotal }));
+        }
       }
-      setRowsData(newRowsData);
 
-      const orderedProduct = {
-        item: row.productId,
-        listId: row.id.toString(),
-        discount: row.discount,
-        quantity: row.quantity,
-        subtotal: row.subtotal,
-        price: row.price,
-        name: row.item,
-      };
-      orderedProducts = [...orderedProducts, orderedProduct];
-    });
+      if (inputId === 'discount') {
+        const newDiscount = Number(value);
+        const rowTotal = calculateTotal(price, quantity, newDiscount);
 
-    dispatch(updateSalesData({ orderedProducts }));
-  };
+        if (newDiscount >= 0) {
+          dispatch(updateProductsListItem({ rowId: id, discount: newDiscount, rowTotal }));
+        }
+      }
+    }
+  }
 
   return (
     <Tr>
       <Td p="0" w={['170px', 'auto']} maxW="300px">
         <CustomSelect
-          id={rowData.id.toString()}
+          id={id.toString()}
           placeholder="Select option"
           onChangeFn={handleSelectChange}
           size="sm"
           borderRadius="md"
-          options={products?.map((prod) => ({ id: prod._id, name: prod.name }))}
+          options={products?.map((prod) => ({ _id: prod._id, name: prod.name }))}
         />
       </Td>
 
-      <TableCellBody>{rowData.stock.toLocaleString()}</TableCellBody>
-      <TableCellBody>{numberToCurrency(rowData.price)}</TableCellBody>
+      <TableCellBody>{product?.stock.toLocaleString()}</TableCellBody>
+      <TableCellBody>{numberToCurrency(product?.price ?? 0)}</TableCellBody>
       <TableCellBody>
         <InputCell
           id="quantity"
           handleInputChange={handleInputChange}
           textAlign="center"
           variant="outline"
+          value={product?.quantity?.toLocaleString() ?? ''}
         />
       </TableCellBody>
       <TableCellBody>
@@ -120,9 +128,13 @@ export function TableRow({
           handleInputChange={handleInputChange}
           textAlign="center"
           variant="outline"
+          value={
+            product?.discount?.toLocaleString() ?? saleClient?.discount?.toLocaleString() ?? ''
+          }
         />
       </TableCellBody>
-      <TableCellBody>{numberToCurrency(rowData.subtotal)}</TableCellBody>
+      <TableCellBody id="shipping">{numberToCurrency(product?.shipping ?? 0)}</TableCellBody>
+      <TableCellBody>{numberToCurrency(product?.rowTotal ?? 0)}</TableCellBody>
       <TableCellBody>
         <IconButton
           onClick={(): void => {

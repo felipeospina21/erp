@@ -10,10 +10,11 @@ export const clientFields: InputField[] = [
   },
   {
     name: 'idType',
-    type: 'text',
+    type: 'select',
     placeholder: 'tipo doc',
     label: 'Tipo Doc',
     required: true,
+    options: [],
   },
   {
     name: 'idNumber',
@@ -45,10 +46,11 @@ export const clientFields: InputField[] = [
   },
   {
     name: 'department',
-    type: 'text',
+    type: 'select',
     placeholder: 'departamento',
     label: 'departamento',
     required: true,
+    options: [],
   },
   {
     name: 'email',
@@ -62,6 +64,21 @@ export const clientFields: InputField[] = [
     type: 'number',
     placeholder: 'descuento',
     label: 'descuento',
+    required: true,
+  },
+  {
+    name: 'paymentTerm',
+    type: 'select',
+    placeholder: 'pago',
+    label: 'pago',
+    required: true,
+    options: [],
+  },
+  {
+    name: 'retailer',
+    type: 'radio',
+    placeholder: 'distribuidor',
+    label: 'distribuidor',
     required: true,
   },
 ];

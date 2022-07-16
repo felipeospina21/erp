@@ -1,9 +1,10 @@
-import { CardSkeleton, ConfirmationAlert, CustomForm, CustomModal } from '@/components/Shared';
+import { CardSkeleton, ConfirmationAlert, CustomModal } from '@/components/Shared';
 import { DeleteButton, EditButton } from '@/components/Shared/IconButtons';
 import { ProductDataForm } from '@/pages/productos';
 import {
   Product,
   useDeleteProductMutation,
+  useGetCategoriesQuery,
   useGetProductsQuery,
   useUpdateProductMutation,
 } from '@/redux/services';
@@ -12,7 +13,7 @@ import { Box, Flex, Heading, Text } from '@chakra-ui/react';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { SubmitHandler } from 'react-hook-form';
-import { productFields } from '../ProductForm';
+import ProductForm from '../ProductForm/ProductForm';
 
 export interface CardProps {
   product: Product;
@@ -23,6 +24,7 @@ export function Card({ product, locale }: CardProps): JSX.Element {
   const [displayModal, setDisplayModal] = useState(false);
   const [displayAlert, setDisplayAlert] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const { data: categories } = useGetCategoriesQuery();
   const [deleteProduct, { isLoading: isDeleteLoading }] = useDeleteProductMutation();
   const [updateProduct, { isLoading: isUpdateLoading }] = useUpdateProductMutation();
   const { isFetching: areProductsFetching } = useGetProductsQuery();
@@ -92,26 +94,32 @@ export function Card({ product, locale }: CardProps): JSX.Element {
           <Text mt="0.5rem">{`Precio: ${numberToCurrency(product.price)}`}</Text>
         </Flex>
       </Flex>
-      <Flex w="100%" borderRadius="2xl" justify={'space-evenly'} align="center" bg="brand.grey.50">
+      <Flex
+        w="100%"
+        borderRadius="2xl"
+        justify={'space-evenly'}
+        align="center"
+        bg="brand.grey.50"
+        data-testid="modal-container"
+      >
         <CustomModal
           title="Actualizar Producto"
           isDisplayed={displayModal}
           setDisplayModal={setDisplayModal}
           iconButton={<EditButton size="md" onClick={(): void => setDisplayModal(true)} />}
         >
-          <CustomForm
-            data={product}
+          <ProductForm
             onSubmit={onSubmit}
-            button={{ text: 'modificar' }}
-            fields={productFields}
+            buttonText="Modificar"
+            defaultValues={{ ...product }}
+            categories={categories ?? []}
             isLoading={isUpdateLoading}
-            controlled
           />
         </CustomModal>
 
         <ConfirmationAlert
           header="Desea Eliminar?"
-          body={`Seguro desea eliminar de forma permanente el cliente ${product.name}?`}
+          body={`Seguro desea eliminar de forma permanente el producto ${product.name}?`}
           button={
             <DeleteButton
               isLoading={isDeleteLoading}

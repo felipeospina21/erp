@@ -1,5 +1,5 @@
-import { loginFields } from '@/components/Login';
-import { CustomForm, Layout } from '@/components/Shared';
+import LoginForm from '@/components/Login/LoginForm/LoginForm';
+import { Layout } from '@/components/Shared';
 import { useAppDispatch } from '@/redux/hooks';
 import type { CustomError } from '@/redux/services/customBaseQuery';
 import { useLoginMutation, UserBody } from '@/redux/services/userApi';
@@ -74,30 +74,25 @@ export default function Login(): JSX.Element {
             p={['0', 'auto']}
             bgColor="var(--bgColor)"
           >
-            <CustomForm
-              onSubmit={loginUser}
-              isLoading={isLoading}
-              fields={loginFields}
-              button={{ text: 'Login', width: '100%', margin: ['4rem auto', '3rem auto'] }}
-            />
+            <LoginForm onSubmit={loginUser} isLoading={isLoading} buttonText="Login" />
           </Container>
         </GridItem>
         <GridItem
           w={['70%', '60%', '100%']}
-          h="100%"
+          h="100vh"
           m="auto"
           display="flex"
           flexDir="column"
           justifyContent="center"
-          borderRadius="10%"
-          bg={['none', null, ' linear-gradient(-45deg, #c9e1f1 20%, var(--bgColor-light))']}
+          bg={['none', null, ' #fefefe']}
         >
           <Image
-            src="/blobanimation.svg"
+            src="/logo.png"
             alt="doodle"
             width={400}
             height={400}
             layout="responsive"
+            objectFit={'scale-down'}
           />
         </GridItem>
       </Grid>

@@ -11,7 +11,7 @@ export interface CustomSelectProps {
   maxW?: string;
   minW?: string;
   name?: string;
-  options: { id: string; name: string }[] | undefined;
+  options: { _id: string; name: string; value?: string | number }[] | undefined;
   onChangeFn: (event: React.ChangeEvent<HTMLSelectElement>) => void;
   placeholder: string;
   size: Sizes;
@@ -58,7 +58,9 @@ export function CustomSelect({
         id={id}
       >
         {options?.map((option) => (
-          <option key={option.id}>{option.name}</option>
+          <option key={option._id} value={option.value ?? option.name}>
+            {option.name}
+          </option>
         ))}
       </Select>
     </Box>

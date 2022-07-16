@@ -3,37 +3,43 @@ import type { Client, DocumentId } from './clientApi';
 import type { Product } from './productApi';
 import { axiosBaseQuery } from './customBaseQuery';
 
-export interface OrderInfo {
-  discount: number;
-  listId: string;
-  quantity: number;
-  subtotal: number;
+export interface RowInfo {
+  rowId: string;
+  rowTotal: number;
 }
 
-export interface SaleInfo {
-  deliveryCity: string;
-  salesChannel: string;
-  subtotal: number;
-  tax: number;
-  total: number;
-}
-export interface OrderedProduct extends OrderInfo {
+export interface OrderedProduct extends RowInfo {
   item: Product;
 }
 
-export interface NewSaleOrderedProduct extends OrderInfo {
+export interface NewSaleOrderedProduct extends RowInfo {
   item: string;
-  price?: number;
-  name?: string;
+  name: string;
+  price: number;
+  stock: number;
+  quantity: number;
+  discount: number;
+  shipping?: number;
 }
 
-export interface NewSale extends SaleInfo {
-  clientId: string;
-  orderedProducts: NewSaleOrderedProduct[];
+export interface CheckoutData {
+  deliveryCity: string;
+  paymentTerm: string;
+  subtotal: number;
+  tax: number;
+  total: number;
+  withholdingTax?: number;
 }
-export interface SaleResponse extends SaleInfo {
+export interface NewSale extends CheckoutData {
+  clientId: string;
+  orderedProducts: Array<
+    Pick<NewSaleOrderedProduct, 'item' | 'discount' | 'quantity' | 'rowTotal'>
+  >;
+  invoiceRef: string;
+}
+export interface SaleResponse extends CheckoutData {
   clientInfo: Client;
-  orderedProducts: OrderedProduct[];
+  orderedProducts: NewSaleOrderedProduct[];
 }
 
 export interface NewSaleResponse extends SaleResponse, DocumentId {}
@@ -49,8 +55,7 @@ export const saleApi = createApi({
       query: () => ({ url: '/', method: 'GET', withCredentials: true }),
       providesTags: [{ type: 'Sale' }],
     }),
-    saveSale: build.mutation<NewSaleResponse, Partial<NewSale>>({
-      // TODO: Check body type, not to be partial but required
+    saveSale: build.mutation<NewSaleResponse, NewSale>({
       query: (body) => ({
         url: '/',
         method: 'post',

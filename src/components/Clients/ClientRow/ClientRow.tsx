@@ -3,15 +3,16 @@ import { Tr, Td } from '@chakra-ui/react';
 import { CustomModal } from '@/components/Shared';
 import {
   Client,
-  UpdateClientValues,
+  // UpdateClientValues,
   useDeleteClientMutation,
   useUpdateClientMutation,
 } from '@/redux/services';
-import { CustomForm } from '@/components/Shared/Form';
-import { clientFields } from '../ClientForm';
+// import { CustomForm } from '@/components/Shared/Form';
+// import { clientFields } from '../ClientForm';
 import { DeleteButton, EditButton } from '@/components/Shared/IconButtons';
 import { ConfirmationAlert } from '@/components/Shared/Overlay/ConfirmationAlert/ConfirmationAlert';
 import { SubmitHandler } from 'react-hook-form';
+import ClientForm, { ClientFormValues } from '../ClientForm/ClientForm';
 
 export interface ClientRowProps {
   client: Client;
@@ -24,8 +25,8 @@ export function ClientRow({ client }: ClientRowProps): JSX.Element {
   const [deleteClient, { isLoading: isDeleteLoading }] = useDeleteClientMutation();
   const [updateClient, { isLoading }] = useUpdateClientMutation();
 
-  function onSubmit(values: UpdateClientValues): void | SubmitHandler<UpdateClientValues> {
-    const payload = { _id: client._id ?? '', update: { ...values } };
+  function onSubmit(data: ClientFormValues): void | SubmitHandler<ClientFormValues> {
+    const payload = { _id: client._id ?? '', ...data };
     updateClient(payload);
     setDisplayModal(false);
   }
@@ -40,14 +41,35 @@ export function ClientRow({ client }: ClientRowProps): JSX.Element {
   return (
     <Tr>
       <Td fontSize="13px">{client.name}</Td>
-      <Td fontSize="13px">{client.idType}</Td>
-      <Td fontSize="13px">{client.idNumber}</Td>
-      <Td fontSize="13px">{client.addres1}</Td>
-      <Td fontSize="13px">{client.addres2}</Td>
-      <Td fontSize="13px">{client.city}</Td>
-      <Td fontSize="13px">{client.department}</Td>
-      <Td fontSize="13px">{client.email}</Td>
-      <Td fontSize="13px">{`${client.discount}%`}</Td>
+      <Td fontSize="13px" textAlign="center">
+        {client.idType}
+      </Td>
+      <Td fontSize="13px" textAlign="center">
+        {client.idNumber}
+      </Td>
+      <Td fontSize="13px" textAlign="center">
+        {client.addres1}
+      </Td>
+      <Td fontSize="13px" textAlign="center">
+        {client.addres2}
+      </Td>
+      <Td fontSize="13px" textAlign="center">
+        {client.city}
+      </Td>
+      <Td fontSize="13px" textAlign="center">
+        {client.department}
+      </Td>
+      <Td fontSize="13px" textAlign="center">
+        {client.email}
+      </Td>
+      <Td fontSize="13px" textAlign="center">{`${client.discount}%`}</Td>
+      <Td fontSize="13px" textAlign="center">
+        {client.paymentTerm}
+      </Td>
+      <Td fontSize="13px" textAlign="center">
+        {client.retailer ? 'si' : 'no'}
+      </Td>
+
       <Td display="flex">
         <ConfirmationAlert
           header="Desea Eliminar?"
@@ -72,13 +94,24 @@ export function ClientRow({ client }: ClientRowProps): JSX.Element {
           setDisplayModal={setDisplayModal}
           iconButton={<EditButton size="md" onClick={(): void => setDisplayModal(true)} />}
         >
-          <CustomForm
-            data={client}
+          <ClientForm
+            update
             onSubmit={onSubmit}
-            button={{ text: 'modificar' }}
-            fields={clientFields}
             isLoading={isLoading}
-            controlled
+            defaultValues={{ ...client }}
+            buttonText="Actualizar"
+            idTypes={[
+              { _id: 'CC', name: 'CC' },
+              { _id: 'NIT', name: 'NIT' },
+              { _id: 'Pasaporte', name: 'Pasaporte' },
+              { _id: 'Otro', name: 'Otro' },
+            ]}
+            paymentTerm={[
+              { _id: 'contado', name: 'contado' },
+              { _id: '15', name: '15' },
+              { _id: '30', name: '30' },
+              { _id: '60', name: '60' },
+            ]}
           />
         </CustomModal>
       </Td>

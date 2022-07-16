@@ -1,11 +1,6 @@
-import { clientFields, ClientRow } from '@/components/Clients';
-import {
-  ClientFormValues,
-  CustomForm,
-  CustomModal,
-  CustomTable,
-  Layout,
-} from '@/components/Shared';
+import { clientFields, ClientRow, idTypes, paymentTerms } from '@/components/Clients';
+import ClientForm, { ClientFormValues } from '@/components/Clients/ClientForm/ClientForm';
+import { CustomModal, CustomTable, Layout } from '@/components/Shared';
 import { AddButton } from '@/components/Shared/IconButtons/AddButton/AddButton';
 import { useCreateClientMutation, useGetClientsQuery } from '@/redux/services';
 import { checkAuth, IsAuth } from '@/utils/auth';
@@ -63,11 +58,12 @@ export default function ClientesPage({ isAuth }: IsAuth): ReactElement {
           <AddButton size="sm" margin="1.5rem" onClick={(): void => setDisplayModal(true)} />
         }
       >
-        <CustomForm
+        <ClientForm
           onSubmit={onSubmit}
           isLoading={isLoading}
-          button={{ text: 'crear' }}
-          fields={clientFields}
+          buttonText="Crear"
+          idTypes={idTypes}
+          paymentTerm={paymentTerms}
         />
       </CustomModal>
     </Box>

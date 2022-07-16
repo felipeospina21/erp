@@ -47,11 +47,10 @@ describe('New product creation', () => {
   test('Success', async () => {
     const user = userEvent.setup();
     render(<ProductosPage isAuth={true} />);
-  
     await user.click(await screen.findByRole('button', {name: /agregar/i}))
     await screen.findByTestId('custom-modal')
     await user.type( screen.getByLabelText(/nombre/i), 'test name')
-    await user.selectOptions( screen.getByLabelText(/category/i), 'test category')
+    await user.selectOptions( screen.getByLabelText(/categoria/i), 'test category')
     await user.type( screen.getByLabelText(/precio/i), '10000')
     await user.type( screen.getByLabelText(/inventario/i), '10')
     await user.click(screen.getByRole('button', {name:/crear/i}))
@@ -62,18 +61,20 @@ describe('New product creation', () => {
 
 });
 
-test('Click update product and change name', async()=> {
+test.skip('Click update product and change name', async()=> {
   const user = userEvent.setup();
   render(<ProductosPage isAuth={true} />);
-
-  const buttons = await screen.findAllByRole('button', {name:/editar/i})
-  await user.click(buttons[0])
+  const [modalContainer] = await screen.findAllByTestId('modal-container')
+  const editButton = await within(modalContainer).findByRole('button', {name:/editar/i})
+  await user.click(editButton)
   await screen.findByText(/actualizar producto/i)
   await user.type( screen.getByLabelText(/nombre/i), 'updated test name')
   const modal = screen.getByTestId('custom-modal')
   const updateBtn = within(modal).getByRole('button', {name:/modificar/i})
   await user.click(updateBtn)
-  expect(screen.getAllByText(/test prod/i)[0]).toBeInTheDocument()
+  const product = await screen.findAllByText(/test prod/i)
+  screen.debug(product)
+  expect(product[0]).toBeInTheDocument()
 })
 
 test.todo('delete product')

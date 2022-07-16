@@ -10,6 +10,7 @@ export interface CustomFormFieldProps {
   id: string;
   label: string;
   variant?: 'floating';
+  isDisabled?: boolean;
 }
 
 export function CustomFormField({
@@ -21,6 +22,7 @@ export function CustomFormField({
   id,
   label,
   variant,
+  isDisabled,
 }: CustomFormFieldProps): JSX.Element {
   return (
     <FormControl
@@ -30,6 +32,7 @@ export function CustomFormField({
       id={id}
       mt="1.5rem"
       bgColor="inherit"
+      isDisabled={isDisabled}
     >
       <FormLabel htmlFor={id}>{label}</FormLabel>
       {children}

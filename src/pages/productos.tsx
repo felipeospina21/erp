@@ -1,12 +1,14 @@
 import { CardsContainer } from '@/components/Products';
-import { productFields } from '@/components/Products/ProductForm/fields/productFields';
-import { CardSkeleton, CustomForm, CustomModal, Layout } from '@/components/Shared';
+import ProductForm from '@/components/Products/ProductForm/ProductForm';
+import StockForm, { StockFormValues } from '@/components/Products/StockForm/StockForm';
+import { CardSkeleton, CustomModal, EditButton, Layout } from '@/components/Shared';
 import { AddButton } from '@/components/Shared/IconButtons/AddButton/AddButton';
 import {
   Product,
   useCreateProductMutation,
   useGetCategoriesQuery,
   useGetProductsQuery,
+  useUpdateProductStockInBatchMutation,
 } from '@/redux/services';
 import { checkAuth, IsAuth } from '@/utils/auth';
 import { Flex, Skeleton, useToast } from '@chakra-ui/react';
@@ -15,12 +17,14 @@ import Router from 'next/router';
 import { ReactElement, useEffect, useState } from 'react';
 const LoginPage = dynamic(() => import('@/pages/login'));
 
-export interface ProductDataForm extends Omit<Product, 'price' | 'stock'> {
+export interface ProductDataForm extends Omit<Product, 'price' | 'stock' | 'category'> {
   price: string | Blob;
   stock: string | Blob;
+  category: string;
 }
 export default function ProductosPage({ isAuth }: IsAuth): JSX.Element {
   const [displayModal, setDisplayModal] = useState(false);
+  const [displayStockModal, setDisplayStockModal] = useState(false);
   const { data: categories } = useGetCategoriesQuery();
   const { data: products, isLoading: areProductsLoading, isError, error } = useGetProductsQuery();
   const [
@@ -31,6 +35,7 @@ export default function ProductosPage({ isAuth }: IsAuth): JSX.Element {
       isLoading: isCreateProductLoading,
     },
   ] = useCreateProductMutation();
+  const [addToStock] = useUpdateProductStockInBatchMutation();
   const toast = useToast();
 
   function createNewProduct(data: ProductDataForm): void {
@@ -48,13 +53,10 @@ export default function ProductosPage({ isAuth }: IsAuth): JSX.Element {
     setDisplayModal(false);
   }
 
-  useEffect(() => {
-    productFields.map((field) => {
-      if (field.name === 'category' && categories) {
-        field.options = [...categories];
-      }
-    });
-  }, [categories]);
+  function updateStockInBatch(data: StockFormValues): void {
+    addToStock(data);
+    setDisplayStockModal(false);
+  }
 
   useEffect(() => {
     if (isCreateProductSuccess) {
@@ -124,21 +126,45 @@ export default function ProductosPage({ isAuth }: IsAuth): JSX.Element {
       minH="100vh"
       m={['1rem auto', null, '2rem auto']}
     >
-      <CustomModal
-        title="Nuevo Producto"
-        isDisplayed={displayModal}
-        setDisplayModal={setDisplayModal}
-        iconButton={
-          <AddButton size="sm" margin="1.5rem" onClick={(): void => setDisplayModal(true)} />
-        }
-      >
-        <CustomForm
-          onSubmit={createNewProduct}
-          isLoading={false}
-          button={{ text: 'crear' }}
-          fields={productFields}
-        />
-      </CustomModal>
+      <Flex align="center">
+        <CustomModal
+          title="Nuevo Producto"
+          isDisplayed={displayModal}
+          setDisplayModal={setDisplayModal}
+          iconButton={
+            <AddButton
+              variant="primary"
+              size="sm"
+              margin="1.5rem"
+              onClick={(): void => setDisplayModal(true)}
+            />
+          }
+        >
+          <ProductForm
+            buttonText="Crear"
+            categories={categories ?? []}
+            onSubmit={createNewProduct}
+          />
+        </CustomModal>
+
+        <CustomModal
+          title="Adicionar Inventario"
+          isDisplayed={displayStockModal}
+          setDisplayModal={setDisplayStockModal}
+          iconButton={
+            <EditButton
+              variant="primary"
+              color="white"
+              size="sm"
+              margin="1.5rem"
+              onClick={(): void => setDisplayStockModal(true)}
+            />
+          }
+        >
+          <StockForm products={products} onSubmit={updateStockInBatch} />
+        </CustomModal>
+      </Flex>
+
       <CardsContainer data={products ?? []} />
     </Flex>
   );
