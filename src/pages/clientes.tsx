@@ -59,7 +59,6 @@ export default function ClientesPage({ isAuth }: IsAuth): ReactElement {
         }
       >
         <ClientForm
-          // setDisplayModal={setDisplayModal}
           onSubmit={onSubmit}
           isLoading={isLoading}
           buttonText="Crear"

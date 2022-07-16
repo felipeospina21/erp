@@ -204,7 +204,7 @@ export default function ClientForm({
 
         <CustomFormField
           id="discount"
-          label="Discount"
+          label="Descuento"
           // isError={!!errors?.name}
           isRequired={true}
           // errorMessage="This field is required"

@@ -42,13 +42,16 @@ export const middlewares = [
   categoryApi.middleware,
   citiesApi.middleware,
   taxApi.middleware,
-  rtkQueryErrorLogger,
+  // rtkQueryErrorLogger,
 ];
 
 export const store = () =>
   configureStore({
     reducer,
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(...middlewares),
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware()
+        .concat(...middlewares)
+        .concat(rtkQueryErrorLogger),
   });
 
 export type AppStore = ReturnType<typeof store>;
