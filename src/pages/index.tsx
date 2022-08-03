@@ -2,14 +2,11 @@ import { Layout } from '@/components/Shared';
 import { checkAuth, IsAuth } from '@/utils/auth';
 import { Flex, Heading } from '@chakra-ui/react';
 import dynamic from 'next/dynamic';
-import Router from 'next/router';
-import React, { ReactElement, useEffect } from 'react';
+import React, { ReactElement } from 'react';
 const LoginPage = dynamic(() => import('@/pages/login'));
+import { useAuth } from '../utils';
 export default function Home({ isAuth }: IsAuth): ReactElement {
-  useEffect(() => {
-    if (isAuth) return; // do nothing if the user is logged in
-    Router.replace('/', '/login', { shallow: true });
-  }, [isAuth]);
+  useAuth(isAuth, '/');
 
   if (!isAuth) {
     return <LoginPage />;

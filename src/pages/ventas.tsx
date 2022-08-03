@@ -4,9 +4,9 @@ import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { updateCheckoutData } from '@/redux/slices/salesSlice';
 import React, { ReactElement, useEffect, useMemo, useState } from 'react';
 import { checkAuth, IsAuth } from '@/utils/auth';
-import Router from 'next/router';
 import dynamic from 'next/dynamic';
 import { useGetwithholdingTaxQuery } from '@/redux/services';
+import { useAuth } from '../utils';
 const LoginPage = dynamic(() => import('@/pages/login'));
 
 export interface RowData {
@@ -43,6 +43,7 @@ export default function VentasPage({ isAuth }: IsAuth): ReactElement {
     invoiceObservations,
   } = useAppSelector((state) => state.sales);
   const dispatch = useAppDispatch();
+  useAuth(isAuth, '/ventas');
 
   const header = useMemo(
     () => [
@@ -81,11 +82,6 @@ export default function VentasPage({ isAuth }: IsAuth): ReactElement {
     ],
     []
   );
-
-  useEffect(() => {
-    if (isAuth) return; // do nothing if the user is logged in
-    Router.replace('/ventas', '/login', { shallow: true });
-  }, [isAuth]);
 
   useEffect(() => {
     const quantityArr = productsList?.map(({ quantity }) => quantity).filter((q) => q >= 1);

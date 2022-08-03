@@ -11,10 +11,10 @@ import {
   useUpdateProductStockInBatchMutation,
 } from '@/redux/services';
 import { checkAuth, IsAuth } from '@/utils/auth';
-import { Flex, Skeleton, useToast } from '@chakra-ui/react';
+import { useAuth, useCreationToast } from '@/utils/hooks';
+import { Flex, Skeleton } from '@chakra-ui/react';
 import dynamic from 'next/dynamic';
-import Router from 'next/router';
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useState } from 'react';
 const LoginPage = dynamic(() => import('@/pages/login'));
 
 export interface ProductDataForm extends Omit<Product, 'price' | 'stock' | 'category'> {
@@ -36,7 +36,13 @@ export default function ProductosPage({ isAuth }: IsAuth): JSX.Element {
     },
   ] = useCreateProductMutation();
   const [addToStock] = useUpdateProductStockInBatchMutation();
-  const toast = useToast();
+  useAuth(isAuth, '/productos');
+  useCreationToast(
+    isCreateProductSuccess,
+    isCreateProductUninitialized,
+    isCreateProductLoading,
+    'nuevo producto creado'
+  );
 
   function createNewProduct(data: ProductDataForm): void {
     const newProduct = new FormData();
@@ -44,7 +50,8 @@ export default function ProductosPage({ isAuth }: IsAuth): JSX.Element {
     newProduct.append('category', data.category);
     newProduct.append('name', data.name);
     newProduct.append('price', data.price);
-    newProduct.append('stock', data.stock);
+    newProduct.append('stockAvailable', data.stock);
+    newProduct.append('stockReserved', '0');
     if (data.image?.length) {
       newProduct.append('image', data.image[0]);
     }
@@ -57,37 +64,6 @@ export default function ProductosPage({ isAuth }: IsAuth): JSX.Element {
     addToStock(data);
     setDisplayStockModal(false);
   }
-
-  useEffect(() => {
-    if (isCreateProductSuccess) {
-      toast({
-        title: 'Creacion Exitosa',
-        description: 'nuevo producto creado',
-        status: 'success',
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-
-    if (!isCreateProductSuccess && !isCreateProductUninitialized && !isCreateProductLoading) {
-      toast({
-        title: 'Error En Creacion',
-        description: 'ha ocurrido un error, favor intentar de nuevo',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-
-    return () => {
-      toast.closeAll();
-    };
-  }, [isCreateProductSuccess, isCreateProductUninitialized, isCreateProductLoading, toast]);
-
-  useEffect(() => {
-    if (isAuth) return; // do nothing if the user is logged in
-    Router.replace('/productos', '/login', { shallow: true });
-  }, [isAuth]);
 
   if (!isAuth) {
     return <LoginPage />;

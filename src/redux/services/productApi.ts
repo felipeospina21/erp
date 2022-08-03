@@ -7,12 +7,17 @@ export interface Product extends DocumentId {
   category: { _id: string; name: string };
   name: string;
   price: number;
-  stock: number;
+  stockAvailable: number;
+  stockReserved: number;
   image?: string;
 }
 
-export interface UpdateStock extends DocumentId {
-  stock: number;
+export interface UpdateStockAvailable extends DocumentId {
+  stockAvailable: number;
+}
+
+export interface UpdateStockReserved extends DocumentId {
+  stockReserved: number;
 }
 
 export const productApi = createApi({
@@ -40,9 +45,17 @@ export const productApi = createApi({
       }),
       invalidatesTags: [{ type: 'Product' }],
     }),
-    updateProductStock: build.mutation<Product, UpdateStock>({
+    updateProductStockAvailable: build.mutation<Product, UpdateStockAvailable>({
       query: (body) => ({
-        url: '/updateStock',
+        url: '/updateStockAvailable',
+        method: 'put',
+        data: { ...body },
+      }),
+      invalidatesTags: [{ type: 'Product' }],
+    }),
+    updateProductStockReserved: build.mutation<Product, UpdateStockReserved>({
+      query: (body) => ({
+        url: '/updateStockReserved',
         method: 'put',
         data: { ...body },
       }),
@@ -79,7 +92,7 @@ export const productApi = createApi({
 export const {
   useGetProductsQuery,
   useUpdateProductMutation,
-  useUpdateProductStockMutation,
+  useUpdateProductStockAvailableMutation,
   useUpdateProductStockInBatchMutation,
   useDeleteProductMutation,
   useCreateProductMutation,
@@ -89,7 +102,7 @@ export const {
 export const {
   getProducts,
   updateProduct,
-  updateProductStock,
+  updateProductStockAvailable,
   updateProductStockInBatch,
   deleteProduct,
   createProduct,

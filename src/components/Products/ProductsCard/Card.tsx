@@ -90,7 +90,7 @@ export function Card({ product, locale }: CardProps): JSX.Element {
           {product.name.toLocaleUpperCase(locale)}
         </Heading>
         <Flex flexDir="column" align="flex-start" width="100%">
-          <Text mt="1rem">{`Stock: ${product.stock.toLocaleString()}`}</Text>
+          <Text mt="1rem">{`Stock: ${product.stockAvailable.toLocaleString()}`}</Text>
           <Text mt="0.5rem">{`Precio: ${numberToCurrency(product.price)}`}</Text>
         </Flex>
       </Flex>

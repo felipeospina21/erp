@@ -105,7 +105,7 @@ export default function ProductForm({
           <Controller
             name="stock"
             control={control}
-            defaultValue={defaultValues?.stock ?? 0}
+            defaultValue={defaultValues?.stockAvailable ?? 0}
             rules={{ required: true }}
             render={({ field: inputField }): JSX.Element => <Input {...inputField} />}
           />

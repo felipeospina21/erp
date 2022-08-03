@@ -40,7 +40,12 @@ export function TableRow({ id, removeRow }: TableRowProps): JSX.Element {
     const { value } = event.target;
 
     if (products) {
-      const { _id, price, stock, name } = products?.filter((product) => product.name === value)[0];
+      const {
+        _id,
+        price,
+        stockAvailable: stock,
+        name,
+      } = products?.filter((product) => product.name === value)[0];
       const shipping = calculateShipping(_id, deliveryCity);
       const rowTotal = calculateTotal(price);
       const newProduct = {

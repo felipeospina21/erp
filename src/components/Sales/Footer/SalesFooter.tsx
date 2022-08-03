@@ -2,13 +2,13 @@ import { CustomButton, CustomFormField } from '@/components/Shared';
 import { RowData } from '@/pages/ventas';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import {
-  InvoiceResponse,
+  ConsecutiveResponse,
   NewSaleResponse,
   Product,
   useGetInvoiceCountQuery,
   useSaveSaleMutation,
   useUpdateInvoiceCountMutation,
-  useUpdateProductStockMutation,
+  useUpdateProductStockAvailableMutation,
 } from '@/redux/services';
 import {
   addInvoiceObservations,
@@ -38,7 +38,7 @@ export function SalesFooter({
   const [textValue, setTextValue] = useDebounce('', 1000);
   const { data: invoice } = useGetInvoiceCountQuery();
   const [updateInvoiceCount] = useUpdateInvoiceCountMutation();
-  const [updateProductStock] = useUpdateProductStockMutation();
+  const [updateProductStock] = useUpdateProductStockAvailableMutation();
   const [
     saveSale,
     { isLoading: isSaveSaleLoading, isError: isSaveSaleError, error: saveSaleError },
@@ -63,7 +63,7 @@ export function SalesFooter({
 
   async function handleNewSale(): Promise<void> {
     async function saveNewSale(): Promise<any> {
-      const promises: Promise<NewSaleResponse | Product | InvoiceResponse>[] = [];
+      const promises: Promise<NewSaleResponse | Product | ConsecutiveResponse>[] = [];
       const invoiceRef = invoice ? String(invoice.count + 1) : '';
       const orderedProducts =
         productsList?.map(({ item, discount, quantity, rowTotal }) => ({
@@ -78,6 +78,8 @@ export function SalesFooter({
           ...checkoutData,
           orderedProducts,
           invoiceRef,
+          status: 'alistamiento',
+          saleRequestRef: '1',
         }).unwrap()
       );
       promises.push(updateInvoiceCount().unwrap());
@@ -86,7 +88,7 @@ export function SalesFooter({
         promises.push(
           updateProductStock({
             _id: item,
-            stock: stock - quantity,
+            stockAvailable: stock - quantity,
           }).unwrap()
         );
       });

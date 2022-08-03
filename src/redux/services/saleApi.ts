@@ -35,7 +35,17 @@ export interface NewSale extends CheckoutData {
   orderedProducts: Array<
     Pick<NewSaleOrderedProduct, 'item' | 'discount' | 'quantity' | 'rowTotal'>
   >;
-  invoiceRef: string;
+  invoiceRef?: string;
+  saleRequestRef: string;
+  status:
+    | 'producción'
+    | 'alistamiento'
+    | 'despachado'
+    | 'entregado'
+    | 'facturado'
+    | 'en cartera'
+    | 'pagado'
+    | 'anulado';
 }
 export interface SaleResponse extends CheckoutData {
   clientInfo: Client;

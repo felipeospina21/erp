@@ -6,8 +6,8 @@ import { useCreateClientMutation, useGetClientsQuery } from '@/redux/services';
 import { checkAuth, IsAuth } from '@/utils/auth';
 import { Box, Th } from '@chakra-ui/react';
 import dynamic from 'next/dynamic';
-import Router from 'next/router';
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useState } from 'react';
+import { useAuth } from '../utils';
 const LoginPage = dynamic(() => import('@/pages/login'));
 
 export default function ClientesPage({ isAuth }: IsAuth): ReactElement {
@@ -21,10 +21,7 @@ export default function ClientesPage({ isAuth }: IsAuth): ReactElement {
     setDisplayModal(false);
   }
 
-  useEffect(() => {
-    if (isAuth) return; // do nothing if the user is logged in
-    Router.replace('/clientes', '/login', { shallow: true });
-  }, [isAuth]);
+  useAuth(isAuth, '/clientes');
 
   if (!isAuth) {
     return <LoginPage />;
