@@ -44,7 +44,7 @@ type StockReserved = MutationTrigger<
 >;
 export async function saveNewSale(
   salesData: SalesState,
-  invoice: ConsecutiveResponse,
+  saleRequest: ConsecutiveResponse | undefined,
   saveSale: SaveSale,
   updateSaleRef: UpdateSaleRef,
   updateStockAvailable: StockAvailable,
@@ -52,7 +52,7 @@ export async function saveNewSale(
 ): Promise<any> {
   const promises: Promise<NewSaleResponse | Product | ConsecutiveResponse>[] = [];
   const { productsList, client, checkoutData } = salesData;
-  const invoiceRef = invoice ? String(invoice.count + 1) : '';
+  const saleRequestRef = saleRequest ? String(saleRequest.count + 1) : '';
   const orderedProducts =
     productsList?.map(({ item, discount, quantity, rowTotal }) => ({
       item,
@@ -60,16 +60,6 @@ export async function saveNewSale(
       quantity,
       rowTotal,
     })) ?? [];
-  promises.push(
-    saveSale({
-      clientId: client?._id ?? '',
-      ...checkoutData,
-      orderedProducts,
-      invoiceRef,
-      status: 'alistamiento',
-      saleRequestRef: '1',
-    }).unwrap()
-  );
   promises.push(updateSaleRef().unwrap());
 
   productsList?.forEach(({ stock, quantity, item }) => {
@@ -87,5 +77,14 @@ export async function saveNewSale(
     );
   });
 
+  promises.push(
+    saveSale({
+      clientId: client?._id ?? '',
+      ...checkoutData,
+      orderedProducts,
+      status: 'alistamiento',
+      saleRequestRef,
+    }).unwrap()
+  );
   return Promise.all(promises);
 }

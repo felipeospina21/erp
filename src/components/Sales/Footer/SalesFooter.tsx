@@ -2,13 +2,11 @@ import { CustomButton, CustomFormField } from '@/components/Shared';
 import { RowData } from '@/pages/ventas';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import {
-  ConsecutiveResponse,
-  NewSaleResponse,
-  Product,
-  useGetInvoiceCountQuery,
+  useGetSaleRefCountQuery,
   useSaveSaleMutation,
-  useUpdateInvoiceCountMutation,
   useUpdateProductStockAvailableMutation,
+  useUpdateProductStockReservedMutation,
+  useUpdateSaleRefCountMutation,
 } from '@/redux/services';
 import {
   addInvoiceObservations,
@@ -16,11 +14,11 @@ import {
   resetSale,
 } from '@/redux/slices/salesSlice';
 import useDebounce from '@/utils/hooks/useDebounce';
-import { createPdf } from '@/utils/utils';
 import { Box, Flex, Textarea, useToast } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import TaxPicker from './TaxPicker';
 import ValueContainer from './ValueContainer';
+import { saveNewSale } from 'services/createSale';
 
 export interface SalesFooterProps {
   pageMaxW: string;
@@ -36,15 +34,16 @@ export function SalesFooter({
   setRowsData,
 }: SalesFooterProps): JSX.Element {
   const [textValue, setTextValue] = useDebounce('', 1000);
-  const { data: invoice } = useGetInvoiceCountQuery();
-  const [updateInvoiceCount] = useUpdateInvoiceCountMutation();
-  const [updateProductStock] = useUpdateProductStockAvailableMutation();
+  const { data: saleRequest } = useGetSaleRefCountQuery();
+  const [updateSaleRef] = useUpdateSaleRefCountMutation();
+  const [updateProductStockAvailable] = useUpdateProductStockAvailableMutation();
+  const [updateProductStockReserved] = useUpdateProductStockReservedMutation();
   const [
     saveSale,
     { isLoading: isSaveSaleLoading, isError: isSaveSaleError, error: saveSaleError },
   ] = useSaveSaleMutation();
   const salesData = useAppSelector((state) => state.sales);
-  const { productsList, client, checkoutData, invoiceObservations } = salesData;
+  const { invoiceObservations } = salesData;
   const { subtotal, total, withholdingTax } = useAppSelector((state) => state.sales.checkoutData);
   const dispatch = useAppDispatch();
   const toast = useToast();
@@ -62,47 +61,14 @@ export function SalesFooter({
   }
 
   async function handleNewSale(): Promise<void> {
-    async function saveNewSale(): Promise<any> {
-      const promises: Promise<NewSaleResponse | Product | ConsecutiveResponse>[] = [];
-      const invoiceRef = invoice ? String(invoice.count + 1) : '';
-      const orderedProducts =
-        productsList?.map(({ item, discount, quantity, rowTotal }) => ({
-          item,
-          discount,
-          quantity,
-          rowTotal,
-        })) ?? [];
-      promises.push(
-        saveSale({
-          clientId: client?._id ?? '',
-          ...checkoutData,
-          orderedProducts,
-          invoiceRef,
-          status: 'alistamiento',
-          saleRequestRef: '1',
-        }).unwrap()
-      );
-      promises.push(updateInvoiceCount().unwrap());
-
-      productsList?.forEach(({ stock, quantity, item }) => {
-        promises.push(
-          updateProductStock({
-            _id: item,
-            stockAvailable: stock - quantity,
-          }).unwrap()
-        );
-      });
-
-      return Promise.all(promises);
-    }
-
     if (!isSaveSaleLoading && !isSaveSaleError) {
-      const invoiceNum = invoice?.count ? invoice?.count + 1 : undefined;
-      await saveNewSale();
-      await createPdf(
-        { clientInfo: client, ...checkoutData, orderedProducts: productsList ?? [] },
-        invoiceNum,
-        textValue
+      saveNewSale(
+        salesData,
+        saleRequest,
+        saveSale,
+        updateSaleRef,
+        updateProductStockAvailable,
+        updateProductStockReserved
       );
       resetInputs();
       toast({
