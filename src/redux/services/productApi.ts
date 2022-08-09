@@ -18,6 +18,7 @@ export interface UpdateStockAvailable extends DocumentId {
 
 export interface UpdateStockReserved extends DocumentId {
   stockReserved: number;
+  method: 'add' | 'substract';
 }
 
 export const productApi = createApi({

@@ -73,6 +73,7 @@ export async function saveNewSale(
       updateStockReserved({
         _id: item,
         stockReserved: quantity,
+        method: 'add',
       }).unwrap()
     );
   });

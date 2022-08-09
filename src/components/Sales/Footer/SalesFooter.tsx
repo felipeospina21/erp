@@ -19,6 +19,7 @@ import React, { useEffect } from 'react';
 import TaxPicker from './TaxPicker';
 import ValueContainer from './ValueContainer';
 import { saveNewSale } from 'services/createSale';
+import { createPackingList } from '@/utils/pdf/createPackingList';
 
 export interface SalesFooterProps {
   pageMaxW: string;
@@ -43,8 +44,8 @@ export function SalesFooter({
     { isLoading: isSaveSaleLoading, isError: isSaveSaleError, error: saveSaleError },
   ] = useSaveSaleMutation();
   const salesData = useAppSelector((state) => state.sales);
-  const { invoiceObservations } = salesData;
-  const { subtotal, total, withholdingTax } = useAppSelector((state) => state.sales.checkoutData);
+  const { invoiceObservations, productsList, client, checkoutData } = salesData;
+  const { subtotal, total, withholdingTax } = checkoutData;
   const dispatch = useAppDispatch();
   const toast = useToast();
 
@@ -61,15 +62,21 @@ export function SalesFooter({
   }
 
   async function handleNewSale(): Promise<void> {
+    await saveNewSale(
+      salesData,
+      saleRequest,
+      saveSale,
+      updateSaleRef,
+      updateProductStockAvailable,
+      updateProductStockReserved
+    );
+
+    createPackingList(
+      { clientInfo: client, orderedProducts: productsList ?? [], ...checkoutData },
+      saleRequest?.count
+    );
+
     if (!isSaveSaleLoading && !isSaveSaleError) {
-      saveNewSale(
-        salesData,
-        saleRequest,
-        saveSale,
-        updateSaleRef,
-        updateProductStockAvailable,
-        updateProductStockReserved
-      );
       resetInputs();
       toast({
         title: 'Success',
@@ -142,7 +149,7 @@ export function SalesFooter({
             status={isSalesBtnDisabled}
             onClick={handleNewSale}
           >
-            Vender
+            Guardar
           </CustomButton>
           <CustomButton fontSize="sm" variant="reject" onClick={resetInputs}>
             Borrar
