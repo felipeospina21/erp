@@ -11,7 +11,7 @@ import {
 import { saveNewSale } from 'services/createSale';
 import { createPackingList } from '@/utils/pdf/createPackingList';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { addNewDeliveryToList, resetSale } from '@/redux/slices/salesSlice';
+import { addNewDeliveryToList, Delivery, resetSale } from '@/redux/slices/salesSlice';
 
 export interface ActionButtonsProps {
   isSalesBtnDisabled?: boolean;
@@ -27,7 +27,7 @@ export function ActionButtons({ isSalesBtnDisabled }: ActionButtonsProps): JSX.E
     { isLoading: isSaveSaleLoading, isError: isSaveSaleError, error: saveSaleError },
   ] = useSaveSaleMutation();
   const salesData = useAppSelector((state) => state.sales);
-  const { checkoutData, client } = salesData;
+  const { deliveriesList, client } = salesData;
   const toast = useToast();
   const dispatch = useAppDispatch();
 
@@ -36,19 +36,30 @@ export function ActionButtons({ isSalesBtnDisabled }: ActionButtonsProps): JSX.E
   }
 
   async function handleNewSale(): Promise<void> {
-    await saveNewSale(
-      salesData,
-      saleRequest,
-      saveSale,
-      updateSaleRef,
-      updateProductStockAvailable,
-      updateProductStockReserved
-    );
+    const saleRef = saleRequest?.count ?? 0;
+    async function newSale(idx: number, delivery: Delivery): Promise<void> {
+      await saveNewSale(
+        salesData,
+        delivery,
+        saleRef,
+        saveSale,
+        updateSaleRef,
+        updateProductStockAvailable,
+        updateProductStockReserved,
+        idx
+      );
 
-    createPackingList(
-      { clientInfo: client, orderedProducts: productsList ?? [], ...checkoutData },
-      saleRequest?.count
-    );
+      await createPackingList(
+        { clientInfo: client, orderedProducts: delivery.productsList ?? [], ...delivery.summary },
+        saleRef,
+        idx
+      );
+    }
+
+    for (let i = 0; i < deliveriesList.length; i++) {
+      const delivery = deliveriesList[i];
+      await newSale(i, delivery);
+    }
 
     if (!isSaveSaleLoading && !isSaveSaleError) {
       resetInputs();

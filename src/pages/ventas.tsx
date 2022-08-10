@@ -40,7 +40,7 @@ export default function VentasPage({ isAuth }: IsAuth): ReactElement {
     <>
       <SalesHeader pageMaxW={'var(--maxPageWitdth)'} />
       {deliveriesList.map((element, id) => (
-        <>
+        <React.Fragment key={id}>
           <Heading as="h2" size="sm" m="0 auto -1.5rem 3rem">{`Entrega ${id + 1}`}</Heading>
           <TableContainer
             key={id}
@@ -51,7 +51,7 @@ export default function VentasPage({ isAuth }: IsAuth): ReactElement {
             salesBtnDisabled={isSalesBtnDisabled}
             setSalesBtnDisabled={setSalesBtnDisabled}
           />
-        </>
+        </React.Fragment>
       ))}
 
       <ActionButtons />

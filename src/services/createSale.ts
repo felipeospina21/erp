@@ -8,7 +8,7 @@ import {
   UpdateStockAvailable,
   UpdateStockReserved,
 } from '@/redux/services';
-import { SalesState } from '@/redux/slices/salesSlice';
+import { Delivery, SalesState } from '@/redux/slices/salesSlice';
 import { BaseQueryFn, MutationDefinition } from '@reduxjs/toolkit/dist/query';
 import { MutationTrigger } from '@reduxjs/toolkit/dist/query/react/buildHooks';
 import { AxiosProxyConfig, AxiosRequestHeaders } from 'axios';
@@ -44,15 +44,18 @@ type StockReserved = MutationTrigger<
 >;
 export async function saveNewSale(
   salesData: SalesState,
-  saleRequest: ConsecutiveResponse | undefined,
+  deliveryData: Delivery,
+  saleRequestRef: number,
   saveSale: SaveSale,
   updateSaleRef: UpdateSaleRef,
   updateStockAvailable: StockAvailable,
-  updateStockReserved: StockReserved
+  updateStockReserved: StockReserved,
+  idx: number
 ): Promise<any> {
   const promises: Promise<NewSaleResponse | Product | ConsecutiveResponse>[] = [];
-  const { productsList, client, checkoutData } = salesData;
-  const saleRequestRef = saleRequest ? String(saleRequest.count + 1) : '';
+  const { client, checkoutData } = salesData;
+  const { productsList, summary } = deliveryData;
+  const newRef = saleRequestRef + idx;
   const orderedProducts =
     productsList?.map(({ item, discount, quantity, rowTotal }) => ({
       item,
@@ -60,8 +63,11 @@ export async function saveNewSale(
       quantity,
       rowTotal,
     })) ?? [];
+
+  // update sale ref
   promises.push(updateSaleRef().unwrap());
 
+  // update stock
   productsList?.forEach(({ stock, quantity, item }) => {
     promises.push(
       updateStockAvailable({
@@ -78,13 +84,15 @@ export async function saveNewSale(
     );
   });
 
+  // save sale
   promises.push(
     saveSale({
       clientId: client?._id ?? '',
       ...checkoutData,
+      ...summary,
       orderedProducts,
       status: 'alistamiento',
-      saleRequestRef,
+      saleRequestRef: String(newRef),
     }).unwrap()
   );
   return Promise.all(promises);

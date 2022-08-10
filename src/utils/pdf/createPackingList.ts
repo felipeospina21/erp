@@ -1,4 +1,4 @@
-import { CheckoutData, Client, NewSaleOrderedProduct } from '@/redux/services';
+import { Client, NewSaleOrderedProduct, SaleSummary } from '@/redux/services';
 import { addInvoiceData } from '@/utils/pdf';
 import {
   addFooter,
@@ -10,22 +10,23 @@ import {
   setPDFParams,
 } from './pdfUtils';
 
-export interface CreatePdfData extends CheckoutData {
+export interface CreatePdfData extends SaleSummary {
   clientInfo: Client;
   orderedProducts: Array<NewSaleOrderedProduct>;
 }
 
 export async function createPackingList(
   data: CreatePdfData,
-  docRef?: number,
+  docRef: number,
+  idx: number,
   observations?: string
 ): Promise<void> {
   const { clientInfo, orderedProducts, subtotal, total, withholdingTax } = data;
   const tableBorderHight = orderedProducts.length * 5;
-
+  const newRef = docRef + idx;
   const { pdfDoc, page, config } = await setPDFParams();
   page.setSize(config.page.width, config.page.height);
-  addInvoiceData(page, clientInfo.paymentTerm, 'remisión', docRef, config);
+  addInvoiceData(page, clientInfo.paymentTerm, 'remisión', newRef, config);
   addLeftHeader(page, clientInfo, config);
 
   addProducts(page, config, orderedProducts, total, subtotal, withholdingTax, false);
@@ -39,5 +40,5 @@ export async function createPackingList(
     pdfDoc
   );
 
-  await savePDF(pdfDoc, `Remisión N° ${docRef} - ${clientInfo.name.toUpperCase()} - DLT`);
+  await savePDF(pdfDoc, `Remisión N° ${newRef} - ${clientInfo.name.toUpperCase()} - DLT`);
 }

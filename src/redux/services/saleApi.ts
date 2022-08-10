@@ -22,11 +22,19 @@ export interface NewSaleOrderedProduct extends RowInfo {
   shipping?: number;
 }
 
+export interface SaleSummary {
+  subtotal: number;
+  tax: number;
+  total: number;
+  withholdingTax?: number;
+}
+
 export interface CheckoutData {
   deliveryCity: string;
   paymentTerm: string;
 }
-export interface NewSale extends CheckoutData {
+
+export interface NewSale extends CheckoutData, SaleSummary {
   clientId: string;
   orderedProducts: Array<
     Pick<NewSaleOrderedProduct, 'item' | 'discount' | 'quantity' | 'rowTotal'>

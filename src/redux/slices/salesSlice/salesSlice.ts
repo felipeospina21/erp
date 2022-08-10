@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '@/redux/store';
-import type { CheckoutData, Client, NewSaleOrderedProduct } from '@/redux/services';
+import type { CheckoutData, Client, NewSaleOrderedProduct, SaleSummary } from '@/redux/services';
 
 export interface SalesState {
   deliveriesList: Array<Delivery>;
@@ -10,12 +10,7 @@ export interface SalesState {
 
 export interface Delivery {
   productsList: NewSaleOrderedProduct[];
-  summary: {
-    subtotal: number;
-    tax: number;
-    total: number;
-    withholdingTax?: number;
-  };
+  summary: SaleSummary;
   invoiceObservations?: {
     text: string;
     areInvalid: boolean;
