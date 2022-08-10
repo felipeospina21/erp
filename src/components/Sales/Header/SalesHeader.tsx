@@ -5,8 +5,8 @@ import { CustomSelect } from '@/components/Shared';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import {
   addNewSaleClient,
-  updateCheckoutData,
   updateClientPaymentTerm,
+  updateCheckoutData,
 } from '@/redux/slices/salesSlice';
 import { PaymentOptions, useGetClientsQuery } from '@/redux/services';
 import { paymentTerms } from '@/components/Clients';

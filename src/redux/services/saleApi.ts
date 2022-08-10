@@ -25,10 +25,6 @@ export interface NewSaleOrderedProduct extends RowInfo {
 export interface CheckoutData {
   deliveryCity: string;
   paymentTerm: string;
-  subtotal: number;
-  tax: number;
-  total: number;
-  withholdingTax?: number;
 }
 export interface NewSale extends CheckoutData {
   clientId: string;

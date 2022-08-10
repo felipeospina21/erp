@@ -11,9 +11,8 @@ import {
 import { FaPlusCircle } from 'react-icons/fa';
 import { TableCellHeader, TableRow } from './';
 import { useAppDispatch } from '@/redux/hooks';
-import { addProductToList, removeProductFromList } from '@/redux/slices/salesSlice';
+import { addProductToList, Delivery, removeProductFromList } from '@/redux/slices/salesSlice';
 import { nanoid } from '@reduxjs/toolkit';
-import { NewSaleOrderedProduct } from '@/redux/services';
 import { SaleSummary } from './Footer';
 
 export interface TableContainerProps {
@@ -23,7 +22,7 @@ export interface TableContainerProps {
     id: string;
   }[];
   deliveryId: number;
-  deliveryData: NewSaleOrderedProduct[];
+  deliveryData: Delivery;
   salesBtnDisabled: boolean;
   setSalesBtnDisabled: (salesBtnDisabled: boolean) => void;
 }
@@ -32,7 +31,7 @@ export function TableContainer({
   pageMaxW,
   header,
   deliveryId,
-  deliveryData,
+  deliveryData: { productsList },
   salesBtnDisabled,
   setSalesBtnDisabled,
 }: TableContainerProps): JSX.Element {
@@ -55,7 +54,7 @@ export function TableContainer({
   };
 
   const removeRow = (id: string): void => {
-    const idx = deliveryData.findIndex(({ rowId }) => id === rowId);
+    const idx = productsList.findIndex(({ rowId }) => id === rowId);
     dispatch(removeProductFromList({ deliveryId, idx }));
   };
 
@@ -81,7 +80,7 @@ export function TableContainer({
             </Tr>
           </Thead>
           <Tbody fontSize={['xs', 'sm']}>
-            {deliveryData.map(({ rowId }) => {
+            {productsList.map(({ rowId }) => {
               return (
                 <TableRow
                   key={rowId}
@@ -106,7 +105,7 @@ export function TableContainer({
       >
         Row
       </Button>
-      <SaleSummary pageMaxW={'var(--maxPageWitdth)'} />
+      <SaleSummary pageMaxW={'var(--maxPageWitdth)'} deliveryId={deliveryId} />
     </Flex>
   );
 }

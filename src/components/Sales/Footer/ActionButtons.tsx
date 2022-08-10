@@ -11,17 +11,13 @@ import {
 import { saveNewSale } from 'services/createSale';
 import { createPackingList } from '@/utils/pdf/createPackingList';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { resetSale } from '@/redux/slices/salesSlice';
+import { addNewDeliveryToList, resetSale } from '@/redux/slices/salesSlice';
 
 export interface ActionButtonsProps {
   isSalesBtnDisabled?: boolean;
-  addNewDelivery: () => void;
 }
 
-export function ActionButtons({
-  isSalesBtnDisabled,
-  addNewDelivery,
-}: ActionButtonsProps): JSX.Element {
+export function ActionButtons({ isSalesBtnDisabled }: ActionButtonsProps): JSX.Element {
   const { data: saleRequest } = useGetSaleRefCountQuery();
   const [updateSaleRef] = useUpdateSaleRefCountMutation();
   const [updateProductStockAvailable] = useUpdateProductStockAvailableMutation();
@@ -31,9 +27,13 @@ export function ActionButtons({
     { isLoading: isSaveSaleLoading, isError: isSaveSaleError, error: saveSaleError },
   ] = useSaveSaleMutation();
   const salesData = useAppSelector((state) => state.sales);
-  const { checkoutData, client, productsList } = salesData;
+  const { checkoutData, client } = salesData;
   const toast = useToast();
   const dispatch = useAppDispatch();
+
+  function addNewDelivery(): void {
+    dispatch(addNewDeliveryToList());
+  }
 
   async function handleNewSale(): Promise<void> {
     await saveNewSale(

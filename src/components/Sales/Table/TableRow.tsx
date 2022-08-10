@@ -20,7 +20,9 @@ export function TableRow({ id, removeRow, deliveryId }: TableRowProps): JSX.Elem
   const bogotaShipping = useAppSelector((state) => state.shipping.bogota);
   const saleClient = useAppSelector((state) => state.sales.client);
   const deliveriesList = useAppSelector((state) => state.sales.deliveriesList);
-  const product = deliveriesList[deliveryId].filter((product) => product.rowId === id)[0];
+  const product = deliveriesList[deliveryId].productsList.filter(
+    (product) => product.rowId === id
+  )[0];
   const toast = useToast();
   const dispatch = useAppDispatch();
 
@@ -61,7 +63,7 @@ export function TableRow({ id, removeRow, deliveryId }: TableRowProps): JSX.Elem
         shipping,
       };
 
-      if (deliveriesList[deliveryId].length < 1) {
+      if (deliveriesList[deliveryId].productsList.length < 1) {
         dispatch(addProductToList({ deliveryId, rowData: newProduct }));
       } else {
         dispatch(updateProductsListItem({ deliveryId, newProduct }));
