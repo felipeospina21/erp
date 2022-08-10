@@ -1,5 +1,4 @@
 import { CustomButton, CustomFormField } from '@/components/Shared';
-import { RowData } from '@/pages/ventas';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import {
   useGetSaleRefCountQuery,
@@ -23,17 +22,17 @@ import { createPackingList } from '@/utils/pdf/createPackingList';
 
 export interface SalesFooterProps {
   pageMaxW: string;
-  initialRowSate: RowData;
+  // initialRowSate: RowData;
   isSalesBtnDisabled: boolean;
-  setRowsData: React.Dispatch<React.SetStateAction<RowData[]>>;
+  // setRowsData: React.Dispatch<React.SetStateAction<RowData[]>>;
 }
 
 export function SalesFooter({
   pageMaxW,
-  initialRowSate,
+  // initialRowSate,
   isSalesBtnDisabled,
-  setRowsData,
-}: SalesFooterProps): JSX.Element {
+}: // setRowsData,
+SalesFooterProps): JSX.Element {
   const [textValue, setTextValue] = useDebounce('', 1000);
   const { data: saleRequest } = useGetSaleRefCountQuery();
   const [updateSaleRef] = useUpdateSaleRefCountMutation();
@@ -52,7 +51,7 @@ export function SalesFooter({
   const resetInputs = (): void => {
     Array.from(document.querySelectorAll('input')).forEach((input) => (input.value = ''));
     Array.from(document.querySelectorAll('select')).forEach((select) => (select.value = ''));
-    setRowsData([initialRowSate]);
+    // setRowsData([initialRowSate]);
     dispatch(resetSale());
   };
 

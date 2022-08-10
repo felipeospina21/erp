@@ -14,7 +14,7 @@ export interface OrderedProduct extends RowInfo {
 
 export interface NewSaleOrderedProduct extends RowInfo {
   item: string;
-  name: string;
+  productId: string;
   price: number;
   stock: number;
   quantity: number;

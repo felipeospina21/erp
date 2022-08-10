@@ -1,12 +1,13 @@
-import { SalesFooter, SalesHeader, TableContainer } from '@/components/Sales';
+import { SalesHeader, TableContainer, tableHeader } from '@/components/Sales';
 import { Layout } from '@/components/Shared';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { updateCheckoutData } from '@/redux/slices/salesSlice';
-import React, { ReactElement, useEffect, useMemo, useState } from 'react';
+import { addNewDeliveryToList, resetSale, updateCheckoutData } from '@/redux/slices/salesSlice';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { checkAuth, IsAuth } from '@/utils/auth';
 import dynamic from 'next/dynamic';
 import { useGetwithholdingTaxQuery } from '@/redux/services';
 import { useAuth } from '../utils';
+import { Button } from '@chakra-ui/react';
 const LoginPage = dynamic(() => import('@/pages/login'));
 
 export interface RowData {
@@ -20,18 +21,17 @@ export interface RowData {
   productId: string;
 }
 
+export const initialRowSate: RowData = {
+  id: '1',
+  item: '',
+  discount: 0,
+  subtotal: 0,
+  stock: 0,
+  quantity: 0,
+  productId: '',
+  price: 0,
+};
 export default function VentasPage({ isAuth }: IsAuth): ReactElement {
-  const initialRowSate: RowData = {
-    id: '1',
-    item: '',
-    discount: 0,
-    subtotal: 0,
-    stock: 0,
-    quantity: 0,
-    productId: '',
-    price: 0,
-  };
-  const [rowsData, setRowsData] = useState<RowData[]>([initialRowSate]);
   const [isSalesBtnDisabled, setSalesBtnDisabled] = useState(true);
   const { data: withholdingTax } = useGetwithholdingTaxQuery('62d19e8a3a4b06e0eed05d2d');
   const { subtotal, tax, deliveryCity, paymentTerm } = useAppSelector(
@@ -41,47 +41,27 @@ export default function VentasPage({ isAuth }: IsAuth): ReactElement {
     client: selectedClient,
     productsList,
     invoiceObservations,
+    deliveriesList,
   } = useAppSelector((state) => state.sales);
   const dispatch = useAppDispatch();
   useAuth(isAuth, '/ventas');
 
-  const header = useMemo(
-    () => [
-      {
-        title: 'Producto',
-        id: 'product',
-      },
-      {
-        title: 'Stock',
-        id: 'stock',
-      },
-      {
-        title: 'Precio',
-        id: 'price',
-      },
-      {
-        title: 'Cantidad',
-        id: 'quantity',
-      },
-      {
-        title: 'Descuento',
-        id: 'discount',
-      },
-      {
-        title: 'Transporte (und)',
-        id: 'shipping',
-      },
-      {
-        title: 'Total',
-        id: 'total',
-      },
-      {
-        title: '',
-        id: 'action',
-      },
-    ],
-    []
-  );
+  function addNewDelivery(): void {
+    const newDelivery = {
+      ...initialRowSate,
+      rowId: initialRowSate.id,
+      rowTotal: initialRowSate.subtotal,
+      name: initialRowSate.item,
+    };
+    dispatch(addNewDeliveryToList([newDelivery]));
+  }
+
+  useEffect(() => {
+    addNewDelivery();
+    return () => {
+      dispatch(resetSale());
+    };
+  }, []);
 
   useEffect(() => {
     const quantityArr = productsList?.map(({ quantity }) => quantity).filter((q) => q >= 1);
@@ -132,21 +112,19 @@ export default function VentasPage({ isAuth }: IsAuth): ReactElement {
   return (
     <>
       <SalesHeader pageMaxW={'var(--maxPageWitdth)'} />
-      <TableContainer
-        pageMaxW={'var(--maxPageWitdth)'}
-        header={header}
-        rowsData={rowsData}
-        setRowsData={setRowsData}
-        salesBtnDisabled={isSalesBtnDisabled}
-        setSalesBtnDisabled={setSalesBtnDisabled}
-      />
+      {deliveriesList.map((element, id) => (
+        <TableContainer
+          key={id}
+          pageMaxW={'var(--maxPageWitdth)'}
+          header={tableHeader}
+          deliveryId={id}
+          deliveryData={element}
+          salesBtnDisabled={isSalesBtnDisabled}
+          setSalesBtnDisabled={setSalesBtnDisabled}
+        />
+      ))}
 
-      <SalesFooter
-        pageMaxW={'var(--maxPageWitdth)'}
-        initialRowSate={initialRowSate}
-        isSalesBtnDisabled={isSalesBtnDisabled}
-        setRowsData={setRowsData}
-      />
+      <Button onClick={addNewDelivery}>agregar entrega</Button>
     </>
   );
 }

@@ -258,7 +258,7 @@ export function addProducts(
     const discountedPrice = price - price * discount;
     newLineY += lineHeight;
     props.y = height - newLineY;
-    page.drawText(product.name ?? '', {
+    page.drawText(product.productId ?? '', {
       ...props,
       x: col1,
     });

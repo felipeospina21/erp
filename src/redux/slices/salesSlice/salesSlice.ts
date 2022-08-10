@@ -3,6 +3,7 @@ import { RootState } from '@/redux/store';
 import type { CheckoutData, Client, NewSaleOrderedProduct } from '@/redux/services';
 
 export interface SalesState {
+  deliveriesList: Array<NewSaleOrderedProduct[]>;
   productsList?: NewSaleOrderedProduct[];
   client: Client;
   checkoutData: CheckoutData;
@@ -12,7 +13,27 @@ export interface SalesState {
   };
 }
 
+interface AddProductPayload {
+  deliveryId: number;
+  rowData: NewSaleOrderedProduct;
+}
+
+interface RemoveProductPayload {
+  deliveryId: number;
+  idx: number;
+}
+
+interface UpdateProductListPayload {
+  deliveryId: number;
+  productList: NewSaleOrderedProduct[];
+}
+
+interface UpdateProductPayload extends Pick<AddProductPayload, 'deliveryId'> {
+  newProduct: Partial<NewSaleOrderedProduct>;
+}
+
 const initialState: SalesState = {
+  deliveriesList: [],
   productsList: [],
   client: {
     addres1: '',
@@ -45,24 +66,31 @@ const salesSlice = createSlice({
     resetSale: () => {
       return initialState;
     },
-    addProductToList: (state, action: PayloadAction<NewSaleOrderedProduct>) => {
-      state.productsList?.push(action.payload);
+    addNewDeliveryToList: (state, action: PayloadAction<NewSaleOrderedProduct[]>) => {
+      state.deliveriesList.push(action.payload);
     },
-    removeProductFromList: (state, action: PayloadAction<number>) => {
-      state.productsList?.splice(action.payload, 1);
+    addProductToList: (state, action: PayloadAction<AddProductPayload>) => {
+      const { deliveryId, rowData } = action.payload;
+      state.deliveriesList[deliveryId].push(rowData);
+    },
+    removeProductFromList: (state, action: PayloadAction<RemoveProductPayload>) => {
+      const { deliveryId, idx } = action.payload;
+      state.deliveriesList[deliveryId].splice(idx, 1);
     },
 
-    updateProductList: (state, action: PayloadAction<NewSaleOrderedProduct[]>) => {
-      state.productsList = action.payload;
+    updateProductList: (state, action: PayloadAction<UpdateProductListPayload>) => {
+      const { deliveryId, productList } = action.payload;
+      state.deliveriesList[deliveryId] = productList;
     },
 
-    updateProductsListItem: (state, action: PayloadAction<Partial<NewSaleOrderedProduct>>) => {
-      const { payload } = action;
+    updateProductsListItem: (state, action: PayloadAction<UpdateProductPayload>) => {
+      const { newProduct, deliveryId } = action.payload;
+      const productsList = state.deliveriesList[deliveryId];
 
-      if (payload.rowId && state.productsList) {
-        const idx = state.productsList?.findIndex(({ rowId }) => rowId === payload.rowId);
+      if (newProduct.rowId && productsList) {
+        const idx = productsList.findIndex(({ rowId }) => rowId === newProduct.rowId);
         if (idx >= 0) {
-          state.productsList[idx] = { ...state.productsList[idx], ...payload };
+          productsList[idx] = { ...productsList[idx], ...newProduct };
         }
       }
     },
@@ -104,6 +132,7 @@ export const {
   updateClientPaymentTerm,
   addInvoiceObservations,
   isInvoiceObservationsTextInvalid,
+  addNewDeliveryToList,
 } = salesSlice.actions;
 export const selectSales = (state: RootState): SalesState => state.sales;
 export default salesSlice.reducer;

@@ -10,16 +10,17 @@ import { CustomSelect } from '@/components/Shared';
 
 export interface TableRowProps {
   id: string;
+  deliveryId: number;
   removeRow: (id: string) => void;
 }
 
-export function TableRow({ id, removeRow }: TableRowProps): JSX.Element {
+export function TableRow({ id, removeRow, deliveryId }: TableRowProps): JSX.Element {
   const { data: products } = useGetProductsQuery();
   const deliveryCity = useAppSelector((state) => state.sales.checkoutData.deliveryCity);
   const bogotaShipping = useAppSelector((state) => state.shipping.bogota);
   const saleClient = useAppSelector((state) => state.sales.client);
-  const productsList = useAppSelector((state) => state.sales.productsList);
-  const product = productsList?.filter((product) => product.rowId === id)[0];
+  const deliveriesList = useAppSelector((state) => state.sales.deliveriesList);
+  const product = deliveriesList[deliveryId].filter((product) => product.rowId === id)[0];
   const toast = useToast();
   const dispatch = useAppDispatch();
 
@@ -44,7 +45,7 @@ export function TableRow({ id, removeRow }: TableRowProps): JSX.Element {
         _id,
         price,
         stockAvailable: stock,
-        name,
+        name: productId,
       } = products?.filter((product) => product.name === value)[0];
       const shipping = calculateShipping(_id, deliveryCity);
       const rowTotal = calculateTotal(price);
@@ -53,17 +54,17 @@ export function TableRow({ id, removeRow }: TableRowProps): JSX.Element {
         rowId: id,
         stock,
         price,
-        name,
+        productId,
         rowTotal,
         discount: saleClient.discount,
         quantity: 0,
         shipping,
       };
 
-      if (!productsList?.length) {
-        dispatch(addProductToList(newProduct));
+      if (deliveriesList[deliveryId].length < 1) {
+        dispatch(addProductToList({ deliveryId, rowData: newProduct }));
       } else {
-        dispatch(updateProductsListItem(newProduct));
+        dispatch(updateProductsListItem({ deliveryId, newProduct }));
       }
     }
   };
@@ -71,7 +72,7 @@ export function TableRow({ id, removeRow }: TableRowProps): JSX.Element {
   function handleInputChange(event: React.ChangeEvent<HTMLInputElement>): void {
     const { value, id: inputId } = event.target;
     if (product) {
-      const { price, quantity, discount, stock, name, shipping } = product;
+      const { price, quantity, discount, stock, productId: name, shipping } = product;
 
       if (inputId === 'quantity') {
         const newQuantity = Number(value);
@@ -88,7 +89,12 @@ export function TableRow({ id, removeRow }: TableRowProps): JSX.Element {
 
         if (newQuantity >= 0) {
           const rowTotal = calculateTotal(price, newQuantity, discount, shipping);
-          dispatch(updateProductsListItem({ rowId: id, quantity: newQuantity, rowTotal }));
+          dispatch(
+            updateProductsListItem({
+              deliveryId,
+              newProduct: { rowId: id, quantity: newQuantity, rowTotal },
+            })
+          );
         }
       }
 
@@ -97,7 +103,12 @@ export function TableRow({ id, removeRow }: TableRowProps): JSX.Element {
         const rowTotal = calculateTotal(price, quantity, newDiscount);
 
         if (newDiscount >= 0) {
-          dispatch(updateProductsListItem({ rowId: id, discount: newDiscount, rowTotal }));
+          dispatch(
+            updateProductsListItem({
+              deliveryId,
+              newProduct: { rowId: id, discount: newDiscount, rowTotal },
+            })
+          );
         }
       }
     }
