@@ -16,7 +16,7 @@ const TaxPicker = (): JSX.Element => {
     dispatch(updateCheckoutData({ key: 'tax', value: formatedValue }));
   };
   return (
-    <SimpleGrid columns={2} spacing={1} justifyItems="end" mt="1.5rem" w="100%">
+    <SimpleGrid columns={2} spacing={1} justifyItems="end" alignItems="center" mt="0.5rem" w="100%">
       <Box textAlign="right" w="100%" fontWeight="500">
         IVA (%):
       </Box>

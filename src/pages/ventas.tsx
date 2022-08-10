@@ -1,13 +1,13 @@
-import { SalesHeader, TableContainer, tableHeader } from '@/components/Sales';
+import { SalesHeader, TableContainer, tableHeader, ActionButtons } from '@/components/Sales';
 import { Layout } from '@/components/Shared';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { addNewDeliveryToList, resetSale, updateCheckoutData } from '@/redux/slices/salesSlice';
-import React, { ReactElement, useEffect, useState } from 'react';
-import { checkAuth, IsAuth } from '@/utils/auth';
-import dynamic from 'next/dynamic';
 import { useGetwithholdingTaxQuery } from '@/redux/services';
+import { addNewDeliveryToList, resetSale, updateCheckoutData } from '@/redux/slices/salesSlice';
+import { checkAuth, IsAuth } from '@/utils/auth';
+import { Heading } from '@chakra-ui/react';
+import dynamic from 'next/dynamic';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { useAuth } from '../utils';
-import { Button } from '@chakra-ui/react';
 const LoginPage = dynamic(() => import('@/pages/login'));
 
 export interface RowData {
@@ -21,17 +21,17 @@ export interface RowData {
   productId: string;
 }
 
-export const initialRowSate: RowData = {
-  id: '1',
-  item: '',
-  discount: 0,
-  subtotal: 0,
-  stock: 0,
-  quantity: 0,
-  productId: '',
-  price: 0,
-};
 export default function VentasPage({ isAuth }: IsAuth): ReactElement {
+  const initialRowSate: RowData = {
+    id: '1',
+    item: '',
+    discount: 0,
+    subtotal: 0,
+    stock: 0,
+    quantity: 0,
+    productId: '',
+    price: 0,
+  };
   const [isSalesBtnDisabled, setSalesBtnDisabled] = useState(true);
   const { data: withholdingTax } = useGetwithholdingTaxQuery('62d19e8a3a4b06e0eed05d2d');
   const { subtotal, tax, deliveryCity, paymentTerm } = useAppSelector(
@@ -113,18 +113,21 @@ export default function VentasPage({ isAuth }: IsAuth): ReactElement {
     <>
       <SalesHeader pageMaxW={'var(--maxPageWitdth)'} />
       {deliveriesList.map((element, id) => (
-        <TableContainer
-          key={id}
-          pageMaxW={'var(--maxPageWitdth)'}
-          header={tableHeader}
-          deliveryId={id}
-          deliveryData={element}
-          salesBtnDisabled={isSalesBtnDisabled}
-          setSalesBtnDisabled={setSalesBtnDisabled}
-        />
+        <>
+          <Heading as="h2" size="sm" m="0 auto -1.5rem 3rem">{`Entrega ${id + 1}`}</Heading>
+          <TableContainer
+            key={id}
+            pageMaxW={'var(--maxPageWitdth)'}
+            header={tableHeader}
+            deliveryId={id}
+            deliveryData={element}
+            salesBtnDisabled={isSalesBtnDisabled}
+            setSalesBtnDisabled={setSalesBtnDisabled}
+          />
+        </>
       ))}
 
-      <Button onClick={addNewDelivery}>agregar entrega</Button>
+      <ActionButtons addNewDelivery={addNewDelivery} />
     </>
   );
 }

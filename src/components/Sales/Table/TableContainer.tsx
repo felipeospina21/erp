@@ -14,7 +14,7 @@ import { useAppDispatch } from '@/redux/hooks';
 import { addProductToList, removeProductFromList } from '@/redux/slices/salesSlice';
 import { nanoid } from '@reduxjs/toolkit';
 import { NewSaleOrderedProduct } from '@/redux/services';
-import { SalesFooter } from '../Footer';
+import { SaleSummary } from './Footer';
 
 export interface TableContainerProps {
   pageMaxW: string;
@@ -98,20 +98,15 @@ export function TableContainer({
         variant="ghost"
         color="brand.green.600"
         size="sm"
-        my="1rem"
+        mt="0"
+        mb="1rem"
         ml={[null, '1rem', '2rem', '4rem']}
         leftIcon={<Icon as={FaPlusCircle} />}
         onClick={addRow}
       >
         Row
       </Button>
-
-      <SalesFooter
-        pageMaxW={'var(--maxPageWitdth)'}
-        // initialRowSate={initialRowSate}
-        isSalesBtnDisabled={false}
-        // setRowsData={setSale}
-      />
+      <SaleSummary pageMaxW={'var(--maxPageWitdth)'} />
     </Flex>
   );
 }
