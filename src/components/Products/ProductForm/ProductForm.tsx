@@ -103,7 +103,7 @@ export default function ProductForm({
           variant={'floating'}
         >
           <Controller
-            name="stock"
+            name="stockAvailable"
             control={control}
             defaultValue={defaultValues?.stockAvailable ?? 0}
             rules={{ required: true }}

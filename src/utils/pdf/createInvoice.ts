@@ -1,5 +1,5 @@
-import { CheckoutData, Client, NewSaleOrderedProduct } from '@/redux/services';
 import { addInvoiceData } from '@/utils/pdf';
+import { CreatePdfData } from './createPackingList';
 import {
   addFooter,
   addLeftHeader,
@@ -10,11 +10,6 @@ import {
   savePDF,
   setPDFParams,
 } from './pdfUtils';
-
-export interface CreatePdfData extends CheckoutData {
-  clientInfo: Client;
-  orderedProducts: Array<NewSaleOrderedProduct>;
-}
 
 export async function createInvoice(
   data: CreatePdfData,

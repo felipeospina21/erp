@@ -1,4 +1,4 @@
-import { Client, NewSaleOrderedProduct, SaleSummary } from '@/redux/services';
+import { CheckoutData, Client, NewSaleOrderedProduct, SaleSummary } from '@/redux/services';
 import { addInvoiceData } from '@/utils/pdf';
 import {
   addFooter,
@@ -10,7 +10,7 @@ import {
   setPDFParams,
 } from './pdfUtils';
 
-export interface CreatePdfData extends SaleSummary {
+export interface CreatePdfData extends SaleSummary, Partial<CheckoutData> {
   clientInfo: Client;
   orderedProducts: Array<NewSaleOrderedProduct>;
 }
