@@ -40,7 +40,7 @@ export function Card({ product, locale }: CardProps): JSX.Element {
     updatedProduct.append('category', values.category);
     updatedProduct.append('name', values.name);
     updatedProduct.append('price', values.price);
-    updatedProduct.append('stock', values.stock);
+    updatedProduct.append('stockAvailable', values.stock);
     if (values.image?.length) {
       updatedProduct.append('image', values.image[0]);
     }

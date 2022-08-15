@@ -13,7 +13,7 @@ export interface Product extends DocumentId {
 }
 
 export interface UpdateStockAvailable extends DocumentId {
-  stockAvailable: number;
+  quantity: number;
 }
 
 export interface UpdateStockReserved extends DocumentId {

@@ -49,7 +49,8 @@ export interface NewSale extends CheckoutData, SaleSummary {
     | 'facturado'
     | 'en cartera'
     | 'pagado'
-    | 'anulado';
+    | 'anulado'
+    | '';
 }
 export interface SaleResponse extends CheckoutData {
   clientInfo: Client;

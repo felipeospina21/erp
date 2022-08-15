@@ -68,11 +68,11 @@ export async function saveNewSale(
   promises.push(updateSaleRef().unwrap());
 
   // update stock
-  productsList?.forEach(({ stock, quantity, item }) => {
+  productsList?.forEach(({ quantity, item }) => {
     promises.push(
       updateStockAvailable({
         _id: item,
-        stockAvailable: stock - quantity,
+        quantity,
       }).unwrap()
     );
     promises.push(
@@ -91,7 +91,7 @@ export async function saveNewSale(
       ...checkoutData,
       ...summary,
       orderedProducts,
-      status: 'alistamiento',
+      status: '',
       saleRequestRef: String(newRef),
     }).unwrap()
   );
