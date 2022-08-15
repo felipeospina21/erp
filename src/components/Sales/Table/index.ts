@@ -3,3 +3,4 @@ export * from './TableCellBody';
 export * from './TableCellHeader';
 export * from './TableContainer';
 export * from './TableRow';
+export * from './tableHeader';

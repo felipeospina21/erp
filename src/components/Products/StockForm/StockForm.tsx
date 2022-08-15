@@ -12,7 +12,7 @@ export interface StockFormProps {
 
 export interface StockFormValues {
   productName: string;
-  stock: number;
+  stockAvailable: number;
 }
 
 export default function StockForm({ products, isLoading, onSubmit }: StockFormProps): JSX.Element {

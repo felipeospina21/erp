@@ -14,7 +14,7 @@ export interface OrderedProduct extends RowInfo {
 
 export interface NewSaleOrderedProduct extends RowInfo {
   item: string;
-  name: string;
+  productId: string;
   price: number;
   stock: number;
   quantity: number;
@@ -22,20 +22,35 @@ export interface NewSaleOrderedProduct extends RowInfo {
   shipping?: number;
 }
 
-export interface CheckoutData {
-  deliveryCity: string;
-  paymentTerm: string;
+export interface SaleSummary {
   subtotal: number;
   tax: number;
   total: number;
   withholdingTax?: number;
 }
-export interface NewSale extends CheckoutData {
+
+export interface CheckoutData {
+  deliveryCity: string;
+  paymentTerm: string;
+}
+
+export interface NewSale extends CheckoutData, SaleSummary {
   clientId: string;
   orderedProducts: Array<
     Pick<NewSaleOrderedProduct, 'item' | 'discount' | 'quantity' | 'rowTotal'>
   >;
-  invoiceRef: string;
+  invoiceRef?: string;
+  saleRequestRef: string;
+  status:
+    | 'producción'
+    | 'alistamiento'
+    | 'despachado'
+    | 'entregado'
+    | 'facturado'
+    | 'en cartera'
+    | 'pagado'
+    | 'anulado'
+    | '';
 }
 export interface SaleResponse extends CheckoutData {
   clientInfo: Client;

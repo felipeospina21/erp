@@ -11,6 +11,7 @@ export interface CustomFormFieldProps {
   label: string;
   variant?: 'floating';
   isDisabled?: boolean;
+  margin?: string;
 }
 
 export function CustomFormField({
@@ -23,6 +24,7 @@ export function CustomFormField({
   label,
   variant,
   isDisabled,
+  margin = '1.5rem auto auto auto',
 }: CustomFormFieldProps): JSX.Element {
   return (
     <FormControl
@@ -30,7 +32,7 @@ export function CustomFormField({
       isInvalid={isError}
       isRequired={isRequired}
       id={id}
-      mt="1.5rem"
+      m={margin}
       bgColor="inherit"
       isDisabled={isDisabled}
     >

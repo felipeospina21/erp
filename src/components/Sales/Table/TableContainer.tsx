@@ -10,10 +10,10 @@ import {
 } from '@chakra-ui/react';
 import { FaPlusCircle } from 'react-icons/fa';
 import { TableCellHeader, TableRow } from './';
-import { RowData } from '@/pages/ventas';
 import { useAppDispatch } from '@/redux/hooks';
-import { addProductToList, removeProductFromList } from '@/redux/slices/salesSlice';
+import { addProductToList, Delivery, removeProductFromList } from '@/redux/slices/salesSlice';
 import { nanoid } from '@reduxjs/toolkit';
+import { SaleSummary } from './Footer';
 
 export interface TableContainerProps {
   pageMaxW: string;
@@ -21,8 +21,8 @@ export interface TableContainerProps {
     title: string;
     id: string;
   }[];
-  rowsData: RowData[];
-  setRowsData: (rowsData: RowData[]) => void;
+  deliveryId: number;
+  deliveryData: Delivery;
   salesBtnDisabled: boolean;
   setSalesBtnDisabled: (salesBtnDisabled: boolean) => void;
 }
@@ -30,8 +30,8 @@ export interface TableContainerProps {
 export function TableContainer({
   pageMaxW,
   header,
-  rowsData,
-  setRowsData,
+  deliveryId,
+  deliveryData: { productsList },
   salesBtnDisabled,
   setSalesBtnDisabled,
 }: TableContainerProps): JSX.Element {
@@ -40,8 +40,8 @@ export function TableContainer({
   const addRow = (): void => {
     salesBtnDisabled ? null : setSalesBtnDisabled(true);
     const newRow = {
-      id: nanoid(),
-      subtotal: 0,
+      rowId: nanoid(),
+      rowTotal: 0,
       item: '',
       price: 0,
       stock: 0,
@@ -49,23 +49,13 @@ export function TableContainer({
       discount: 0,
       productId: '',
     };
-    setRowsData([...rowsData, newRow]);
-    dispatch(
-      addProductToList({
-        ...newRow,
-        rowId: newRow.id,
-        rowTotal: newRow.subtotal,
-        name: newRow.productId,
-      })
-    );
+
+    dispatch(addProductToList({ deliveryId, rowData: newRow }));
   };
 
   const removeRow = (id: string): void => {
-    const rowId = id;
-    const idx = rowsData.findIndex(({ id }) => id === rowId);
-    const newRows = rowsData.filter((row) => row.id !== rowId);
-    setRowsData(newRows);
-    dispatch(removeProductFromList(idx));
+    const idx = productsList.findIndex(({ rowId }) => id === rowId);
+    dispatch(removeProductFromList({ deliveryId, idx }));
   };
 
   return (
@@ -90,8 +80,15 @@ export function TableContainer({
             </Tr>
           </Thead>
           <Tbody fontSize={['xs', 'sm']}>
-            {rowsData.map((row) => {
-              return <TableRow key={row.id} id={row.id ?? nanoid()} removeRow={removeRow} />;
+            {productsList.map(({ rowId }) => {
+              return (
+                <TableRow
+                  key={rowId}
+                  id={rowId ?? nanoid()}
+                  deliveryId={deliveryId}
+                  removeRow={removeRow}
+                />
+              );
             })}
           </Tbody>
         </Table>
@@ -100,13 +97,15 @@ export function TableContainer({
         variant="ghost"
         color="brand.green.600"
         size="sm"
-        my="1rem"
+        mt="0"
+        mb="1rem"
         ml={[null, '1rem', '2rem', '4rem']}
         leftIcon={<Icon as={FaPlusCircle} />}
         onClick={addRow}
       >
         Row
       </Button>
+      <SaleSummary pageMaxW={'var(--maxPageWitdth)'} deliveryId={deliveryId} />
     </Flex>
   );
 }

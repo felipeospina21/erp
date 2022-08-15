@@ -1,19 +1,67 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '@/redux/store';
-import type { CheckoutData, Client, NewSaleOrderedProduct } from '@/redux/services';
+import type { CheckoutData, Client, NewSaleOrderedProduct, SaleSummary } from '@/redux/services';
 
 export interface SalesState {
-  productsList?: NewSaleOrderedProduct[];
+  deliveriesList: Array<Delivery>;
   client: Client;
   checkoutData: CheckoutData;
+}
+
+export interface Delivery {
+  productsList: NewSaleOrderedProduct[];
+  summary: SaleSummary;
   invoiceObservations?: {
     text: string;
     areInvalid: boolean;
   };
 }
 
+interface AddProductPayload {
+  deliveryId: number;
+  rowData: NewSaleOrderedProduct;
+}
+
+interface RemoveProductPayload {
+  deliveryId: number;
+  idx: number;
+}
+
+interface UpdateProductListPayload {
+  deliveryId: number;
+  productList: NewSaleOrderedProduct[];
+}
+
+interface UpdateProductPayload extends Pick<AddProductPayload, 'deliveryId'> {
+  newProduct: Partial<NewSaleOrderedProduct>;
+}
+
 const initialState: SalesState = {
-  productsList: [],
+  deliveriesList: [
+    {
+      productsList: [
+        {
+          rowId: '1',
+          item: '',
+          discount: 0,
+          rowTotal: 0,
+          stock: 0,
+          quantity: 0,
+          productId: '',
+          price: 0,
+        },
+      ],
+      summary: {
+        tax: 0,
+        subtotal: 0,
+        total: 0,
+      },
+      invoiceObservations: {
+        text: '',
+        areInvalid: false,
+      },
+    },
+  ],
   client: {
     addres1: '',
     city: '',
@@ -28,13 +76,6 @@ const initialState: SalesState = {
   checkoutData: {
     deliveryCity: '',
     paymentTerm: '',
-    tax: 0,
-    subtotal: 0,
-    total: 0,
-  },
-  invoiceObservations: {
-    text: '',
-    areInvalid: false,
   },
 };
 
@@ -45,30 +86,51 @@ const salesSlice = createSlice({
     resetSale: () => {
       return initialState;
     },
-    addProductToList: (state, action: PayloadAction<NewSaleOrderedProduct>) => {
-      state.productsList?.push(action.payload);
+    addNewDeliveryToList: (state) => {
+      const [newDelivery] = initialState.deliveriesList;
+      state.deliveriesList.push(newDelivery);
     },
-    removeProductFromList: (state, action: PayloadAction<number>) => {
-      state.productsList?.splice(action.payload, 1);
+    addProductToList: (state, action: PayloadAction<AddProductPayload>) => {
+      const { deliveryId, rowData } = action.payload;
+      state.deliveriesList[deliveryId].productsList.push(rowData);
+    },
+    removeProductFromList: (state, action: PayloadAction<RemoveProductPayload>) => {
+      const { deliveryId, idx } = action.payload;
+      state.deliveriesList[deliveryId].productsList.splice(idx, 1);
     },
 
-    updateProductList: (state, action: PayloadAction<NewSaleOrderedProduct[]>) => {
-      state.productsList = action.payload;
+    updateProductList: (state, action: PayloadAction<UpdateProductListPayload>) => {
+      const { deliveryId, productList } = action.payload;
+      state.deliveriesList[deliveryId].productsList = productList;
     },
 
-    updateProductsListItem: (state, action: PayloadAction<Partial<NewSaleOrderedProduct>>) => {
-      const { payload } = action;
+    updateProductsListItem: (state, action: PayloadAction<UpdateProductPayload>) => {
+      const { newProduct, deliveryId } = action.payload;
+      const productsList = state.deliveriesList[deliveryId].productsList;
 
-      if (payload.rowId && state.productsList) {
-        const idx = state.productsList?.findIndex(({ rowId }) => rowId === payload.rowId);
+      if (newProduct.rowId && productsList) {
+        const idx = productsList.findIndex(({ rowId }) => rowId === newProduct.rowId);
         if (idx >= 0) {
-          state.productsList[idx] = { ...state.productsList[idx], ...payload };
+          productsList[idx] = { ...productsList[idx], ...newProduct };
         }
       }
     },
     addNewSaleClient: (state, action: PayloadAction<Client>) => {
       const { payload } = action;
       state.client = { ...payload };
+    },
+    updateDeliverySummary: (
+      state,
+      action: PayloadAction<{ key: string; value: string | number; deliveryId: number }>
+    ) => {
+      const { key, value, deliveryId } = action.payload;
+      const summary = state.deliveriesList[deliveryId].summary;
+      if (summary) {
+        state.deliveriesList[deliveryId].summary = {
+          ...summary,
+          [key as keyof CheckoutData]: value,
+        };
+      }
     },
     updateCheckoutData: (state, action: PayloadAction<{ key: string; value: string | number }>) => {
       const { key, value } = action.payload;
@@ -80,14 +142,24 @@ const salesSlice = createSlice({
       const { payload } = action;
       state.checkoutData.paymentTerm = payload;
     },
-    addInvoiceObservations: (state, action: PayloadAction<string>) => {
-      if (state.invoiceObservations) {
-        state.invoiceObservations.text = action.payload;
+    addInvoiceObservations: (
+      state,
+      action: PayloadAction<{ deliveryId: number; observations: string }>
+    ) => {
+      const { deliveryId, observations } = action.payload;
+      const invoiceObservations = state.deliveriesList[deliveryId].invoiceObservations;
+      if (invoiceObservations) {
+        invoiceObservations.text = observations;
       }
     },
-    isInvoiceObservationsTextInvalid: (state, action: PayloadAction<boolean>) => {
-      if (state.invoiceObservations) {
-        state.invoiceObservations.areInvalid = action.payload;
+    isInvoiceObservationsTextInvalid: (
+      state,
+      action: PayloadAction<{ deliveryId: number; isInvalid: boolean }>
+    ) => {
+      const { deliveryId, isInvalid } = action.payload;
+      const invoiceObservations = state.deliveriesList[deliveryId].invoiceObservations;
+      if (invoiceObservations) {
+        invoiceObservations.areInvalid = isInvalid;
       }
     },
   },
@@ -100,10 +172,12 @@ export const {
   updateProductList,
   updateProductsListItem,
   addNewSaleClient,
-  updateCheckoutData,
+  updateDeliverySummary,
   updateClientPaymentTerm,
   addInvoiceObservations,
   isInvoiceObservationsTextInvalid,
+  addNewDeliveryToList,
+  updateCheckoutData,
 } = salesSlice.actions;
 export const selectSales = (state: RootState): SalesState => state.sales;
 export default salesSlice.reducer;

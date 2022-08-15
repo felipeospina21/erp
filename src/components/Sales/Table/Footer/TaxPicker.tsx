@@ -1,22 +1,26 @@
 import React from 'react';
 import { Box, SimpleGrid } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
-import { updateCheckoutData } from '@/redux/slices/salesSlice';
+import { updateDeliverySummary } from '@/redux/slices/salesSlice';
 import { CustomSelect } from '@/components/Shared';
 import { nanoid } from '@reduxjs/toolkit';
 import { useAppSelector } from '@/redux/hooks';
 
-const TaxPicker = (): JSX.Element => {
-  const { tax } = useAppSelector((state) => state.sales.checkoutData);
+interface TaxPicker {
+  deliveryId: number;
+}
+
+const TaxPicker = ({ deliveryId }: TaxPicker): JSX.Element => {
+  const { tax } = useAppSelector((state) => state.sales.deliveriesList[deliveryId].summary);
   const dispatch = useDispatch();
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
     const { value } = event.target;
     const formatedValue = Number(value) / 100;
-    dispatch(updateCheckoutData({ key: 'tax', value: formatedValue }));
+    dispatch(updateDeliverySummary({ key: 'tax', value: formatedValue, deliveryId }));
   };
   return (
-    <SimpleGrid columns={2} spacing={1} justifyItems="end" mt="1.5rem" w="100%">
+    <SimpleGrid columns={2} spacing={1} justifyItems="end" alignItems="center" mt="0.5rem" w="100%">
       <Box textAlign="right" w="100%" fontWeight="500">
         IVA (%):
       </Box>
