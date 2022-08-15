@@ -17,9 +17,9 @@ import dynamic from 'next/dynamic';
 import { ReactElement, useState } from 'react';
 const LoginPage = dynamic(() => import('@/pages/login'));
 
-export interface ProductDataForm extends Omit<Product, 'price' | 'stock' | 'category'> {
+export interface ProductDataForm extends Omit<Product, 'price' | 'stockAvailable' | 'category'> {
   price: string | Blob;
-  stock: string | Blob;
+  stockAvailable: string | Blob;
   category: string;
 }
 export default function ProductosPage({ isAuth }: IsAuth): JSX.Element {
@@ -50,7 +50,7 @@ export default function ProductosPage({ isAuth }: IsAuth): JSX.Element {
     newProduct.append('category', data.category);
     newProduct.append('name', data.name);
     newProduct.append('price', data.price);
-    newProduct.append('stockAvailable', data.stock);
+    newProduct.append('stockAvailable', data.stockAvailable);
     newProduct.append('stockReserved', '0');
     if (data.image?.length) {
       newProduct.append('image', data.image[0]);
