@@ -52,9 +52,19 @@ export interface NewSale extends CheckoutData, SaleSummary {
     | 'anulado'
     | '';
 }
-export interface SaleResponse extends CheckoutData {
+export interface SaleResponse extends CheckoutData, SaleSummary {
   clientInfo: Client;
   orderedProducts: NewSaleOrderedProduct[];
+  clientId?: {
+    _id: string;
+    name: string;
+  };
+  createdAt?: string;
+  updatedAt?: string;
+  invoiceRef?: string;
+  saleRequestRef: string;
+  status: string;
+  _id: string;
 }
 
 export interface NewSaleResponse extends SaleResponse, DocumentId {}
@@ -79,12 +89,22 @@ export const saleApi = createApi({
       }),
       invalidatesTags: [{ type: 'Sale' }, { type: 'Product' }],
     }),
+    deleteSale: build.mutation<SaleResponse, string>({
+      query: (id) => ({
+        url: '/',
+        method: 'DELETE',
+        withCredentials: true,
+        data: { _id: id },
+      }),
+      invalidatesTags: [{ type: 'Sale' }],
+    }),
   }),
 });
 
 export const {
   useGetSalesQuery,
   useSaveSaleMutation,
+  useDeleteSaleMutation,
   util: { getRunningOperationPromises: getSaleRunningOperationPromises },
 } = saleApi;
-export const { getSales, saveSale } = saleApi.endpoints;
+export const { getSales, saveSale, deleteSale } = saleApi.endpoints;

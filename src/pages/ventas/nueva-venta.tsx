@@ -5,7 +5,7 @@ import { resetSale } from '@/redux/slices/salesSlice';
 import { checkAuth, IsAuth } from '@/utils/auth';
 import dynamic from 'next/dynamic';
 import React, { ReactElement, useEffect, useState } from 'react';
-import { useAuth } from '../utils';
+import { useAuth } from '../../utils';
 const LoginPage = dynamic(() => import('@/pages/login'));
 
 export interface RowData {
@@ -19,7 +19,7 @@ export interface RowData {
   productId: string;
 }
 
-export default function VentasPage({ isAuth }: IsAuth): ReactElement {
+export default function NewSale({ isAuth }: IsAuth): ReactElement {
   const [isSalesBtnDisabled, setSalesBtnDisabled] = useState(true);
   const { deliveriesList } = useAppSelector((state) => state.sales);
   const dispatch = useAppDispatch();
@@ -55,8 +55,8 @@ export default function VentasPage({ isAuth }: IsAuth): ReactElement {
   );
 }
 
-VentasPage.getLayout = function getLayout(page: ReactElement): JSX.Element {
+NewSale.getLayout = function getLayout(page: ReactElement): JSX.Element {
   return <Layout>{page}</Layout>;
 };
 
-VentasPage.getInitialProps = checkAuth;
+NewSale.getInitialProps = checkAuth;
