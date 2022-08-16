@@ -38,7 +38,7 @@ export function SideNav(): JSX.Element {
     }
   }, [isSuccess, router]);
   return (
-    <Box p="1rem" bg={'custom.grey.600'}>
+    <Box p="1rem" bg={'custom.grey.600'} position="sticky" top={0} zIndex={2}>
       <Flex align="center" justify="space-between">
         <Box w="12rem">
           <IconButton
