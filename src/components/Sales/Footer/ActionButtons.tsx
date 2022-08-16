@@ -14,10 +14,11 @@ import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { addNewDeliveryToList, Delivery, resetSale } from '@/redux/slices/salesSlice';
 
 export interface ActionButtonsProps {
+  pageMaxW: string;
   isSalesBtnDisabled?: boolean;
 }
 
-export function ActionButtons({ isSalesBtnDisabled }: ActionButtonsProps): JSX.Element {
+export function ActionButtons({ isSalesBtnDisabled, pageMaxW }: ActionButtonsProps): JSX.Element {
   const { data: saleRequest } = useGetSaleRefCountQuery();
   const [updateSaleRef] = useUpdateSaleRefCountMutation();
   const [updateProductStockAvailable] = useUpdateProductStockAvailableMutation();
@@ -103,8 +104,14 @@ export function ActionButtons({ isSalesBtnDisabled }: ActionButtonsProps): JSX.E
   };
 
   return (
-    <Flex justify="space-between" align="center" m="2rem auto">
-      <Button variant="primary" m="0.5rem 3rem" p="1rem" onClick={addNewDelivery}>
+    <Flex
+      justify="space-between"
+      align="center"
+      m={['2rem 2rem', null, null, null, null, '2rem auto']}
+      w={[null, null, null, null, null, '95%']}
+      maxW={pageMaxW}
+    >
+      <Button variant="primary" m="0.5rem 3rem" p="1rem" fontSize="sm" onClick={addNewDelivery}>
         Agregar entrega
       </Button>
       <Box m="auto 4rem">

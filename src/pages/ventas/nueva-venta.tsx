@@ -50,7 +50,7 @@ export default function NewSale({ isAuth }: IsAuth): ReactElement {
         />
       ))}
 
-      <ActionButtons />
+      <ActionButtons pageMaxW={'var(--maxPageWitdth)'} />
     </>
   );
 }

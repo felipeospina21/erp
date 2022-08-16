@@ -74,7 +74,7 @@ export function TableContainer({
       flexDir="column"
       align="flex-start"
       m={['2rem 2rem', null, null, null, null, '2rem auto']}
-      w={[null, null, null, null, null, '100%']}
+      w={[null, null, null, null, null, '95%']}
       maxW={pageMaxW}
       overflow="auto"
       bgColor="brand.bgLight"
