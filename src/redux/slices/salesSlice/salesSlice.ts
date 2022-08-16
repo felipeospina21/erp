@@ -90,6 +90,12 @@ const salesSlice = createSlice({
       const [newDelivery] = initialState.deliveriesList;
       state.deliveriesList.push(newDelivery);
     },
+    removeDeliveryFromList: (state, action: PayloadAction<number>) => {
+      const deleteIdx = action.payload;
+      if (state.deliveriesList.length > 1) {
+        state.deliveriesList.splice(deleteIdx, 1);
+      }
+    },
     addProductToList: (state, action: PayloadAction<AddProductPayload>) => {
       const { deliveryId, rowData } = action.payload;
       state.deliveriesList[deliveryId].productsList.push(rowData);
@@ -177,6 +183,7 @@ export const {
   addInvoiceObservations,
   isInvoiceObservationsTextInvalid,
   addNewDeliveryToList,
+  removeDeliveryFromList,
   updateCheckoutData,
 } = salesSlice.actions;
 export const selectSales = (state: RootState): SalesState => state.sales;

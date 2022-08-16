@@ -3,7 +3,6 @@ import { Layout } from '@/components/Shared';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { resetSale } from '@/redux/slices/salesSlice';
 import { checkAuth, IsAuth } from '@/utils/auth';
-import { Heading } from '@chakra-ui/react';
 import dynamic from 'next/dynamic';
 import React, { ReactElement, useEffect, useState } from 'react';
 import { useAuth } from '../utils';
@@ -40,18 +39,15 @@ export default function VentasPage({ isAuth }: IsAuth): ReactElement {
     <>
       <SalesHeader pageMaxW={'var(--maxPageWitdth)'} />
       {deliveriesList.map((element, id) => (
-        <React.Fragment key={id}>
-          <Heading as="h2" size="sm" m="0 auto -1.5rem 3rem">{`Entrega ${id + 1}`}</Heading>
-          <TableContainer
-            key={id}
-            pageMaxW={'var(--maxPageWitdth)'}
-            header={tableHeader}
-            deliveryId={id}
-            deliveryData={element}
-            salesBtnDisabled={isSalesBtnDisabled}
-            setSalesBtnDisabled={setSalesBtnDisabled}
-          />
-        </React.Fragment>
+        <TableContainer
+          key={id}
+          pageMaxW={'var(--maxPageWitdth)'}
+          header={tableHeader}
+          deliveryId={id}
+          deliveryData={element}
+          salesBtnDisabled={isSalesBtnDisabled}
+          setSalesBtnDisabled={setSalesBtnDisabled}
+        />
       ))}
 
       <ActionButtons />
