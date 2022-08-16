@@ -1,6 +1,7 @@
 import {
   Button,
   Flex,
+  Heading,
   Icon,
   Table,
   TableContainer as TableWrapper,
@@ -11,9 +12,15 @@ import {
 import { FaPlusCircle } from 'react-icons/fa';
 import { TableCellHeader, TableRow } from './';
 import { useAppDispatch } from '@/redux/hooks';
-import { addProductToList, Delivery, removeProductFromList } from '@/redux/slices/salesSlice';
+import {
+  addProductToList,
+  Delivery,
+  removeDeliveryFromList,
+  removeProductFromList,
+} from '@/redux/slices/salesSlice';
 import { nanoid } from '@reduxjs/toolkit';
 import { SaleSummary } from './Footer';
+import { CloseButton } from '@/components/Shared';
 
 export interface TableContainerProps {
   pageMaxW: string;
@@ -58,18 +65,32 @@ export function TableContainer({
     dispatch(removeProductFromList({ deliveryId, idx }));
   };
 
+  function deletePartialSale(idx: number): void {
+    dispatch(removeDeliveryFromList(idx));
+  }
+
   return (
     <Flex
       flexDir="column"
       align="flex-start"
       m={['2rem 2rem', null, null, null, null, '2rem auto']}
-      w={[null, null, null, null, null, '95%']}
+      w={[null, null, null, null, null, '100%']}
       maxW={pageMaxW}
       overflow="auto"
       bgColor="brand.bgLight"
       borderRadius="3xl"
       boxShadow={'var(--boxShadow)'}
     >
+      <Flex m="0.5rem 1.5rem" align="center" justify="space-between" w="95%">
+        <Heading as="h2" size="sm" w="10rem">{`Entrega ${deliveryId + 1}`}</Heading>
+        <CloseButton
+          size="md"
+          onClick={(): void => {
+            deletePartialSale(deliveryId);
+          }}
+        />
+      </Flex>
+
       <TableWrapper p="2rem 0" w="100%" display="flex" justifyContent="center">
         <Table variant="simple" w="90%" m={['auto']} colorScheme="blackAlpha">
           <Thead fontSize={['sm', 'md']}>
