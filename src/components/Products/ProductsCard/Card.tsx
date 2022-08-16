@@ -8,10 +8,11 @@ import {
   useGetProductsQuery,
   useUpdateProductMutation,
 } from '@/redux/services';
+import { useConfirmDelete } from '@/utils/hooks';
 import { numberToCurrency } from '@/utils/numberToCurrency';
 import { Box, Flex, Heading, Text } from '@chakra-ui/react';
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { SubmitHandler } from 'react-hook-form';
 import ProductForm from '../ProductForm/ProductForm';
 
@@ -23,7 +24,7 @@ export interface CardProps {
 export function Card({ product, locale }: CardProps): JSX.Element {
   const [displayModal, setDisplayModal] = useState(false);
   const [displayAlert, setDisplayAlert] = useState(false);
-  const [confirmDelete, setConfirmDelete] = useState(false);
+  const setConfirmDelete = useConfirmDelete(handleDelete);
   const { data: categories } = useGetCategoriesQuery();
   const [deleteProduct, { isLoading: isDeleteLoading }] = useDeleteProductMutation();
   const [updateProduct, { isLoading: isUpdateLoading }] = useUpdateProductMutation();
@@ -48,14 +49,6 @@ export function Card({ product, locale }: CardProps): JSX.Element {
     updateProduct(updatedProduct);
     setDisplayModal(false);
   }
-
-  useEffect(() => {
-    if (confirmDelete) {
-      handleDelete();
-      setConfirmDelete(false);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [confirmDelete]);
 
   if (areProductsFetching) {
     return <CardSkeleton data-testid="update-card-skeleton" />;
