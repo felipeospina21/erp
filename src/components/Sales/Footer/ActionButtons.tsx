@@ -8,7 +8,7 @@ import {
   useUpdateProductStockReservedMutation,
   useUpdateSaleRefCountMutation,
 } from '@/redux/services';
-import { saveNewSale } from 'services/createSale';
+import { updateStockAndDocRef } from 'services/updateStockAndDocRef';
 import { createPackingList } from '@/utils/pdf/createPackingList';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { addNewDeliveryToList, Delivery, resetSale } from '@/redux/slices/salesSlice';
@@ -27,7 +27,7 @@ export function ActionButtons({ isSalesBtnDisabled }: ActionButtonsProps): JSX.E
     { isLoading: isSaveSaleLoading, isError: isSaveSaleError, error: saveSaleError },
   ] = useSaveSaleMutation();
   const salesData = useAppSelector((state) => state.sales);
-  const { deliveriesList, client } = salesData;
+  const { deliveriesList, client, checkoutData } = salesData;
   const toast = useToast();
   const dispatch = useAppDispatch();
 
@@ -38,15 +38,29 @@ export function ActionButtons({ isSalesBtnDisabled }: ActionButtonsProps): JSX.E
   async function handleNewSale(): Promise<void> {
     const saleRef = saleRequest?.count ?? 0;
     async function newSale(idx: number, delivery: Delivery): Promise<void> {
-      await saveNewSale(
-        salesData,
+      const { productsList, summary } = delivery;
+      const orderedProducts =
+        productsList?.map(({ item, discount, quantity, rowTotal }) => ({
+          item,
+          discount,
+          quantity,
+          rowTotal,
+        })) ?? [];
+
+      await saveSale({
+        clientId: client?._id ?? '',
+        ...checkoutData,
+        ...summary,
+        orderedProducts,
+        status: '',
+        saleRequestRef: String(saleRef + idx),
+      }).unwrap();
+
+      await updateStockAndDocRef(
         delivery,
-        saleRef,
-        saveSale,
         updateSaleRef,
         updateProductStockAvailable,
-        updateProductStockReserved,
-        idx
+        updateProductStockReserved
       );
 
       await createPackingList(

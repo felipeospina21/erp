@@ -2,13 +2,12 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import {
   ConsecutiveResponse,
-  NewSale,
   NewSaleResponse,
   Product,
   UpdateStockAvailable,
   UpdateStockReserved,
 } from '@/redux/services';
-import { Delivery, SalesState } from '@/redux/slices/salesSlice';
+import { Delivery } from '@/redux/slices/salesSlice';
 import { BaseQueryFn, MutationDefinition } from '@reduxjs/toolkit/dist/query';
 import { MutationTrigger } from '@reduxjs/toolkit/dist/query/react/buildHooks';
 import { AxiosProxyConfig, AxiosRequestHeaders } from 'axios';
@@ -28,9 +27,6 @@ type BaseQuery = BaseQueryFn<
   {},
   {}
 >;
-type SaveSale = MutationTrigger<
-  MutationDefinition<NewSale, BaseQuery, 'Sale' | 'Product', NewSaleResponse, 'saleApi'>
->;
 
 type UpdateSaleRef = MutationTrigger<
   MutationDefinition<void, BaseQuery, 'Consecutive', ConsecutiveResponse, 'consecutiveApi'>
@@ -42,27 +38,15 @@ type StockAvailable = MutationTrigger<
 type StockReserved = MutationTrigger<
   MutationDefinition<UpdateStockReserved, BaseQuery, 'Product', Product, 'productApi'>
 >;
-export async function saveNewSale(
-  salesData: SalesState,
+export async function updateStockAndDocRef(
   deliveryData: Delivery,
-  saleRequestRef: number,
-  saveSale: SaveSale,
   updateSaleRef: UpdateSaleRef,
   updateStockAvailable: StockAvailable,
-  updateStockReserved: StockReserved,
-  idx: number
+  updateStockReserved: StockReserved
 ): Promise<any> {
   const promises: Promise<NewSaleResponse | Product | ConsecutiveResponse>[] = [];
-  const { client, checkoutData } = salesData;
-  const { productsList, summary } = deliveryData;
-  const newRef = saleRequestRef + idx;
-  const orderedProducts =
-    productsList?.map(({ item, discount, quantity, rowTotal }) => ({
-      item,
-      discount,
-      quantity,
-      rowTotal,
-    })) ?? [];
+  const { productsList } = deliveryData;
+  // TODO: Refactor function to save sale first and then update stock. Check for an option on th BE to revert in case one of the processes fail.
 
   // update sale ref
   promises.push(updateSaleRef().unwrap());
@@ -84,16 +68,5 @@ export async function saveNewSale(
     );
   });
 
-  // save sale
-  promises.push(
-    saveSale({
-      clientId: client?._id ?? '',
-      ...checkoutData,
-      ...summary,
-      orderedProducts,
-      status: '',
-      saleRequestRef: String(newRef),
-    }).unwrap()
-  );
   return Promise.all(promises);
 }
