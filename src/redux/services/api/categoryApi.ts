@@ -1,21 +1,15 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
+import { api } from './api';
 import { DocumentId } from './clientApi';
-import { axiosBaseQuery } from './customBaseQuery';
 
 export interface Category extends DocumentId {
   name: string;
 }
 
-export const categoryApi = createApi({
-  reducerPath: 'categoryApi',
-  baseQuery: axiosBaseQuery({
-    baseUrl: `${process.env.NEXT_PUBLIC_API_URL}/category`,
-  }),
-  tagTypes: ['Category'],
+export const categoryApi = api.injectEndpoints({
   endpoints: (build) => ({
     getCategories: build.query<Category[], void>({
       query: () => ({
-        url: '/',
+        url: '/category',
         method: 'GET',
       }),
       providesTags: [{ type: 'Category' }],

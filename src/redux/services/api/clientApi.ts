@@ -1,6 +1,5 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
-import { axiosBaseQuery } from './customBaseQuery';
-import { HYDRATE } from 'next-redux-wrapper';
+import { api } from './api';
+
 export interface DocumentId {
   _id: string;
 }
@@ -27,29 +26,19 @@ export interface UpdateClient extends DocumentId, UpdateClientValues {
   discount: string;
 }
 
-export const clientApi = createApi({
-  reducerPath: 'clientApi',
-  baseQuery: axiosBaseQuery({
-    baseUrl: `${process.env.NEXT_PUBLIC_API_URL}/clients`,
-  }),
-  extractRehydrationInfo(action, { reducerPath }) {
-    if (action.type === HYDRATE) {
-      return action.payload[reducerPath];
-    }
-  },
-  tagTypes: ['Client'],
+export const clientApi = api.injectEndpoints({
   endpoints: (build) => ({
     getClients: build.query<Client[], void>({
-      query: () => ({ url: '/', method: 'GET' }),
+      query: () => ({ url: '/clients', method: 'GET' }),
       providesTags: [{ type: 'Client' }],
     }),
     getClientById: build.query<Client[], string>({
-      query: (id) => ({ url: `/${id}`, method: 'GET' }),
+      query: (id) => ({ url: `/clients/${id}`, method: 'GET' }),
       providesTags: [{ type: 'Client' }],
     }),
     createClient: build.mutation<Client, Client>({
       query: (body) => ({
-        url: '/',
+        url: '/clients',
         method: 'POST',
         data: { ...body },
       }),
@@ -57,7 +46,7 @@ export const clientApi = createApi({
     }),
     updateClient: build.mutation<Client, UpdateClient>({
       query: (body) => ({
-        url: '/',
+        url: '/clients',
         method: 'PUT',
         data: { ...body },
       }),
@@ -65,7 +54,7 @@ export const clientApi = createApi({
     }),
     deleteClient: build.mutation<Client, DocumentId>({
       query: (body) => ({
-        url: '/',
+        url: '/clients',
         method: 'DELETE',
         data: { ...body },
       }),

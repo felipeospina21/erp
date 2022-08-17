@@ -1,6 +1,5 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
+import { api } from './api';
 import { DocumentId } from './clientApi';
-import { axiosBaseQuery } from './customBaseQuery';
 
 export interface Tax extends DocumentId {
   concept: string;
@@ -8,16 +7,11 @@ export interface Tax extends DocumentId {
   percentage: number;
 }
 
-export const taxApi = createApi({
-  reducerPath: 'taxApi',
-  baseQuery: axiosBaseQuery({
-    baseUrl: `${process.env.NEXT_PUBLIC_API_URL}/tax`,
-  }),
-  tagTypes: ['Tax'],
+export const taxApi = api.injectEndpoints({
   endpoints: (build) => ({
     getwithholdingTax: build.query<Tax, string>({
       query: (id) => ({
-        url: `/${id}`,
+        url: `/tax/${id}`,
         method: 'GET',
       }),
       providesTags: [{ type: 'Tax' }],

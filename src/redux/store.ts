@@ -1,15 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { createWrapper } from 'next-redux-wrapper';
-import {
-  clientApi,
-  productApi,
-  saleApi,
-  userApi,
-  consecutiveApi,
-  categoryApi,
-  citiesApi,
-  taxApi,
-} from './services';
+import { citiesApi, api } from './services';
 import productsReducer from './slices/productsSlice';
 import clientsReducer from './slices/clientsSlice';
 import salesReducer from './slices/salesSlice';
@@ -23,25 +14,13 @@ export const reducer = {
   clients: clientsReducer,
   user: userReducer,
   shipping: shippingReducer,
-  [clientApi.reducerPath]: clientApi.reducer,
-  [productApi.reducerPath]: productApi.reducer,
-  [saleApi.reducerPath]: saleApi.reducer,
-  [userApi.reducerPath]: userApi.reducer,
-  [consecutiveApi.reducerPath]: consecutiveApi.reducer,
-  [categoryApi.reducerPath]: categoryApi.reducer,
+  [api.reducerPath]: api.reducer,
   [citiesApi.reducerPath]: citiesApi.reducer,
-  [taxApi.reducerPath]: taxApi.reducer,
 };
 
 export const middlewares = [
-  clientApi.middleware,
-  productApi.middleware,
-  saleApi.middleware,
-  userApi.middleware,
-  consecutiveApi.middleware,
-  categoryApi.middleware,
+  api.middleware,
   citiesApi.middleware,
-  taxApi.middleware,
   // rtkQueryErrorLogger,
 ];
 

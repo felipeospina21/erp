@@ -2,7 +2,7 @@ import LoginForm from '@/components/Login/LoginForm/LoginForm';
 import { Layout } from '@/components/Shared';
 import { useAppDispatch } from '@/redux/hooks';
 import type { CustomError } from '@/redux/services/customBaseQuery';
-import { useLoginMutation, UserBody } from '@/redux/services/userApi';
+import { useLoginMutation, UserBody } from '@/redux/services/api/userApi';
 import { setUser } from '@/redux/slices/userSlice';
 import { Container, Grid, GridItem, Heading, useToast } from '@chakra-ui/react';
 import Image from 'next/image';
