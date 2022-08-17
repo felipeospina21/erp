@@ -12,7 +12,8 @@ export default function SalesListPage({ isAuth }: IsAuth): ReactElement {
   const { data: salesList } = useGetSalesQuery();
 
   const headers = [
-    { name: 'doc', label: 'Numero Documento' },
+    { name: 'doc', label: 'Remisión' },
+    { name: 'invoice', label: 'Factura' },
     { name: 'client', label: 'Cliente' },
     { name: 'total', label: 'Total' },
     { name: 'createdAt', label: 'Fecha' },
