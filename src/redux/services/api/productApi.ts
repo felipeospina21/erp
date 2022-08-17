@@ -1,7 +1,5 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
+import { api } from './api';
 import type { DocumentId } from './clientApi';
-import { axiosBaseQuery } from './customBaseQuery';
-import { HYDRATE } from 'next-redux-wrapper';
 import { StockFormValues } from '@/components/Products/StockForm/StockForm';
 export interface Product extends DocumentId {
   category: { _id: string; name: string };
@@ -21,25 +19,15 @@ export interface UpdateStockReserved extends DocumentId {
   method: 'add' | 'substract';
 }
 
-export const productApi = createApi({
-  reducerPath: 'productApi',
-  baseQuery: axiosBaseQuery({
-    baseUrl: `${process.env.NEXT_PUBLIC_API_URL}/products`,
-  }),
-  extractRehydrationInfo(action, { reducerPath }) {
-    if (action.type === HYDRATE) {
-      return action.payload[reducerPath];
-    }
-  },
-  tagTypes: ['Product'],
+export const productApi = api.injectEndpoints({
   endpoints: (build) => ({
     getProducts: build.query<Product[], void>({
-      query: () => ({ url: '/', method: 'GET' }),
+      query: () => ({ url: '/products', method: 'GET' }),
       providesTags: [{ type: 'Product' }],
     }),
     updateProduct: build.mutation<Product, FormData>({
       query: (body) => ({
-        url: '/',
+        url: '/products',
         method: 'put',
         headers: { 'Content-Type': 'multipart/form-data' },
         data: body,
@@ -48,7 +36,7 @@ export const productApi = createApi({
     }),
     updateProductStockAvailable: build.mutation<Product, UpdateStockAvailable>({
       query: (body) => ({
-        url: '/updateStockAvailable',
+        url: '/products/updateStockAvailable',
         method: 'put',
         data: { ...body },
       }),
@@ -56,7 +44,7 @@ export const productApi = createApi({
     }),
     updateProductStockReserved: build.mutation<Product, UpdateStockReserved>({
       query: (body) => ({
-        url: '/updateStockReserved',
+        url: '/products/updateStockReserved',
         method: 'put',
         data: { ...body },
       }),
@@ -64,7 +52,7 @@ export const productApi = createApi({
     }),
     updateProductStockInBatch: build.mutation<{ message: string }, StockFormValues>({
       query: (body) => ({
-        url: '/updateStockInBatch',
+        url: '/products/updateStockInBatch',
         method: 'put',
         data: { ...body },
       }),
@@ -72,7 +60,7 @@ export const productApi = createApi({
     }),
     deleteProduct: build.mutation<Product, DocumentId>({
       query: (body) => ({
-        url: '/',
+        url: '/products',
         method: 'DELETE',
         data: { ...body },
       }),
@@ -80,7 +68,7 @@ export const productApi = createApi({
     }),
     createProduct: build.mutation<Product, FormData>({
       query: (body) => ({
-        url: '/',
+        url: '/products',
         method: 'POST',
         headers: { 'Content-Type': 'multipart/form-data' },
         data: body,

@@ -1,6 +1,5 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
+import { api } from './api';
 import { DocumentId } from './clientApi';
-import { axiosBaseQuery } from './customBaseQuery';
 
 export interface UserBody {
   email: string;
@@ -20,16 +19,11 @@ export interface UserResponse {
   user?: UserData;
 }
 
-export const userApi = createApi({
-  reducerPath: 'userApi',
-  baseQuery: axiosBaseQuery({
-    baseUrl: `${process.env.NEXT_PUBLIC_API_URL}/user`,
-  }),
-  tagTypes: ['User'],
+export const userApi = api.injectEndpoints({
   endpoints: (build) => ({
     createUser: build.mutation<User, UserBody>({
       query: (body) => ({
-        url: '/',
+        url: '/user',
         method: 'POST',
         data: { ...body },
       }),
@@ -37,7 +31,7 @@ export const userApi = createApi({
     }),
     login: build.mutation<UserResponse, UserBody>({
       query: (body) => ({
-        url: '/login',
+        url: '/user/login',
         method: 'POST',
         withCredentials: true,
         data: { ...body },
@@ -46,7 +40,7 @@ export const userApi = createApi({
     }),
     logout: build.mutation<UserResponse, void>({
       query: () => ({
-        url: '/logout',
+        url: '/user/logout',
         method: 'POST',
         withCredentials: true,
       }),

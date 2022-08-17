@@ -1,7 +1,6 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
+import { api } from './api';
 import type { Client, DocumentId } from './clientApi';
 import type { Product } from './productApi';
-import { axiosBaseQuery } from './customBaseQuery';
 
 export interface RowInfo {
   rowId: string;
@@ -73,20 +72,15 @@ export interface DeleteSale {
   message: string;
 }
 
-export const saleApi = createApi({
-  reducerPath: 'saleApi',
-  baseQuery: axiosBaseQuery({
-    baseUrl: `${process.env.NEXT_PUBLIC_API_URL}/sales`,
-  }),
-  tagTypes: ['Sale', 'Product'],
+export const saleApi = api.injectEndpoints({
   endpoints: (build) => ({
     getSales: build.query<SaleResponse[], void>({
-      query: () => ({ url: '/', method: 'GET', withCredentials: true }),
+      query: () => ({ url: '/sales', method: 'GET', withCredentials: true }),
       providesTags: [{ type: 'Sale' }],
     }),
     saveSale: build.mutation<NewSaleResponse, NewSale>({
       query: (body) => ({
-        url: '/',
+        url: '/sales',
         method: 'post',
         withCredentials: true,
         data: { ...body },
@@ -95,12 +89,12 @@ export const saleApi = createApi({
     }),
     deleteSale: build.mutation<DeleteSale, string>({
       query: (id) => ({
-        url: '/',
+        url: '/sales',
         method: 'DELETE',
         withCredentials: true,
         data: { _id: id },
       }),
-      invalidatesTags: [{ type: 'Sale' }],
+      invalidatesTags: [{ type: 'Sale' }, { type: 'Product' }],
     }),
   }),
 });
