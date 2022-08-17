@@ -1,5 +1,5 @@
 import { UpdateClient, UpdateClientValues } from '@/redux/services';
-import { UserBody } from '@/redux/services/userApi';
+import { UserBody } from '@/redux/services/api/userApi';
 
 export interface InputField {
   name: string;
