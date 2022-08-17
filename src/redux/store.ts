@@ -1,7 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { createWrapper } from 'next-redux-wrapper';
 import { citiesApi, api } from './services';
-import productsReducer from './slices/productsSlice';
 import clientsReducer from './slices/clientsSlice';
 import salesReducer from './slices/salesSlice';
 import userReducer from './slices/userSlice';
@@ -9,7 +8,6 @@ import shippingReducer from './slices/shippingSlice';
 import { rtkQueryErrorLogger } from './middleware/handleError';
 
 export const reducer = {
-  products: productsReducer,
   sales: salesReducer,
   clients: clientsReducer,
   user: userReducer,
