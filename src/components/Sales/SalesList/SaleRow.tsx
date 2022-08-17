@@ -1,5 +1,5 @@
 import { ConfirmationAlert, DeleteButton } from '@/components/Shared';
-import { SaleResponse, useDeleteSaleMutation } from '@/redux/services';
+import { DeleteSale, SaleResponse, useDeleteSaleMutation } from '@/redux/services';
 import { formatDate } from '@/utils/formatDate';
 import { useConfirmDelete } from '@/utils/hooks/useConfirmDelete';
 import { numberToCurrency } from '@/utils/numberToCurrency';
@@ -17,7 +17,7 @@ export function SaleRow({
   const [displayAlert, setDisplayAlert] = useState(false);
   const setConfirmDelete = useConfirmDelete(handleDelete);
 
-  async function handleDelete(): Promise<{ data: SaleResponse } | { error: unknown }> {
+  async function handleDelete(): Promise<{ data: DeleteSale } | { error: unknown }> {
     return await deleteSale(_id);
   }
 

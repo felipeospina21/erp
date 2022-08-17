@@ -69,6 +69,10 @@ export interface SaleResponse extends CheckoutData, SaleSummary {
 
 export interface NewSaleResponse extends SaleResponse, DocumentId {}
 
+export interface DeleteSale {
+  message: string;
+}
+
 export const saleApi = createApi({
   reducerPath: 'saleApi',
   baseQuery: axiosBaseQuery({
@@ -89,7 +93,7 @@ export const saleApi = createApi({
       }),
       invalidatesTags: [{ type: 'Sale' }, { type: 'Product' }],
     }),
-    deleteSale: build.mutation<SaleResponse, string>({
+    deleteSale: build.mutation<DeleteSale, string>({
       query: (id) => ({
         url: '/',
         method: 'DELETE',
