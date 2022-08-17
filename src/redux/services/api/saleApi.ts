@@ -87,12 +87,11 @@ export const saleApi = api.injectEndpoints({
       }),
       invalidatesTags: [{ type: 'Sale' }, { type: 'Product' }],
     }),
-    deleteSale: build.mutation<DeleteSale, string>({
+    cancelSale: build.mutation<DeleteSale, string>({
       query: (id) => ({
-        url: '/sales',
-        method: 'DELETE',
+        url: `/sales/cancelDoc/${id}`,
+        method: 'PUT',
         withCredentials: true,
-        data: { _id: id },
       }),
       invalidatesTags: [{ type: 'Sale' }, { type: 'Product' }],
     }),
@@ -102,7 +101,7 @@ export const saleApi = api.injectEndpoints({
 export const {
   useGetSalesQuery,
   useSaveSaleMutation,
-  useDeleteSaleMutation,
+  useCancelSaleMutation,
   util: { getRunningOperationPromises: getSaleRunningOperationPromises },
 } = saleApi;
-export const { getSales, saveSale, deleteSale } = saleApi.endpoints;
+export const { getSales, saveSale, cancelSale } = saleApi.endpoints;
