@@ -1,9 +1,9 @@
-import { UserBody } from '@/redux/services';
+import { LoginData } from '@/redux/services';
 import { rest } from 'msw';
 
 export const userHandlers = [
   rest.post(`${process.env.NEXT_PUBLIC_API_URL}/user/login`, (req, res, ctx) => {
-    const { email, password } = req.body as UserBody;
+    const { email, password } = req.body as LoginData;
 
     if (!password || !email) {
       return res(ctx.status(400), ctx.json({ message: 'password and/or email needed' }));

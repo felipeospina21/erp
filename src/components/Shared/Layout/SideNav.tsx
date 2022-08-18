@@ -1,5 +1,4 @@
-import { useAppSelector } from '@/redux/hooks';
-import { useLogoutMutation } from '@/redux/services';
+import { useGetUserQuery, useLogoutMutation } from '@/redux/services';
 import {
   Box,
   Drawer,
@@ -21,10 +20,11 @@ import UserMenu from './UserMenu';
 
 export function SideNav(): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const userId = typeof window !== 'undefined' ? localStorage.getItem('userId') : '';
+  const { data: user } = useGetUserQuery(userId ?? '');
   const [logout, { isSuccess }] = useLogoutMutation();
   const btnRef = React.useRef<HTMLButtonElement>(null);
   const router = useRouter();
-  const user = useAppSelector((state) => state.user);
   const [, currPage] = router.pathname.split('/');
 
   function handleLogout(): void {
@@ -33,7 +33,7 @@ export function SideNav(): JSX.Element {
 
   useEffect(() => {
     if (isSuccess) {
-      sessionStorage.removeItem('isAuth');
+      localStorage.removeItem('userId');
       router.push('/login');
     }
   }, [isSuccess, router]);

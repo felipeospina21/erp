@@ -1,9 +1,7 @@
 import LoginForm from '@/components/Login/LoginForm/LoginForm';
 import { Layout } from '@/components/Shared';
-import { useAppDispatch } from '@/redux/hooks';
 import type { CustomError } from '@/redux/services/customBaseQuery';
-import { useLoginMutation, UserBody } from '@/redux/services/api/userApi';
-import { setUser } from '@/redux/slices/userSlice';
+import { useLoginMutation, LoginData } from '@/redux/services/api/userApi';
 import { Container, Grid, GridItem, Heading, useToast } from '@chakra-ui/react';
 import Image from 'next/image';
 import Router from 'next/router';
@@ -13,19 +11,22 @@ export interface LoginProps {
   token: string;
 }
 export default function Login(): JSX.Element {
-  const [login, { data, isLoading, isSuccess, isError, error }] = useLoginMutation();
-  const dispatch = useAppDispatch();
+  const [login, { data, isLoading, isSuccess, isError, error }] = useLoginMutation({
+    fixedCacheKey: 'user-data',
+  });
   const toast = useToast();
   const err = error as CustomError | undefined;
   const errMsg = err?.data.message ?? 'network error, please try again';
 
-  function loginUser(data: UserBody): void {
+  function loginUser(data: LoginData): void {
     login(data);
   }
 
   useEffect(() => {
     if (isSuccess && data?.user) {
-      dispatch(setUser(data?.user));
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('userId', data.user.id);
+      }
       Router.push('/');
     } else if (isError) {
       toast({
@@ -39,7 +40,7 @@ export default function Login(): JSX.Element {
     return () => {
       toast.closeAll();
     };
-  }, [isSuccess, isError, errMsg, toast, dispatch, data?.user]);
+  }, [isSuccess, isError, errMsg, toast, data?.user]);
 
   return (
     <>

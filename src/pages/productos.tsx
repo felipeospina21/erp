@@ -1,7 +1,7 @@
 import { CardsContainer } from '@/components/Products';
 import ProductForm from '@/components/Products/ProductForm/ProductForm';
 import StockForm, { StockFormValues } from '@/components/Products/StockForm/StockForm';
-import { CardSkeleton, CustomModal, EditButton, Layout } from '@/components/Shared';
+import { CardsSkeleton, CustomModal, EditButton, LargeSpinner, Layout } from '@/components/Shared';
 import { AddButton } from '@/components/Shared/IconButtons/AddButton/AddButton';
 import {
   Product,
@@ -11,7 +11,7 @@ import {
   useUpdateProductStockInBatchMutation,
 } from '@/redux/services';
 import { useCreationToast } from '@/utils/hooks';
-import { Flex, Skeleton } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 import { ReactElement, useState } from 'react';
 
 export interface ProductDataForm extends Omit<Product, 'price' | 'stockAvailable' | 'category'> {
@@ -23,7 +23,7 @@ export default function ProductosPage(): JSX.Element {
   const [displayModal, setDisplayModal] = useState(false);
   const [displayStockModal, setDisplayStockModal] = useState(false);
   const { data: categories } = useGetCategoriesQuery();
-  const { data: products, isLoading: areProductsLoading, isError, error } = useGetProductsQuery();
+  const { data: products, isLoading: areProductsLoading, isError } = useGetProductsQuery();
   const [
     createProduct,
     {
@@ -63,28 +63,11 @@ export default function ProductosPage(): JSX.Element {
   }
 
   if (areProductsLoading) {
-    return (
-      <Flex
-        data-testid="cards-skeleton"
-        flexDir="column"
-        align="center"
-        justify="space-around"
-        h="50vh"
-        m="5rem auto"
-      >
-        <Skeleton borderRadius="md" h="40px" w="40px" />
-        <Flex justify="center" m="1rem" w="100%" wrap="wrap">
-          <CardSkeleton />
-          <CardSkeleton />
-          <CardSkeleton />
-          <CardSkeleton />
-        </Flex>
-      </Flex>
-    );
+    return <CardsSkeleton cards={4} />;
   }
 
   if (isError) {
-    return <>{JSON.stringify(error)}</>;
+    return <LargeSpinner />;
   }
 
   return (

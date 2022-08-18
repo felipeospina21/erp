@@ -6,7 +6,6 @@ export const rtkQueryErrorLogger: Middleware =
     if (isRejectedWithValue(action)) {
       if (action.payload.status === 401) {
         setTimeout(() => {
-          window.sessionStorage.removeItem('isAuth');
           window.location.href = '/login';
         }, 1000);
       }

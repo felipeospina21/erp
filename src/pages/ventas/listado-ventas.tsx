@@ -1,11 +1,11 @@
 import { SaleRow } from '@/components/Sales/SalesList/SaleRow';
-import { CustomTable, Layout } from '@/components/Shared';
+import { CustomTable, LargeSpinner, TableSkeleton, Layout } from '@/components/Shared';
 import { useGetSalesQuery } from '@/redux/services';
 import { Box, Th } from '@chakra-ui/react';
 import React, { ReactElement } from 'react';
 
 export default function SalesListPage(): ReactElement {
-  const { data: salesList } = useGetSalesQuery();
+  const { data: salesList, isLoading, isError } = useGetSalesQuery();
 
   const headers = [
     { name: 'doc', label: 'Remisión' },
@@ -17,6 +17,13 @@ export default function SalesListPage(): ReactElement {
     { name: 'actions', label: '' },
   ];
 
+  if (isLoading) {
+    return <TableSkeleton />;
+  }
+
+  if (isError) {
+    return <LargeSpinner />;
+  }
   return (
     <Box
       maxW="var(--maxPageWitdth)"
