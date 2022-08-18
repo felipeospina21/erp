@@ -1,7 +1,7 @@
 import React from 'react';
 import NextLink from 'next/link';
 import { List, ListItem, Box } from '@chakra-ui/react';
-import { DropDownLink } from './NavMenu/DropDownLink/DropDownLink';
+import { DropDownLink } from '../DropDownLink/DropDownLink';
 
 export interface NavLinksProps {
   onClose: () => void;

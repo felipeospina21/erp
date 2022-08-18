@@ -1,7 +1,7 @@
 import LoginForm from '@/components/Login/LoginForm/LoginForm';
-import { Layout } from '@/components/Shared';
+import { NoAuthLayout } from '@/components/Shared';
+import { LoginData, useLoginMutation } from '@/redux/services/api/userApi';
 import type { CustomError } from '@/redux/services/customBaseQuery';
-import { useLoginMutation, LoginData } from '@/redux/services/api/userApi';
 import { Container, Grid, GridItem, Heading, useToast } from '@chakra-ui/react';
 import Image from 'next/image';
 import Router from 'next/router';
@@ -101,5 +101,5 @@ export default function Login(): JSX.Element {
 }
 
 Login.getLayout = function getLayout(page: ReactElement): JSX.Element {
-  return <Layout hasNav={false}>{page}</Layout>;
+  return <NoAuthLayout>{page}</NoAuthLayout>;
 };

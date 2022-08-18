@@ -58,4 +58,16 @@ export const userHandlers = [
       })
     );
   }),
+  rest.get(`${process.env.NEXT_PUBLIC_API_URL}/user/:id`, (req, res, ctx) => {
+    const { id } = req.params;
+    if (id === '1') {
+      return res(ctx.status(401), ctx.json({ message: 'not authorized' }));
+    }
+    return res(
+      ctx.status(200),
+      ctx.json({
+        message: 'session canceled',
+      })
+    );
+  }),
 ];

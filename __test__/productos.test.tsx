@@ -3,6 +3,7 @@ import { render, cleanup, screen, within } from '@/utils/test-utils';
 import userEvent from '@testing-library/user-event';
 import ProductosPage from '@/pages/productos';
 import preloadAll from 'jest-next-dynamic';
+import { AuthCheck } from '@/components/Shared/AuthCheck/AuthCheck';
 
 jest.mock('next/router', () => require('next-router-mock'));
 
@@ -26,17 +27,17 @@ beforeAll(() => {
 });
 
 test('When unauthorized it should render login view ', async () => {
-  render(<ProductosPage isAuth={false} />);
-  expect(await screen.findByRole('heading',{name:/login/i})).toBeInTheDocument()
+  render(<AuthCheck><ProductosPage /></AuthCheck>);
+  expect(await screen.findByText(/loading/i)).toBeInTheDocument()
 });
 
 test('When authorized it should render skeleton while loading ', () => {
-  render(<ProductosPage isAuth={true} />);
+  render(<ProductosPage  />);
   expect(screen.getByTestId('cards-skeleton')).toBeInTheDocument()
 });
 
 test('When authorized it should render product cards after loading ', async () => {
-  render(<ProductosPage isAuth={true} />);
+  render(<ProductosPage  />);
   expect( await screen.findByText(/test prod 1/i)).toBeInTheDocument()
 });
 
@@ -46,7 +47,7 @@ describe('New product creation', () => {
   
   test('Success', async () => {
     const user = userEvent.setup();
-    render(<ProductosPage isAuth={true} />);
+    render(<ProductosPage />);
     await user.click(await screen.findByRole('button', {name: /agregar/i}))
     await screen.findByTestId('custom-modal')
     await user.type( screen.getByLabelText(/nombre/i), 'test name')
@@ -63,7 +64,7 @@ describe('New product creation', () => {
 
 test.skip('Click update product and change name', async()=> {
   const user = userEvent.setup();
-  render(<ProductosPage isAuth={true} />);
+  render(<ProductosPage  />);
   const [modalContainer] = await screen.findAllByTestId('modal-container')
   const editButton = await within(modalContainer).findByRole('button', {name:/editar/i})
   await user.click(editButton)

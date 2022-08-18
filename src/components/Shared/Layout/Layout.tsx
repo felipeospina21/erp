@@ -1,22 +1,24 @@
 import React from 'react';
 import { Box, ChakraProvider } from '@chakra-ui/react';
-import SideNav from './SideNav';
+import SideNav from './Nav/SideNav';
 import theme from '@/styles/theme';
+import { AuthCheck } from '../AuthCheck/AuthCheck';
 
 export interface LayoutProps {
   children: JSX.Element;
   hasNav?: boolean;
 }
 
-export function Layout({ children, hasNav = true }: LayoutProps): JSX.Element {
-  const shouldHaveNav = hasNav;
+export function Layout({ children }: LayoutProps): JSX.Element {
   return (
     <>
       <ChakraProvider theme={theme}>
-        {shouldHaveNav && <SideNav />}
-        <Box as="main" bgColor="brand.bg">
-          {children}
-        </Box>
+        <SideNav />
+        <AuthCheck>
+          <Box as="main" bgColor="brand.bg">
+            {children}
+          </Box>
+        </AuthCheck>
       </ChakraProvider>
     </>
   );
