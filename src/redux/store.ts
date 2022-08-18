@@ -16,11 +16,7 @@ export const reducer = {
   [citiesApi.reducerPath]: citiesApi.reducer,
 };
 
-export const middlewares = [
-  api.middleware,
-  citiesApi.middleware,
-  // rtkQueryErrorLogger,
-];
+export const middlewares = [api.middleware, citiesApi.middleware];
 
 export const store = () =>
   configureStore({

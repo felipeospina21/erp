@@ -10,19 +10,16 @@ import {
   useGetProductsQuery,
   useUpdateProductStockInBatchMutation,
 } from '@/redux/services';
-import { checkAuth, IsAuth } from '@/utils/auth';
-import { useAuth, useCreationToast } from '@/utils/hooks';
+import { useCreationToast } from '@/utils/hooks';
 import { Flex, Skeleton } from '@chakra-ui/react';
-import dynamic from 'next/dynamic';
 import { ReactElement, useState } from 'react';
-const LoginPage = dynamic(() => import('@/pages/login'));
 
 export interface ProductDataForm extends Omit<Product, 'price' | 'stockAvailable' | 'category'> {
   price: string | Blob;
   stockAvailable: string | Blob;
   category: string;
 }
-export default function ProductosPage({ isAuth }: IsAuth): JSX.Element {
+export default function ProductosPage(): JSX.Element {
   const [displayModal, setDisplayModal] = useState(false);
   const [displayStockModal, setDisplayStockModal] = useState(false);
   const { data: categories } = useGetCategoriesQuery();
@@ -36,7 +33,7 @@ export default function ProductosPage({ isAuth }: IsAuth): JSX.Element {
     },
   ] = useCreateProductMutation();
   const [addToStock] = useUpdateProductStockInBatchMutation();
-  useAuth(isAuth, '/productos');
+
   useCreationToast(
     isCreateProductSuccess,
     isCreateProductUninitialized,
@@ -63,10 +60,6 @@ export default function ProductosPage({ isAuth }: IsAuth): JSX.Element {
   function updateStockInBatch(data: StockFormValues): void {
     addToStock(data);
     setDisplayStockModal(false);
-  }
-
-  if (!isAuth) {
-    return <LoginPage />;
   }
 
   if (areProductsLoading) {
@@ -149,5 +142,3 @@ export default function ProductosPage({ isAuth }: IsAuth): JSX.Element {
 ProductosPage.getLayout = function getLayout(page: ReactElement): JSX.Element {
   return <Layout>{page}</Layout>;
 };
-
-ProductosPage.getInitialProps = checkAuth;

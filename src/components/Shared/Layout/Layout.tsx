@@ -9,8 +9,7 @@ export interface LayoutProps {
 }
 
 export function Layout({ children, hasNav = true }: LayoutProps): JSX.Element {
-  const isAuth = children.props?.isAuth;
-  const shouldHaveNav = hasNav && isAuth;
+  const shouldHaveNav = hasNav;
   return (
     <>
       <ChakraProvider theme={theme}>

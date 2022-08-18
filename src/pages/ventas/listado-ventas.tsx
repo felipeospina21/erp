@@ -1,14 +1,10 @@
 import { SaleRow } from '@/components/Sales/SalesList/SaleRow';
 import { CustomTable, Layout } from '@/components/Shared';
 import { useGetSalesQuery } from '@/redux/services';
-import { checkAuth, IsAuth } from '@/utils/auth';
-import { useAuth } from '@/utils/hooks';
 import { Box, Th } from '@chakra-ui/react';
 import React, { ReactElement } from 'react';
-import dynamic from 'next/dynamic';
-const LoginPage = dynamic(() => import('@/pages/login'));
 
-export default function SalesListPage({ isAuth }: IsAuth): ReactElement {
+export default function SalesListPage(): ReactElement {
   const { data: salesList } = useGetSalesQuery();
 
   const headers = [
@@ -20,12 +16,6 @@ export default function SalesListPage({ isAuth }: IsAuth): ReactElement {
     { name: 'status', label: 'Status' },
     { name: 'actions', label: '' },
   ];
-
-  useAuth(isAuth, '/ventas/listado-ventas');
-
-  if (!isAuth) {
-    return <LoginPage />;
-  }
 
   return (
     <Box
@@ -52,5 +42,3 @@ export default function SalesListPage({ isAuth }: IsAuth): ReactElement {
 SalesListPage.getLayout = function getLayout(page: ReactElement): JSX.Element {
   return <Layout>{page}</Layout>;
 };
-
-SalesListPage.getInitialProps = checkAuth;
