@@ -10,16 +10,16 @@ import {
   IconButton,
 } from '@chakra-ui/react';
 import { DownArrow } from '@/assets/icons';
-import { UserData } from '@/redux/services';
+import type { User } from '@/redux/services';
 
 export interface UserMenuProps {
-  user: UserData;
+  user: User | undefined;
   menuItemClickFn: {
     [name: string]: () => void;
   };
 }
 export default function UserMenu({
-  user: { firstName, lastName, image, email },
+  user,
   menuItemClickFn: { handleLogout },
 }: UserMenuProps): JSX.Element {
   return (
@@ -31,7 +31,7 @@ export default function UserMenu({
       w={['10rem', '12rem']}
       p={['0', '0 0.5rem']}
     >
-      <Avatar size="sm" name={`${firstName} ${lastName}`} src={image} />
+      <Avatar size="sm" name={`${user?.firstName} ${user?.lastName}`} src={user?.image} />
       <Menu id="user-menu" isLazy>
         <MenuButton
           id="user-menu-btn-desktop"
@@ -39,7 +39,7 @@ export default function UserMenu({
           display={['none', null, 'inherit']}
           {...ButtonProps}
         >
-          {email}
+          {user?.email}
         </MenuButton>
         <MenuList>
           <MenuItem onClick={handleLogout}>Logout</MenuItem>

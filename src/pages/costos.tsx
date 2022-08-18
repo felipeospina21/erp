@@ -1,15 +1,12 @@
 import React, { ReactElement } from 'react';
-import { checkAuth, createInvoice, IsAuth, useAuth } from '../utils';
+import { createInvoice } from '../utils';
 import { salesData } from '@/mockData/salesData';
 import { Layout } from '@/components/Shared';
-// import dynamic from 'next/dynamic';
 // import { createPackingList } from '@/utils/pdf/createPackingList';
 import { Button, Flex } from '@chakra-ui/react';
 import { useUpdateSaleRefCountMutation } from '@/redux/services';
-// const LoginPage = dynamic(() => import('@/pages/login'));
 
-export default function CostosPage({ isAuth }: IsAuth): JSX.Element {
-  useAuth(isAuth, '/costos');
+export default function CostosPage(): JSX.Element {
   const [updateSaleRef] = useUpdateSaleRefCountMutation();
 
   const list = [1, 2, 3, 4, 5];
@@ -24,10 +21,6 @@ export default function CostosPage({ isAuth }: IsAuth): JSX.Element {
       await newSale();
     }
   }
-
-  // if (!isAuth) {
-  //   return <LoginPage />;
-  // }
 
   return (
     <Flex flexDir="column">
@@ -50,5 +43,3 @@ export default function CostosPage({ isAuth }: IsAuth): JSX.Element {
 CostosPage.getLayout = function getLayout(page: ReactElement): JSX.Element {
   return <Layout>{page}</Layout>;
 };
-
-CostosPage.getInitialProps = checkAuth;

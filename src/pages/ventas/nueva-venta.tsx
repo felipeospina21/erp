@@ -2,11 +2,7 @@ import { SalesHeader, TableContainer, tableHeader, ActionButtons } from '@/compo
 import { Layout } from '@/components/Shared';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { resetSale } from '@/redux/slices/salesSlice';
-import { checkAuth, IsAuth } from '@/utils/auth';
-import dynamic from 'next/dynamic';
 import React, { ReactElement, useEffect, useState } from 'react';
-import { useAuth } from '../../utils';
-const LoginPage = dynamic(() => import('@/pages/login'));
 
 export interface RowData {
   id: string;
@@ -19,21 +15,16 @@ export interface RowData {
   productId: string;
 }
 
-export default function NewSale({ isAuth }: IsAuth): ReactElement {
+export default function NewSale(): ReactElement {
   const [isSalesBtnDisabled, setSalesBtnDisabled] = useState(true);
   const { deliveriesList } = useAppSelector((state) => state.sales);
   const dispatch = useAppDispatch();
-  useAuth(isAuth, '/ventas');
 
   useEffect(() => {
     return () => {
       dispatch(resetSale());
     };
   }, []);
-
-  if (!isAuth) {
-    return <LoginPage />;
-  }
 
   return (
     <>
@@ -58,5 +49,3 @@ export default function NewSale({ isAuth }: IsAuth): ReactElement {
 NewSale.getLayout = function getLayout(page: ReactElement): JSX.Element {
   return <Layout>{page}</Layout>;
 };
-
-NewSale.getInitialProps = checkAuth;

@@ -1,27 +1,30 @@
 import { api } from './api';
 import { DocumentId } from './clientApi';
 
-export interface UserBody {
+export interface LoginData {
   email: string;
   password: string;
 }
-export interface User extends DocumentId, UserBody {}
 
-export interface UserData {
-  isLoggedin: boolean;
+export interface User extends DocumentId {
   email: string;
   firstName?: string;
   lastName?: string;
   image?: string;
 }
-export interface UserResponse {
+
+export interface LoginResponse {
   message: string;
-  user?: UserData;
+  user: { id: string };
+}
+
+export interface LogoutResponse {
+  message: string;
 }
 
 export const userApi = api.injectEndpoints({
   endpoints: (build) => ({
-    createUser: build.mutation<User, UserBody>({
+    createUser: build.mutation<DocumentId, LoginData>({
       query: (body) => ({
         url: '/user',
         method: 'POST',
@@ -29,7 +32,7 @@ export const userApi = api.injectEndpoints({
       }),
       invalidatesTags: [{ type: 'User' }],
     }),
-    login: build.mutation<UserResponse, UserBody>({
+    login: build.mutation<LoginResponse, LoginData>({
       query: (body) => ({
         url: '/user/login',
         method: 'POST',
@@ -38,13 +41,20 @@ export const userApi = api.injectEndpoints({
       }),
       invalidatesTags: [{ type: 'User' }],
     }),
-    logout: build.mutation<UserResponse, void>({
+    logout: build.mutation<LogoutResponse, void>({
       query: () => ({
         url: '/user/logout',
         method: 'POST',
         withCredentials: true,
       }),
       invalidatesTags: [{ type: 'User' }],
+    }),
+    getUser: build.query<User, string>({
+      query: (id) => ({
+        url: `/user/${id}`,
+        method: 'GET',
+      }),
+      providesTags: [{ type: 'User' }],
     }),
   }),
 });
@@ -53,6 +63,7 @@ export const {
   useCreateUserMutation,
   useLoginMutation,
   useLogoutMutation,
+  useGetUserQuery,
   util: { getRunningOperationPromises: getUserProductRunningOperationPromises },
 } = userApi;
-export const { createUser, login, logout } = userApi.endpoints;
+export const { createUser, login, logout, getUser } = userApi.endpoints;

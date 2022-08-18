@@ -1,5 +1,5 @@
 import { UpdateClient, UpdateClientValues } from '@/redux/services';
-import { UserBody } from '@/redux/services/api/userApi';
+import { LoginData } from '@/redux/services/api/userApi';
 
 export interface InputField {
   name: string;
@@ -10,4 +10,4 @@ export interface InputField {
   options?: Array<undefined | { _id: string; name: string }>;
 }
 
-export type FormValues = UpdateClient | UpdateClientValues | UserBody;
+export type FormValues = UpdateClient | UpdateClientValues | LoginData;

@@ -1,18 +1,14 @@
 import { clientFields, ClientRow, idTypes, paymentTerms } from '@/components/Clients';
 import ClientForm, { ClientFormValues } from '@/components/Clients/ClientForm/ClientForm';
-import { CustomModal, CustomTable, Layout } from '@/components/Shared';
+import { CardSkeleton, CustomModal, CustomTable, Layout } from '@/components/Shared';
 import { AddButton } from '@/components/Shared/IconButtons/AddButton/AddButton';
 import { useCreateClientMutation, useGetClientsQuery } from '@/redux/services';
-import { checkAuth, IsAuth } from '@/utils/auth';
-import { Box, Th } from '@chakra-ui/react';
-import dynamic from 'next/dynamic';
+import { Box, Flex, Skeleton, Th } from '@chakra-ui/react';
 import { ReactElement, useState } from 'react';
-import { useAuth } from '../utils';
-const LoginPage = dynamic(() => import('@/pages/login'));
 
-export default function ClientesPage({ isAuth }: IsAuth): ReactElement {
+export default function ClientesPage(): ReactElement {
   const [displayModal, setDisplayModal] = useState(false);
-  const { data: clients } = useGetClientsQuery();
+  const { data: clients, isError, isLoading: isGetClientsLoading, error } = useGetClientsQuery();
   const [createClient, { isLoading }] = useCreateClientMutation();
 
   function onSubmit(data: ClientFormValues): void {
@@ -21,10 +17,29 @@ export default function ClientesPage({ isAuth }: IsAuth): ReactElement {
     setDisplayModal(false);
   }
 
-  useAuth(isAuth, '/clientes');
+  if (isGetClientsLoading) {
+    return (
+      <Flex
+        data-testid="cards-skeleton"
+        flexDir="column"
+        align="center"
+        justify="space-around"
+        h="50vh"
+        m="5rem auto"
+      >
+        <Skeleton borderRadius="md" h="40px" w="40px" />
+        <Flex justify="center" m="1rem" w="100%" wrap="wrap">
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+        </Flex>
+      </Flex>
+    );
+  }
 
-  if (!isAuth) {
-    return <LoginPage />;
+  if (isError) {
+    return <>{JSON.stringify(error)}</>;
   }
 
   return (
@@ -70,5 +85,3 @@ export default function ClientesPage({ isAuth }: IsAuth): ReactElement {
 ClientesPage.getLayout = function getLayout(page: ReactElement): JSX.Element {
   return <Layout>{page}</Layout>;
 };
-
-ClientesPage.getInitialProps = checkAuth;

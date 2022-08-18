@@ -1,15 +1,11 @@
 import { SaleRow } from '@/components/Sales/SalesList/SaleRow';
-import { CustomTable, Layout } from '@/components/Shared';
+import { CustomTable, LargeSpinner, TableSkeleton, Layout } from '@/components/Shared';
 import { useGetSalesQuery } from '@/redux/services';
-import { checkAuth, IsAuth } from '@/utils/auth';
-import { useAuth } from '@/utils/hooks';
 import { Box, Th } from '@chakra-ui/react';
 import React, { ReactElement } from 'react';
-import dynamic from 'next/dynamic';
-const LoginPage = dynamic(() => import('@/pages/login'));
 
-export default function SalesListPage({ isAuth }: IsAuth): ReactElement {
-  const { data: salesList } = useGetSalesQuery();
+export default function SalesListPage(): ReactElement {
+  const { data: salesList, isLoading, isError } = useGetSalesQuery();
 
   const headers = [
     { name: 'doc', label: 'Remisión' },
@@ -21,12 +17,13 @@ export default function SalesListPage({ isAuth }: IsAuth): ReactElement {
     { name: 'actions', label: '' },
   ];
 
-  useAuth(isAuth, '/ventas/listado-ventas');
-
-  if (!isAuth) {
-    return <LoginPage />;
+  if (isLoading) {
+    return <TableSkeleton />;
   }
 
+  if (isError) {
+    return <LargeSpinner />;
+  }
   return (
     <Box
       maxW="var(--maxPageWitdth)"
@@ -52,5 +49,3 @@ export default function SalesListPage({ isAuth }: IsAuth): ReactElement {
 SalesListPage.getLayout = function getLayout(page: ReactElement): JSX.Element {
   return <Layout>{page}</Layout>;
 };
-
-SalesListPage.getInitialProps = checkAuth;

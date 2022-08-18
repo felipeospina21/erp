@@ -1,5 +1,5 @@
-import { useAppSelector } from '@/redux/hooks';
 import { useLogoutMutation } from '@/redux/services';
+import { useGetSession } from '@/utils/hooks/useGetSession';
 import {
   Box,
   Drawer,
@@ -16,7 +16,7 @@ import {
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import { RiMenu2Line } from 'react-icons/ri';
-import NavLinks from './NavLinks';
+import NavLinks from './NavLinks/NavLinks';
 import UserMenu from './UserMenu';
 
 export function SideNav(): JSX.Element {
@@ -24,8 +24,8 @@ export function SideNav(): JSX.Element {
   const [logout, { isSuccess }] = useLogoutMutation();
   const btnRef = React.useRef<HTMLButtonElement>(null);
   const router = useRouter();
-  const user = useAppSelector((state) => state.user);
   const [, currPage] = router.pathname.split('/');
+  const session = useGetSession();
 
   function handleLogout(): void {
     logout();
@@ -33,7 +33,7 @@ export function SideNav(): JSX.Element {
 
   useEffect(() => {
     if (isSuccess) {
-      sessionStorage.removeItem('isAuth');
+      localStorage.removeItem('userId');
       router.push('/login');
     }
   }, [isSuccess, router]);
@@ -58,7 +58,7 @@ export function SideNav(): JSX.Element {
         >
           {currPage.toLocaleUpperCase()}
         </Heading>
-        <UserMenu user={user} menuItemClickFn={{ handleLogout }} />
+        <UserMenu user={session.data} menuItemClickFn={{ handleLogout }} />
       </Flex>
 
       <Drawer isOpen={isOpen} placement="left" onClose={onClose} finalFocusRef={btnRef}>
