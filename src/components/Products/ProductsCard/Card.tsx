@@ -8,7 +8,7 @@ import {
   useGetProductsQuery,
   useUpdateProductMutation,
 } from '@/redux/services';
-import { useConfirmDelete } from '@/utils/hooks';
+import { useConfirmDelete } from 'hooks';
 import { numberToCurrency } from '@/utils/numberToCurrency';
 import { Box, Flex, Heading, Text } from '@chakra-ui/react';
 import Image from 'next/image';

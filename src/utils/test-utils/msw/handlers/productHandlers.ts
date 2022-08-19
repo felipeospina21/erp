@@ -1,5 +1,5 @@
 import { rest } from 'msw';
-import { mockProducts } from '@/mockData/products';
+import { mockProducts } from '@/utils/test-utils/mockData/products';
 
 export const productHandlers = [
   rest.get(`${process.env.NEXT_PUBLIC_API_URL}/products`, (req, res, ctx) => {

@@ -1,4 +1,4 @@
-import { CreatePdfData } from '../utils';
+import { CreatePdfData } from '../..';
 
 export const salesData: CreatePdfData = {
   subtotal: 66940,

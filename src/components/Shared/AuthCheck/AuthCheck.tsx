@@ -1,4 +1,4 @@
-import { useGetSession } from '@/utils/hooks/useGetSession';
+import { useGetSession } from 'hooks/useGetSession';
 import React, { ReactElement } from 'react';
 import { LargeSpinner } from '../Loaders';
 

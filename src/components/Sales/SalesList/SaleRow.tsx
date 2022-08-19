@@ -1,7 +1,7 @@
 import { ConfirmationAlert, DeleteButton } from '@/components/Shared';
 import { DeleteSale, SaleResponse, useCancelSaleMutation } from '@/redux/services';
 import { formatDate } from '@/utils/formatDate';
-import { useConfirmDelete } from '@/utils/hooks/useConfirmDelete';
+import { useConfirmDelete } from 'hooks/useConfirmDelete';
 import { numberToCurrency } from '@/utils/numberToCurrency';
 import { Td, Tr } from '@chakra-ui/react';
 import React, { useState } from 'react';

@@ -1,5 +1,5 @@
 import { useLogoutMutation } from '@/redux/services';
-import { useGetSession } from '@/utils/hooks/useGetSession';
+import { useGetSession } from 'hooks/useGetSession';
 import {
   Box,
   Drawer,
