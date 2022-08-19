@@ -1,18 +1,14 @@
 import { clientFields, ClientRow, idTypes, paymentTerms } from '@/components/Clients';
 import ClientForm, { ClientFormValues } from '@/components/Clients/ClientForm/ClientForm';
-import { CustomModal, CustomTable, Layout } from '@/components/Shared';
+import { CustomModal, CustomTable, LargeSpinner, Layout, TableSkeleton } from '@/components/Shared';
 import { AddButton } from '@/components/Shared/IconButtons/AddButton/AddButton';
 import { useCreateClientMutation, useGetClientsQuery } from '@/redux/services';
-import { checkAuth, IsAuth } from '@/utils/auth';
 import { Box, Th } from '@chakra-ui/react';
-import dynamic from 'next/dynamic';
-import Router from 'next/router';
-import { ReactElement, useEffect, useState } from 'react';
-const LoginPage = dynamic(() => import('@/pages/login'));
+import { ReactElement, useState } from 'react';
 
-export default function ClientesPage({ isAuth }: IsAuth): ReactElement {
+export default function ClientesPage(): ReactElement {
   const [displayModal, setDisplayModal] = useState(false);
-  const { data: clients } = useGetClientsQuery();
+  const { data: clients, isError, isLoading: isGetClientsLoading } = useGetClientsQuery();
   const [createClient, { isLoading }] = useCreateClientMutation();
 
   function onSubmit(data: ClientFormValues): void {
@@ -21,13 +17,12 @@ export default function ClientesPage({ isAuth }: IsAuth): ReactElement {
     setDisplayModal(false);
   }
 
-  useEffect(() => {
-    if (isAuth) return; // do nothing if the user is logged in
-    Router.replace('/clientes', '/login', { shallow: true });
-  }, [isAuth]);
+  if (isGetClientsLoading) {
+    return <TableSkeleton />;
+  }
 
-  if (!isAuth) {
-    return <LoginPage />;
+  if (isError) {
+    return <LargeSpinner />;
   }
 
   return (
@@ -55,7 +50,12 @@ export default function ClientesPage({ isAuth }: IsAuth): ReactElement {
         isDisplayed={displayModal}
         setDisplayModal={setDisplayModal}
         iconButton={
-          <AddButton size="sm" margin="1.5rem" onClick={(): void => setDisplayModal(true)} />
+          <AddButton
+            ariaLabel="crear nuevo cliente"
+            size="sm"
+            margin="1.5rem"
+            onClick={(): void => setDisplayModal(true)}
+          />
         }
       >
         <ClientForm
@@ -73,5 +73,3 @@ export default function ClientesPage({ isAuth }: IsAuth): ReactElement {
 ClientesPage.getLayout = function getLayout(page: ReactElement): JSX.Element {
   return <Layout>{page}</Layout>;
 };
-
-ClientesPage.getInitialProps = checkAuth;

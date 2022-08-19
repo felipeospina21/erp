@@ -6,5 +6,4 @@ module.exports = {
   compiler: {
     styledComponents: true,
   },
-  "presets": ["next/babel"]
 };

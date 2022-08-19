@@ -4,21 +4,24 @@ import { Delete } from '@/assets/icons';
 import { IconButtonProps } from '../types';
 
 export function DeleteButton({
-  isLoading,
+  ariaLabel,
   onClick,
+  isDisabled,
+  isLoading,
+  color = 'custom.red.500',
   size = 'lg',
-  colorVariant = 500,
   variant = 'ghost',
 }: IconButtonProps): JSX.Element {
   return (
     <>
       <IconButton
-        aria-label="eliminar"
+        aria-label={ariaLabel}
         icon={<Delete />}
         size={size}
-        color={`custom.red.${colorVariant}`}
+        color={color}
         variant={variant}
         isLoading={isLoading}
+        isDisabled={isDisabled}
         onClick={onClick}
       />
     </>

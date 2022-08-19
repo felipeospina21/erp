@@ -7,13 +7,14 @@ export function EditButton({
   isLoading,
   onClick,
   color,
+  ariaLabel,
   size = 'lg',
   colorVariant = 500,
   variant = 'ghost',
 }: IconButtonProps): JSX.Element {
   return (
     <IconButton
-      aria-label="editar"
+      aria-label={ariaLabel}
       role="button"
       icon={<Edit />}
       size={size}

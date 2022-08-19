@@ -8,7 +8,9 @@
       "@/redux/*": ["redux/*"],
       "@/styles/*": ["styles/*"],
       "@/utils/*": ["utils/*"],
-      "@/mockData/*": ["mockData/*"]
+      "@/hooks/*": ["hooks/*"],
+      "@/config/*": ["config/*"],
+      "@/services/*": ["services/*"]
     },
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -25,6 +27,6 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/utils/utils.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/utils/pdf/pdfUtils.ts"],
   "exclude": ["node_modules"]
 }

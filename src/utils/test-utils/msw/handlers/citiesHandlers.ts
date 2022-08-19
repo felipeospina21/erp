@@ -1,5 +1,5 @@
 import { rest } from 'msw';
-import { cities } from '@/mockData/cities';
+import { cities } from '@/utils/test-utils/mockData/cities';
 
 export const citiesHandlers = [
   // rest.get(`${process.env.NEXT_PUBLIC_DATOS_GOV_URL}`, (req, res, ctx) => {

@@ -1,18 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Tr, Td } from '@chakra-ui/react';
 import { CustomModal } from '@/components/Shared';
-import {
-  Client,
-  // UpdateClientValues,
-  useDeleteClientMutation,
-  useUpdateClientMutation,
-} from '@/redux/services';
-// import { CustomForm } from '@/components/Shared/Form';
-// import { clientFields } from '../ClientForm';
+import { Client, useDeleteClientMutation, useUpdateClientMutation } from '@/redux/services';
 import { DeleteButton, EditButton } from '@/components/Shared/IconButtons';
 import { ConfirmationAlert } from '@/components/Shared/Overlay/ConfirmationAlert/ConfirmationAlert';
 import { SubmitHandler } from 'react-hook-form';
 import ClientForm, { ClientFormValues } from '../ClientForm/ClientForm';
+import { useConfirmDelete } from 'hooks';
 
 export interface ClientRowProps {
   client: Client;
@@ -21,9 +15,9 @@ export interface ClientRowProps {
 export function ClientRow({ client }: ClientRowProps): JSX.Element {
   const [displayModal, setDisplayModal] = useState(false);
   const [displayAlert, setDisplayAlert] = useState(false);
-  const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleteClient, { isLoading: isDeleteLoading }] = useDeleteClientMutation();
   const [updateClient, { isLoading }] = useUpdateClientMutation();
+  const setConfirmDelete = useConfirmDelete(handleDelete);
 
   function onSubmit(data: ClientFormValues): void | SubmitHandler<ClientFormValues> {
     const payload = { _id: client._id ?? '', ...data };
@@ -31,12 +25,9 @@ export function ClientRow({ client }: ClientRowProps): JSX.Element {
     setDisplayModal(false);
   }
 
-  useEffect(() => {
-    if (confirmDelete) {
-      deleteClient({ _id: client?._id ?? '' });
-      setConfirmDelete(false);
-    }
-  }, [confirmDelete, client?._id, deleteClient]);
+  async function handleDelete(): Promise<{ data: Client } | { error: unknown }> {
+    return await deleteClient({ _id: client?._id ?? '' });
+  }
 
   return (
     <Tr>
@@ -76,6 +67,7 @@ export function ClientRow({ client }: ClientRowProps): JSX.Element {
           body={`Seguro desea eliminar de forma permanente el cliente ${client.name}?`}
           button={
             <DeleteButton
+              ariaLabel="eliminar cliente"
               isLoading={isDeleteLoading}
               size="md"
               onClick={(): void => {
@@ -92,7 +84,13 @@ export function ClientRow({ client }: ClientRowProps): JSX.Element {
           title="Actualizar Cliente"
           isDisplayed={displayModal}
           setDisplayModal={setDisplayModal}
-          iconButton={<EditButton size="md" onClick={(): void => setDisplayModal(true)} />}
+          iconButton={
+            <EditButton
+              ariaLabel="editar cliente"
+              size="md"
+              onClick={(): void => setDisplayModal(true)}
+            />
+          }
         >
           <ClientForm
             update

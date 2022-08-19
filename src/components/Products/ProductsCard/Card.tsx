@@ -1,5 +1,6 @@
 import { CardSkeleton, ConfirmationAlert, CustomModal } from '@/components/Shared';
 import { DeleteButton, EditButton } from '@/components/Shared/IconButtons';
+import { useConfirmDelete } from '@/hooks/useConfirmDelete';
 import { ProductDataForm } from '@/pages/productos';
 import {
   Product,
@@ -11,7 +12,7 @@ import {
 import { numberToCurrency } from '@/utils/numberToCurrency';
 import { Box, Flex, Heading, Text } from '@chakra-ui/react';
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { SubmitHandler } from 'react-hook-form';
 import ProductForm from '../ProductForm/ProductForm';
 
@@ -23,7 +24,7 @@ export interface CardProps {
 export function Card({ product, locale }: CardProps): JSX.Element {
   const [displayModal, setDisplayModal] = useState(false);
   const [displayAlert, setDisplayAlert] = useState(false);
-  const [confirmDelete, setConfirmDelete] = useState(false);
+  const setConfirmDelete = useConfirmDelete(handleDelete);
   const { data: categories } = useGetCategoriesQuery();
   const [deleteProduct, { isLoading: isDeleteLoading }] = useDeleteProductMutation();
   const [updateProduct, { isLoading: isUpdateLoading }] = useUpdateProductMutation();
@@ -40,7 +41,7 @@ export function Card({ product, locale }: CardProps): JSX.Element {
     updatedProduct.append('category', values.category);
     updatedProduct.append('name', values.name);
     updatedProduct.append('price', values.price);
-    updatedProduct.append('stock', values.stock);
+    updatedProduct.append('stockAvailable', values.stockAvailable);
     if (values.image?.length) {
       updatedProduct.append('image', values.image[0]);
     }
@@ -48,14 +49,6 @@ export function Card({ product, locale }: CardProps): JSX.Element {
     updateProduct(updatedProduct);
     setDisplayModal(false);
   }
-
-  useEffect(() => {
-    if (confirmDelete) {
-      handleDelete();
-      setConfirmDelete(false);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [confirmDelete]);
 
   if (areProductsFetching) {
     return <CardSkeleton data-testid="update-card-skeleton" />;
@@ -90,7 +83,7 @@ export function Card({ product, locale }: CardProps): JSX.Element {
           {product.name.toLocaleUpperCase(locale)}
         </Heading>
         <Flex flexDir="column" align="flex-start" width="100%">
-          <Text mt="1rem">{`Stock: ${product.stock.toLocaleString()}`}</Text>
+          <Text mt="1rem">{`Stock: ${product.stockAvailable.toLocaleString()}`}</Text>
           <Text mt="0.5rem">{`Precio: ${numberToCurrency(product.price)}`}</Text>
         </Flex>
       </Flex>
@@ -106,7 +99,13 @@ export function Card({ product, locale }: CardProps): JSX.Element {
           title="Actualizar Producto"
           isDisplayed={displayModal}
           setDisplayModal={setDisplayModal}
-          iconButton={<EditButton size="md" onClick={(): void => setDisplayModal(true)} />}
+          iconButton={
+            <EditButton
+              ariaLabel="editar producto"
+              size="md"
+              onClick={(): void => setDisplayModal(true)}
+            />
+          }
         >
           <ProductForm
             onSubmit={onSubmit}
@@ -122,6 +121,7 @@ export function Card({ product, locale }: CardProps): JSX.Element {
           body={`Seguro desea eliminar de forma permanente el producto ${product.name}?`}
           button={
             <DeleteButton
+              ariaLabel="eliminar producto"
               isLoading={isDeleteLoading}
               size="md"
               onClick={(): void => {

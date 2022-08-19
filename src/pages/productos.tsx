@@ -1,7 +1,7 @@
 import { CardsContainer } from '@/components/Products';
 import ProductForm from '@/components/Products/ProductForm/ProductForm';
 import StockForm, { StockFormValues } from '@/components/Products/StockForm/StockForm';
-import { CardSkeleton, CustomModal, EditButton, Layout } from '@/components/Shared';
+import { CardsSkeleton, CustomModal, EditButton, LargeSpinner, Layout } from '@/components/Shared';
 import { AddButton } from '@/components/Shared/IconButtons/AddButton/AddButton';
 import {
   Product,
@@ -10,23 +10,25 @@ import {
   useGetProductsQuery,
   useUpdateProductStockInBatchMutation,
 } from '@/redux/services';
-import { checkAuth, IsAuth } from '@/utils/auth';
-import { Flex, Skeleton, useToast } from '@chakra-ui/react';
-import dynamic from 'next/dynamic';
-import Router from 'next/router';
-import { ReactElement, useEffect, useState } from 'react';
-const LoginPage = dynamic(() => import('@/pages/login'));
+import { useCustomToast } from '@/hooks/index';
+import { Flex } from '@chakra-ui/react';
+import { ReactElement, useState } from 'react';
+import { toastConfig } from '@/config/toastsConfig';
 
-export interface ProductDataForm extends Omit<Product, 'price' | 'stock' | 'category'> {
+export interface ProductDataForm extends Omit<Product, 'price' | 'stockAvailable' | 'category'> {
   price: string | Blob;
-  stock: string | Blob;
+  stockAvailable: string | Blob;
   category: string;
 }
-export default function ProductosPage({ isAuth }: IsAuth): JSX.Element {
+export default function ProductosPage(): JSX.Element {
   const [displayModal, setDisplayModal] = useState(false);
   const [displayStockModal, setDisplayStockModal] = useState(false);
   const { data: categories } = useGetCategoriesQuery();
-  const { data: products, isLoading: areProductsLoading, isError, error } = useGetProductsQuery();
+  const {
+    data: products,
+    isLoading: isProductsLoading,
+    isError: isProductsError,
+  } = useGetProductsQuery();
   const [
     createProduct,
     {
@@ -35,8 +37,30 @@ export default function ProductosPage({ isAuth }: IsAuth): JSX.Element {
       isLoading: isCreateProductLoading,
     },
   ] = useCreateProductMutation();
-  const [addToStock] = useUpdateProductStockInBatchMutation();
-  const toast = useToast();
+  const [
+    addToStock,
+    {
+      isSuccess: isAddToStockSuccess,
+      isUninitialized: isAddToStockUninitialized,
+      isLoading: isAddToStockLoading,
+    },
+  ] = useUpdateProductStockInBatchMutation();
+
+  useCustomToast(
+    isCreateProductSuccess,
+    isCreateProductUninitialized,
+    isCreateProductLoading,
+    'nuevo producto creado',
+    toastConfig.creation
+  );
+
+  useCustomToast(
+    isAddToStockSuccess,
+    isAddToStockUninitialized,
+    isAddToStockLoading,
+    'inventario actualizado',
+    toastConfig.update
+  );
 
   function createNewProduct(data: ProductDataForm): void {
     const newProduct = new FormData();
@@ -44,7 +68,8 @@ export default function ProductosPage({ isAuth }: IsAuth): JSX.Element {
     newProduct.append('category', data.category);
     newProduct.append('name', data.name);
     newProduct.append('price', data.price);
-    newProduct.append('stock', data.stock);
+    newProduct.append('stockAvailable', data.stockAvailable);
+    newProduct.append('stockReserved', '0');
     if (data.image?.length) {
       newProduct.append('image', data.image[0]);
     }
@@ -58,64 +83,12 @@ export default function ProductosPage({ isAuth }: IsAuth): JSX.Element {
     setDisplayStockModal(false);
   }
 
-  useEffect(() => {
-    if (isCreateProductSuccess) {
-      toast({
-        title: 'Creacion Exitosa',
-        description: 'nuevo producto creado',
-        status: 'success',
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-
-    if (!isCreateProductSuccess && !isCreateProductUninitialized && !isCreateProductLoading) {
-      toast({
-        title: 'Error En Creacion',
-        description: 'ha ocurrido un error, favor intentar de nuevo',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-
-    return () => {
-      toast.closeAll();
-    };
-  }, [isCreateProductSuccess, isCreateProductUninitialized, isCreateProductLoading, toast]);
-
-  useEffect(() => {
-    if (isAuth) return; // do nothing if the user is logged in
-    Router.replace('/productos', '/login', { shallow: true });
-  }, [isAuth]);
-
-  if (!isAuth) {
-    return <LoginPage />;
+  if (isProductsLoading) {
+    return <CardsSkeleton cards={4} />;
   }
 
-  if (areProductsLoading) {
-    return (
-      <Flex
-        data-testid="cards-skeleton"
-        flexDir="column"
-        align="center"
-        justify="space-around"
-        h="50vh"
-        m="5rem auto"
-      >
-        <Skeleton borderRadius="md" h="40px" w="40px" />
-        <Flex justify="center" m="1rem" w="100%" wrap="wrap">
-          <CardSkeleton />
-          <CardSkeleton />
-          <CardSkeleton />
-          <CardSkeleton />
-        </Flex>
-      </Flex>
-    );
-  }
-
-  if (isError) {
-    return <>{JSON.stringify(error)}</>;
+  if (isProductsError) {
+    return <LargeSpinner />;
   }
 
   return (
@@ -133,6 +106,7 @@ export default function ProductosPage({ isAuth }: IsAuth): JSX.Element {
           setDisplayModal={setDisplayModal}
           iconButton={
             <AddButton
+              ariaLabel="agregar"
               variant="primary"
               size="sm"
               margin="1.5rem"
@@ -153,6 +127,7 @@ export default function ProductosPage({ isAuth }: IsAuth): JSX.Element {
           setDisplayModal={setDisplayStockModal}
           iconButton={
             <EditButton
+              ariaLabel="adicionar inventarios"
               variant="primary"
               color="white"
               size="sm"
@@ -173,5 +148,3 @@ export default function ProductosPage({ isAuth }: IsAuth): JSX.Element {
 ProductosPage.getLayout = function getLayout(page: ReactElement): JSX.Element {
   return <Layout>{page}</Layout>;
 };
-
-ProductosPage.getInitialProps = checkAuth;
