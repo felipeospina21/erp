@@ -1,6 +1,7 @@
 import { ButtonVariants, Sizes, ColorVariants } from '@/styles/types';
 
 export interface IconButtonProps {
+  ariaLabel: string;
   isLoading?: boolean;
   isDisabled?: boolean;
   colorVariant?: ColorVariants;
