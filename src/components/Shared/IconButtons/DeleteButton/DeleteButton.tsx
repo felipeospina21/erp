@@ -4,6 +4,7 @@ import { Delete } from '@/assets/icons';
 import { IconButtonProps } from '../types';
 
 export function DeleteButton({
+  ariaLabel,
   onClick,
   isDisabled,
   isLoading,
@@ -14,7 +15,7 @@ export function DeleteButton({
   return (
     <>
       <IconButton
-        aria-label="eliminar"
+        aria-label={ariaLabel}
         icon={<Delete />}
         size={size}
         color={color}

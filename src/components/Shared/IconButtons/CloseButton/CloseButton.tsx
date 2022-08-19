@@ -4,6 +4,7 @@ import { Clear } from '@/assets/icons';
 import { IconButtonProps } from '../types';
 
 export function CloseButton({
+  ariaLabel,
   isLoading,
   onClick,
   size = 'lg',
@@ -13,7 +14,7 @@ export function CloseButton({
   return (
     <>
       <IconButton
-        aria-label="cerrar"
+        aria-label={ariaLabel}
         icon={<Clear />}
         size={size}
         color={color}

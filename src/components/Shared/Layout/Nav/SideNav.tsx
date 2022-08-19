@@ -1,5 +1,5 @@
 import { useLogoutMutation } from '@/redux/services';
-import { useGetSession } from '@/utils/hooks/useGetSession';
+import { useGetSession } from '@/hooks/useGetSession';
 import {
   Box,
   Drawer,
@@ -16,7 +16,7 @@ import {
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import { RiMenu2Line } from 'react-icons/ri';
-import NavLinks from './NavLinks/NavLinks';
+import { NavLinks } from './NavLinks';
 import UserMenu from './UserMenu';
 
 export function SideNav(): JSX.Element {

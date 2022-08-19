@@ -90,7 +90,7 @@ export default function ProductForm({
             control={control}
             defaultValue={defaultValues?.price ?? 0}
             rules={{ required: true }}
-            render={({ field: inputField }): JSX.Element => <Input {...inputField} />}
+            render={({ field: inputField }): JSX.Element => <Input type="number" {...inputField} />}
           />
         </CustomFormField>
 
@@ -107,7 +107,7 @@ export default function ProductForm({
             control={control}
             defaultValue={defaultValues?.stockAvailable ?? 0}
             rules={{ required: true }}
-            render={({ field: inputField }): JSX.Element => <Input {...inputField} />}
+            render={({ field: inputField }): JSX.Element => <Input type="number" {...inputField} />}
           />
         </CustomFormField>
 

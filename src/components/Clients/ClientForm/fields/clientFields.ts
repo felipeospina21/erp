@@ -1,4 +1,4 @@
-import { InputField } from '@/components/Shared/Form';
+import { InputField } from '@/components/Shared/Forms';
 
 export const clientFields: InputField[] = [
   {

@@ -1,5 +1,6 @@
 import { CardSkeleton, ConfirmationAlert, CustomModal } from '@/components/Shared';
 import { DeleteButton, EditButton } from '@/components/Shared/IconButtons';
+import { useConfirmDelete } from '@/hooks/useConfirmDelete';
 import { ProductDataForm } from '@/pages/productos';
 import {
   Product,
@@ -8,7 +9,6 @@ import {
   useGetProductsQuery,
   useUpdateProductMutation,
 } from '@/redux/services';
-import { useConfirmDelete } from '@/utils/hooks';
 import { numberToCurrency } from '@/utils/numberToCurrency';
 import { Box, Flex, Heading, Text } from '@chakra-ui/react';
 import Image from 'next/image';
@@ -99,7 +99,13 @@ export function Card({ product, locale }: CardProps): JSX.Element {
           title="Actualizar Producto"
           isDisplayed={displayModal}
           setDisplayModal={setDisplayModal}
-          iconButton={<EditButton size="md" onClick={(): void => setDisplayModal(true)} />}
+          iconButton={
+            <EditButton
+              ariaLabel="editar producto"
+              size="md"
+              onClick={(): void => setDisplayModal(true)}
+            />
+          }
         >
           <ProductForm
             onSubmit={onSubmit}
@@ -115,6 +121,7 @@ export function Card({ product, locale }: CardProps): JSX.Element {
           body={`Seguro desea eliminar de forma permanente el producto ${product.name}?`}
           button={
             <DeleteButton
+              ariaLabel="eliminar producto"
               isLoading={isDeleteLoading}
               size="md"
               onClick={(): void => {

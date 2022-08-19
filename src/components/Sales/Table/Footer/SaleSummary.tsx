@@ -6,7 +6,7 @@ import {
   isInvoiceObservationsTextInvalid,
   updateDeliverySummary,
 } from '@/redux/slices/salesSlice';
-import useDebounce from '@/utils/hooks/useDebounce';
+import useDebounce from 'hooks/useDebounce';
 import { Box, Flex, Textarea } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import TaxPicker from './TaxPicker';

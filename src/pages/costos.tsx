@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
-import { createInvoice } from '../utils';
-import { salesData } from '@/mockData/salesData';
+import { createInvoice } from '@/utils/pdf';
+import { salesData } from '@/utils/test-utils';
 import { Layout } from '@/components/Shared';
 // import { createPackingList } from '@/utils/pdf/createPackingList';
 import { Button, Flex } from '@chakra-ui/react';
