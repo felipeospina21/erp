@@ -8,7 +8,9 @@
       "@/redux/*": ["redux/*"],
       "@/styles/*": ["styles/*"],
       "@/utils/*": ["utils/*"],
-      "@/mockData/*": ["mockData/*"]
+      "@/hooks/*": ["hooks/*"],
+      "@/config/*": ["config/*"],
+      "@/services/*": ["services/*"]
     },
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
