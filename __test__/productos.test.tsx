@@ -44,10 +44,10 @@ describe('Create new product', () => {
     render(<ProductosPage />);
     await user.click(await screen.findByRole('button', {name: /agregar/i}))
     await screen.findByTestId('custom-modal')
-    await user.type( screen.getByLabelText(/nombre/i), 'test name')
-    await user.selectOptions( screen.getByLabelText(/categoria/i), 'test category')
-    await user.type( screen.getByLabelText(/precio/i), '10000')
-    await user.type( screen.getByRole('textbox', {name: /inventario/i} ), '10')
+    await user.type( screen.getByRole('textbox', {name: /nombre/i}), 'test name')
+    await user.selectOptions( screen.getByRole('combobox', {name:/categoria/i}), 'test category')
+    await user.type( screen.getByRole('spinbutton', {name:/precio/i}), '10000')
+    await user.type( screen.getByRole('spinbutton', {name: /inventario/i} ), '10')
     await user.click(screen.getByRole('button', {name:/crear/i}))
   
     const alert = await screen.findByRole('alert')
