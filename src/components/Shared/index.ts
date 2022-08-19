@@ -6,3 +6,4 @@ export * from './IconButtons';
 export * from './Layout';
 export * from './Overlay';
 export * from './Loaders';
+export * from './AuthCheck';

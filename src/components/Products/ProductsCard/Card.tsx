@@ -1,5 +1,6 @@
 import { CardSkeleton, ConfirmationAlert, CustomModal } from '@/components/Shared';
 import { DeleteButton, EditButton } from '@/components/Shared/IconButtons';
+import { useConfirmDelete } from '@/hooks/useConfirmDelete';
 import { ProductDataForm } from '@/pages/productos';
 import {
   Product,
@@ -8,7 +9,6 @@ import {
   useGetProductsQuery,
   useUpdateProductMutation,
 } from '@/redux/services';
-import { useConfirmDelete } from 'hooks';
 import { numberToCurrency } from '@/utils/numberToCurrency';
 import { Box, Flex, Heading, Text } from '@chakra-ui/react';
 import Image from 'next/image';

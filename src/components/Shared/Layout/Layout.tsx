@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, ChakraProvider } from '@chakra-ui/react';
 import SideNav from './Nav/SideNav';
 import theme from '@/styles/theme';
-import { AuthCheck } from '../AuthCheck/AuthCheck';
+import { AuthCheck } from '@/components/Shared';
 
 export interface LayoutProps {
   children: JSX.Element;

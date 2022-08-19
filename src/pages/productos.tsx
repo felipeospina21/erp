@@ -10,10 +10,10 @@ import {
   useGetProductsQuery,
   useUpdateProductStockInBatchMutation,
 } from '@/redux/services';
-import { useCustomToast } from 'hooks';
+import { useCustomToast } from '@/hooks/index';
 import { Flex } from '@chakra-ui/react';
 import { ReactElement, useState } from 'react';
-import { toastConfig } from 'config/toastsConfig';
+import { toastConfig } from '@/config/toastsConfig';
 
 export interface ProductDataForm extends Omit<Product, 'price' | 'stockAvailable' | 'category'> {
   price: string | Blob;

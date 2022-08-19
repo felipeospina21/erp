@@ -24,7 +24,7 @@ test('When authorized it should render product cards after loading ', async () =
 });
 
 
-test('Click add stock button', async()=> {
+test('Add stock in batch', async()=> {
   const user = userEvent.setup();
   render(<ProductosPage  />);
   const addStockInBatch = await screen.findByRole('button', {name:/adicionar inventarios/i})
@@ -36,7 +36,7 @@ test('Click add stock button', async()=> {
   expect(within(alert).getByText(/inventario actualizado/i)).toBeInTheDocument();  
 })
 
-describe('New product creation', () => {
+describe('Create new product', () => {
   afterEach(cleanup);
   
   test('Success', async () => {
@@ -55,6 +55,6 @@ describe('New product creation', () => {
   });
 
 });
-test.todo('delete product')
+
 
 
