@@ -20,4 +20,7 @@ export const productHandlers = [
   rest.put(`${process.env.NEXT_PUBLIC_API_URL}/products`, (req, res, ctx) => {
     return res(ctx.status(200), ctx.json({ message: 'success' }));
   }),
+  rest.put(`${process.env.NEXT_PUBLIC_API_URL}/products/updateStockInBatch`, (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json({ message: 'Productos actualizados' }));
+  }),
 ];
