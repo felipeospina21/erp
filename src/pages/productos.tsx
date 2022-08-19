@@ -10,9 +10,10 @@ import {
   useGetProductsQuery,
   useUpdateProductStockInBatchMutation,
 } from '@/redux/services';
-import { useCreationToast } from '@/utils/hooks';
+import { useCustomToast } from '@/utils/hooks';
 import { Flex } from '@chakra-ui/react';
 import { ReactElement, useState } from 'react';
+import { toastConfig } from '@/utils/toasts/toastsConfig';
 
 export interface ProductDataForm extends Omit<Product, 'price' | 'stockAvailable' | 'category'> {
   price: string | Blob;
@@ -23,7 +24,11 @@ export default function ProductosPage(): JSX.Element {
   const [displayModal, setDisplayModal] = useState(false);
   const [displayStockModal, setDisplayStockModal] = useState(false);
   const { data: categories } = useGetCategoriesQuery();
-  const { data: products, isLoading: areProductsLoading, isError } = useGetProductsQuery();
+  const {
+    data: products,
+    isLoading: isProductsLoading,
+    isError: isProductsError,
+  } = useGetProductsQuery();
   const [
     createProduct,
     {
@@ -32,13 +37,29 @@ export default function ProductosPage(): JSX.Element {
       isLoading: isCreateProductLoading,
     },
   ] = useCreateProductMutation();
-  const [addToStock] = useUpdateProductStockInBatchMutation();
+  const [
+    addToStock,
+    {
+      isSuccess: isAddToStockSuccess,
+      isUninitialized: isAddToStockUninitialized,
+      isLoading: isAddToStockLoading,
+    },
+  ] = useUpdateProductStockInBatchMutation();
 
-  useCreationToast(
+  useCustomToast(
     isCreateProductSuccess,
     isCreateProductUninitialized,
     isCreateProductLoading,
-    'nuevo producto creado'
+    'nuevo producto creado',
+    toastConfig.creation
+  );
+
+  useCustomToast(
+    isAddToStockSuccess,
+    isAddToStockUninitialized,
+    isAddToStockLoading,
+    'inventario actualizado',
+    toastConfig.update
   );
 
   function createNewProduct(data: ProductDataForm): void {
@@ -62,11 +83,11 @@ export default function ProductosPage(): JSX.Element {
     setDisplayStockModal(false);
   }
 
-  if (areProductsLoading) {
+  if (isProductsLoading) {
     return <CardsSkeleton cards={4} />;
   }
 
-  if (isError) {
+  if (isProductsError) {
     return <LargeSpinner />;
   }
 
@@ -85,6 +106,7 @@ export default function ProductosPage(): JSX.Element {
           setDisplayModal={setDisplayModal}
           iconButton={
             <AddButton
+              ariaLabel="agregar"
               variant="primary"
               size="sm"
               margin="1.5rem"
@@ -105,6 +127,7 @@ export default function ProductosPage(): JSX.Element {
           setDisplayModal={setDisplayStockModal}
           iconButton={
             <EditButton
+              ariaLabel="adicionar inventarios"
               variant="primary"
               color="white"
               size="sm"
