@@ -52,6 +52,7 @@ export function SaleRow({
           body={`Seguro desea anular el documento ${saleRequestRef}?`}
           button={
             <DeleteButton
+              ariaLabel="eliminar documento"
               isLoading={isDeleteLoading}
               isDisabled={isDisabled}
               color={isDisabled ? 'gray' : 'custom.red.500'}

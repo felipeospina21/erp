@@ -1,14 +1,14 @@
 import { clientFields, ClientRow, idTypes, paymentTerms } from '@/components/Clients';
 import ClientForm, { ClientFormValues } from '@/components/Clients/ClientForm/ClientForm';
-import { CardSkeleton, CustomModal, CustomTable, Layout } from '@/components/Shared';
+import { CustomModal, CustomTable, LargeSpinner, Layout, TableSkeleton } from '@/components/Shared';
 import { AddButton } from '@/components/Shared/IconButtons/AddButton/AddButton';
 import { useCreateClientMutation, useGetClientsQuery } from '@/redux/services';
-import { Box, Flex, Skeleton, Th } from '@chakra-ui/react';
+import { Box, Th } from '@chakra-ui/react';
 import { ReactElement, useState } from 'react';
 
 export default function ClientesPage(): ReactElement {
   const [displayModal, setDisplayModal] = useState(false);
-  const { data: clients, isError, isLoading: isGetClientsLoading, error } = useGetClientsQuery();
+  const { data: clients, isError, isLoading: isGetClientsLoading } = useGetClientsQuery();
   const [createClient, { isLoading }] = useCreateClientMutation();
 
   function onSubmit(data: ClientFormValues): void {
@@ -18,28 +18,11 @@ export default function ClientesPage(): ReactElement {
   }
 
   if (isGetClientsLoading) {
-    return (
-      <Flex
-        data-testid="cards-skeleton"
-        flexDir="column"
-        align="center"
-        justify="space-around"
-        h="50vh"
-        m="5rem auto"
-      >
-        <Skeleton borderRadius="md" h="40px" w="40px" />
-        <Flex justify="center" m="1rem" w="100%" wrap="wrap">
-          <CardSkeleton />
-          <CardSkeleton />
-          <CardSkeleton />
-          <CardSkeleton />
-        </Flex>
-      </Flex>
-    );
+    return <TableSkeleton />;
   }
 
   if (isError) {
-    return <>{JSON.stringify(error)}</>;
+    return <LargeSpinner />;
   }
 
   return (
@@ -67,7 +50,12 @@ export default function ClientesPage(): ReactElement {
         isDisplayed={displayModal}
         setDisplayModal={setDisplayModal}
         iconButton={
-          <AddButton size="sm" margin="1.5rem" onClick={(): void => setDisplayModal(true)} />
+          <AddButton
+            ariaLabel="crear nuevo cliente"
+            size="sm"
+            margin="1.5rem"
+            onClick={(): void => setDisplayModal(true)}
+          />
         }
       >
         <ClientForm

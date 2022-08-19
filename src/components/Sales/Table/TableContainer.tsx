@@ -84,6 +84,7 @@ export function TableContainer({
       <Flex m="0.5rem 1.5rem" align="center" justify="space-between" w="95%">
         <Heading as="h2" size="sm" w="10rem">{`Entrega ${deliveryId + 1}`}</Heading>
         <CloseButton
+          ariaLabel="quitar venta parcial"
           size="md"
           onClick={(): void => {
             deletePartialSale(deliveryId);

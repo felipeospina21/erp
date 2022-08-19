@@ -67,6 +67,7 @@ export function ClientRow({ client }: ClientRowProps): JSX.Element {
           body={`Seguro desea eliminar de forma permanente el cliente ${client.name}?`}
           button={
             <DeleteButton
+              ariaLabel="eliminar cliente"
               isLoading={isDeleteLoading}
               size="md"
               onClick={(): void => {
@@ -83,7 +84,13 @@ export function ClientRow({ client }: ClientRowProps): JSX.Element {
           title="Actualizar Cliente"
           isDisplayed={displayModal}
           setDisplayModal={setDisplayModal}
-          iconButton={<EditButton size="md" onClick={(): void => setDisplayModal(true)} />}
+          iconButton={
+            <EditButton
+              ariaLabel="editar cliente"
+              size="md"
+              onClick={(): void => setDisplayModal(true)}
+            />
+          }
         >
           <ClientForm
             update

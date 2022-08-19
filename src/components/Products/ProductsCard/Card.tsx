@@ -99,7 +99,13 @@ export function Card({ product, locale }: CardProps): JSX.Element {
           title="Actualizar Producto"
           isDisplayed={displayModal}
           setDisplayModal={setDisplayModal}
-          iconButton={<EditButton size="md" onClick={(): void => setDisplayModal(true)} />}
+          iconButton={
+            <EditButton
+              ariaLabel="editar producto"
+              size="md"
+              onClick={(): void => setDisplayModal(true)}
+            />
+          }
         >
           <ProductForm
             onSubmit={onSubmit}
@@ -115,6 +121,7 @@ export function Card({ product, locale }: CardProps): JSX.Element {
           body={`Seguro desea eliminar de forma permanente el producto ${product.name}?`}
           button={
             <DeleteButton
+              ariaLabel="eliminar producto"
               isLoading={isDeleteLoading}
               size="md"
               onClick={(): void => {
