@@ -1,14 +1,14 @@
-import { Flex } from '@chakra-ui/react';
+import { Box, Flex } from '@chakra-ui/react';
 import React from 'react';
 import { useDrag } from 'react-dnd';
 import { style } from './style';
 
-interface SaleSatusMarkerProps {
+interface SatusPointerProps {
   status: string;
   setMarker: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 
-export function SaleStatusMarker({ status, setMarker }: SaleSatusMarkerProps): JSX.Element {
+export function StatusPointer({ status, setMarker }: SatusPointerProps): JSX.Element {
   const [{ isDragging }, drag] = useDrag(() => ({
     type: 'BOX',
     item: { status },
@@ -27,8 +27,25 @@ export function SaleStatusMarker({ status, setMarker }: SaleSatusMarkerProps): J
 
   const opacity = isDragging ? 0.4 : 1;
   return (
-    <Flex ref={drag} style={{ ...style, opacity }} w="auto" minW="108px" justify="center">
-      *
+    <Flex
+      ref={drag}
+      sx={{
+        ...markerCSS.style,
+        opacity,
+      }}
+      justify="center"
+    >
+      <Box bgColor="brand.teal" w="30px" h="30px" borderRadius="50%" />
     </Flex>
   );
 }
+
+const markerCSS = {
+  style: {
+    ...style,
+    backgroundColor: 'brand.bg',
+    position: 'relative',
+    padding: 0,
+    borderRight: 'none',
+  },
+};

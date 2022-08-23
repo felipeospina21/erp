@@ -3,17 +3,13 @@ import React from 'react';
 import { useDrop } from 'react-dnd';
 import { style } from './style';
 
-interface SaleStatusReceiverProps {
+interface StatusCellProps {
   status: string | undefined;
   statusIdx: number;
   currStatusIdx: number;
 }
 
-export function SaleStatusReceiver({
-  status,
-  currStatusIdx,
-  statusIdx,
-}: SaleStatusReceiverProps): JSX.Element {
+export function StatusCell({ status, currStatusIdx, statusIdx }: StatusCellProps): JSX.Element {
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
     accept: 'BOX',
     drop: () => ({ status }),
@@ -23,20 +19,20 @@ export function SaleStatusReceiver({
     }),
   }));
 
-  let backgroundColor = 'white';
+  let backgroundColor = 'brand.bg_100';
   if (currStatusIdx > statusIdx) {
-    backgroundColor = 'green';
+    backgroundColor = 'brand.teal';
   }
 
   const isActive = canDrop && isOver;
   if (isActive) {
-    backgroundColor = 'black';
+    backgroundColor = 'custom.grey.700';
   } else if (canDrop) {
-    backgroundColor = 'darkkhaki';
+    backgroundColor = 'custom.green.100';
   }
   return (
-    <Box ref={drop} style={{ ...style, backgroundColor }} w="auto" minW="108px" color="transparent">
-      {'n'}
+    <Box ref={drop} sx={{ ...style, backgroundColor }} color="transparent">
+      {''}
     </Box>
   );
 }

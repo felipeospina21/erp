@@ -1,11 +1,11 @@
 import { CSSProperties } from 'react';
 
 export const style: CSSProperties = {
-  // border: '1px dashed gray',
-  backgroundColor: 'white',
+  borderRight: '1px dashed gray',
+  backgroundColor: 'brand.bgLight',
   padding: '0.5rem',
-  // marginRight: '1.5rem',
-  // marginBottom: '1.5rem',
   cursor: 'move',
-  float: 'left',
+  width: 'auto',
+  height: '2.2rem',
+  minWidth: '108px',
 };

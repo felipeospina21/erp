@@ -1,37 +1,23 @@
-import { SaleStatusRow } from '@/components/Sales';
+import { StatusRow } from '@/components/Sales';
+import { StatusHeader } from '@/components/Sales/OpenSales/SaleStatusRow/StatusHeader';
 import { Layout } from '@/components/Shared';
-import { Box, Flex, HStack } from '@chakra-ui/react';
+import { useGetSalesQuery } from '@/redux/services';
+import { Box, Container } from '@chakra-ui/react';
 import React, { ReactElement } from 'react';
 
 export default function OpenSalesPage(): JSX.Element {
-  const statuses = [
-    '',
-    'produccion',
-    'alistamiento',
-    'despacho',
-    'entregado',
-    'facturado',
-    'pagado',
-  ];
-  const ventas = [
-    { _id: '1', status: 'alistamiento' },
-    { _id: '2', status: 'entregado' },
-  ];
+  const { data: sales } = useGetSalesQuery();
 
   return (
-    <Box overflow={'auto'} fontSize="0.85rem">
-      <HStack>
-        {statuses.map((status) => (
-          <Flex key={status} w="auto" minW="100px" justify="center">
-            {status}
-          </Flex>
-        ))}
-      </HStack>
+    <Container maxW="1300px" h="100%" mt="2rem">
+      <Box overflow={'auto'} h="100%" fontSize="0.85rem">
+        <StatusHeader />
 
-      {ventas.map((venta) => {
-        return <SaleStatusRow key={venta._id} venta={venta} statuses={statuses} />;
-      })}
-    </Box>
+        {sales?.map((sale) => {
+          return <StatusRow key={sale._id} sale={sale} />;
+        })}
+      </Box>
+    </Container>
   );
 }
 
