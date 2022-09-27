@@ -1,5 +1,4 @@
-import { StatusRow } from '@/components/Sales';
-import { StatusHeader } from '@/components/Sales/OpenSales/SaleStatusRow/StatusHeader';
+import { StatusRow, StatusHeader } from '@/components/Sales';
 import { Layout } from '@/components/Shared';
 import { useGetSalesQuery } from '@/redux/services';
 import { Box, Container } from '@chakra-ui/react';

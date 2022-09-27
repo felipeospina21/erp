@@ -1,17 +1,19 @@
 import { SaleResponse } from '@/redux/services';
 import { Box, HStack } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import React from 'react';
 import { StatusPointer } from './StatusPointer';
 import { StatusCell } from './StatusCell';
 import { statusOptions } from './statusOptions';
 import { style } from './style';
+import { useUpdateStatus } from './hooks';
 
 interface StatusRowProps {
   sale: Partial<SaleResponse>;
 }
 
 export function StatusRow({ sale }: StatusRowProps): JSX.Element {
-  const [currStatus, setCurrStatus] = useState(sale.status);
+  const [currStatus, setCurrStatus] = useUpdateStatus(sale.status, sale._id);
+
   return (
     <HStack mt="1rem" spacing={0}>
       <Box sx={{ ...style, cursor: 'inherit' }}>{sale.saleRequestRef}</Box>

@@ -2,15 +2,15 @@ import { useGetSalesQuery, useUpdateSaleStatusMutation } from '@/redux/services'
 import { useState, useEffect, useCallback } from 'react';
 import type { SetStateAction, Dispatch } from 'react';
 
-export type UseCurrStatus = [
+export type UseUpdateStatus = [
   currStatus: string | undefined,
   setCurrStatus: Dispatch<SetStateAction<string | undefined>>
 ];
 
-export function useCurrStatus(
+export function useUpdateStatus(
   status: string | undefined,
   saleId: string | undefined
-): UseCurrStatus {
+): UseUpdateStatus {
   const [currStatus, setCurrStatus] = useState(status);
   const [updateSaleStatus] = useUpdateSaleStatusMutation();
 
