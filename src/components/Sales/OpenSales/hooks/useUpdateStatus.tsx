@@ -1,5 +1,5 @@
 import { useGetSalesQuery, useUpdateSaleStatusMutation } from '@/redux/services';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import type { SetStateAction, Dispatch } from 'react';
 
 export type UseUpdateStatus = [
@@ -8,11 +8,15 @@ export type UseUpdateStatus = [
 ];
 
 export function useUpdateStatus(
+  saleId: string | undefined,
   status: string | undefined,
-  saleId: string | undefined
+  invoiceRef: string | undefined,
+  openModal: () => void
 ): UseUpdateStatus {
   const [currStatus, setCurrStatus] = useState(status);
   const [updateSaleStatus] = useUpdateSaleStatusMutation();
+  // const {data} = useGetSaleRefCountQuery()
+  const isMounted = useRef(false);
 
   const { cachedSale } = useGetSalesQuery(undefined, {
     selectFromResult: ({ data }) => ({
@@ -26,10 +30,17 @@ export function useUpdateStatus(
   }, []);
 
   useEffect(() => {
-    if (currStatus && saleId && cachedSale?.status !== currStatus) {
+    if (currStatus && currStatus !== 'entregado' && saleId && cachedSale?.status !== currStatus) {
       updateStatus({ id: saleId, status: currStatus });
     }
-  }, [currStatus, status, cachedSale?.status, saleId, updateStatus]);
+
+    if (isMounted.current && currStatus === 'entregado' && !invoiceRef) {
+      openModal();
+      // updateSaleStatus({id:saleId ?? '', invoiceRef: data?.count.toString() , status: 'facturado'})
+    } else {
+      isMounted.current = true;
+    }
+  }, [currStatus]);
 
   return [currStatus, setCurrStatus];
 }
