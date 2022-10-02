@@ -6,7 +6,7 @@ import { DeleteButton, EditButton } from '@/components/Shared/IconButtons';
 import { ConfirmationAlert } from '@/components/Shared/Overlay/ConfirmationAlert/ConfirmationAlert';
 import { SubmitHandler } from 'react-hook-form';
 import ClientForm, { ClientFormValues } from '../ClientForm/ClientForm';
-import { useConfirmDelete } from 'hooks';
+import { useConfirmDelete } from '@/hooks/useConfirmDelete';
 
 export interface ClientRowProps {
   client: Client;

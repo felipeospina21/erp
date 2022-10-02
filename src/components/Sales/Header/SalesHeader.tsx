@@ -42,7 +42,6 @@ export function SalesHeader({ pageMaxW }: SalesHeaderProps): JSX.Element {
   return (
     <Flex
       maxW={pageMaxW}
-      spacing="30px"
       m={['2rem 2rem', null, null, null, null, '2rem auto']}
       w={[null, null, null, null, null, '95%']}
       p="1rem 0"

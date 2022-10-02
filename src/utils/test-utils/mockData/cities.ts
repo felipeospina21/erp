@@ -1,14 +1,25 @@
 export const cities = [
   {
-    municipio: 'Medellin',
-    departamento: 'Antioquia',
+    _id: '123tea',
+    name: 'Medellin',
   },
   {
-    municipio: 'Envigado',
-    departamento: 'Antioquia',
+    _id: 'arsda1293',
+    name: 'Envigado',
   },
   {
-    municipio: 'Manizales',
-    departamento: 'Caldas',
+    _id: 'zxonn9203',
+    name: 'Manizales',
+  },
+];
+
+export const departments = [
+  {
+    _id: '1',
+    name: 'Antioquia',
+  },
+  {
+    _id: '2',
+    name: 'Caldas',
   },
 ];

@@ -39,7 +39,7 @@ export default function ClientForm({
 
   return (
     <Container>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)} role="form" aria-label="new-client-form">
         <CustomFormField
           id="name"
           label="Cliente"
@@ -257,8 +257,8 @@ export default function ClientForm({
             control={control}
             defaultValue={defaultValues?.retailer}
             rules={{ required: true }}
-            render={({ field: { onChange, onBlur, value, ref } }): JSX.Element => (
-              <RadioGroup onBlur={onBlur} onChange={onChange} isChecked={value} inputRef={ref}>
+            render={({ field: { onChange, onBlur } }): JSX.Element => (
+              <RadioGroup onBlur={onBlur} onChange={onChange}>
                 <Stack direction="row">
                   <Radio value="si">Si</Radio>
                   <Radio value="no">No</Radio>

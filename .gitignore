@@ -39,3 +39,5 @@ yarn-error.log*
 .vscode
 .eslintcache
 tsconfig.tsbuildinfo
+
+ponicode.config.json

@@ -72,6 +72,14 @@ export interface DeleteSale {
   message: string;
 }
 
+export interface UpdateSaleStatus {
+  id: string;
+  status?: string;
+  discounts?: { concept: string; value: number }[];
+  creditNotes?: { concept: string; value: number }[];
+  invoiceRef?: string;
+}
+
 export const saleApi = api.injectEndpoints({
   endpoints: (build) => ({
     getSales: build.query<SaleResponse[], void>({
@@ -86,6 +94,15 @@ export const saleApi = api.injectEndpoints({
         data: { ...body },
       }),
       invalidatesTags: [{ type: 'Sale' }, { type: 'Product' }],
+    }),
+    updateSaleStatus: build.mutation<SaleResponse, UpdateSaleStatus>({
+      query: ({ id, status, discounts, creditNotes, invoiceRef }) => ({
+        url: `/sales/updateStatus/${id}`,
+        method: 'PUT',
+        withCredetials: true,
+        data: { status, discounts, creditNotes, invoiceRef },
+      }),
+      invalidatesTags: [{ type: 'Sale' }],
     }),
     cancelSale: build.mutation<DeleteSale, string>({
       query: (id) => ({
@@ -102,6 +119,7 @@ export const {
   useGetSalesQuery,
   useSaveSaleMutation,
   useCancelSaleMutation,
+  useUpdateSaleStatusMutation,
   util: { getRunningOperationPromises: getSaleRunningOperationPromises },
 } = saleApi;
-export const { getSales, saveSale, cancelSale } = saleApi.endpoints;
+export const { getSales, saveSale, updateSaleStatus, cancelSale } = saleApi.endpoints;
