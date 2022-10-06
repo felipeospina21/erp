@@ -11,7 +11,7 @@ export function useUpdateStatus(
   saleId: string | undefined,
   status: string | undefined,
   invoiceRef: string | undefined,
-  openModal: () => void
+  openModal: (v: boolean) => void
 ): UseUpdateStatus {
   const [currStatus, setCurrStatus] = useState(status);
   const [updateSaleStatus] = useUpdateSaleStatusMutation();
@@ -24,10 +24,13 @@ export function useUpdateStatus(
     }),
   });
 
-  const updateStatus = useCallback((args) => {
-    updateSaleStatus(args);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const updateStatus = useCallback(
+    (args) => {
+      updateSaleStatus(args);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    [status]
+  );
 
   useEffect(() => {
     if (currStatus && currStatus !== 'entregado' && saleId && cachedSale?.status !== currStatus) {
@@ -35,11 +38,13 @@ export function useUpdateStatus(
     }
 
     if (isMounted.current && currStatus === 'entregado' && !invoiceRef) {
-      openModal();
+      openModal(true);
       // updateSaleStatus({id:saleId ?? '', invoiceRef: data?.count.toString() , status: 'facturado'})
     } else {
+      openModal(false);
       isMounted.current = true;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currStatus]);
 
   return [currStatus, setCurrStatus];

@@ -38,7 +38,12 @@ export function ActionButtons({ isSalesBtnDisabled, pageMaxW }: ActionButtonsPro
 
   async function handleNewSale(): Promise<void> {
     const saleRef = saleRequest?.count ?? 0;
-    async function newSale(idx: number, delivery: Delivery): Promise<void> {
+    async function newSale(
+      idx: number,
+      delivery: Delivery,
+      saleRef: number,
+      observations: string
+    ): Promise<void> {
       const { productsList, summary } = delivery;
       const orderedProducts =
         productsList?.map(({ item, discount, quantity, rowTotal }) => ({
@@ -67,13 +72,14 @@ export function ActionButtons({ isSalesBtnDisabled, pageMaxW }: ActionButtonsPro
       await createPackingList(
         { clientInfo: client, orderedProducts: delivery.productsList ?? [], ...delivery.summary },
         saleRef,
-        idx
+        idx,
+        observations
       );
     }
 
     for (let i = 0; i < deliveriesList.length; i++) {
       const delivery = deliveriesList[i];
-      await newSale(i, delivery);
+      await newSale(i, delivery, saleRef, delivery.invoiceObservations?.text ?? '');
     }
 
     if (!isSaveSaleLoading && !isSaveSaleError) {
