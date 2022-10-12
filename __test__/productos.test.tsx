@@ -39,7 +39,7 @@ test('Add stock in batch', async()=> {
 describe('Create new product', () => {
   afterEach(cleanup);
   
-  test('Success', async () => {
+  test.skip('Success', async () => {
     const user = userEvent.setup();
     render(<ProductosPage />);
     await user.click(await screen.findByRole('button', {name: /agregar/i}))

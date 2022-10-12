@@ -105,15 +105,6 @@ export const saleApi = api.injectEndpoints({
       }),
       invalidatesTags: [{ type: 'Sale' }],
     }),
-    // addInvoiceData: build.mutation<SaleResponse, UpdateSaleStatus>({
-    //   query: ({ id, creditNotes, invoiceRef }) => ({
-    //     url: `/sales/addInvoiceData/${id}`,
-    //     method: 'PUT',
-    //     withCredetials: true,
-    //     data: { status, discounts, creditNotes, invoiceRef },
-    //   }),
-    //   invalidatesTags: [{ type: 'Sale' }],
-    // }),
     cancelSale: build.mutation<DeleteSale, string>({
       query: (id) => ({
         url: `/sales/cancelDoc/${id}`,
