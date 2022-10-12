@@ -1,3 +1,4 @@
+import type { Discount } from '@/components/Sales/OpenSales/InvoiceOptions';
 import { api } from './api';
 import type { Client, DocumentId } from './clientApi';
 import type { Product } from './productApi';
@@ -75,7 +76,7 @@ export interface DeleteSale {
 export interface UpdateSaleStatus {
   id: string;
   status?: string;
-  discounts?: { concept: string; value: number }[];
+  discounts?: Discount[];
   creditNotes?: { concept: string; value: number }[];
   invoiceRef?: string;
 }
@@ -104,6 +105,15 @@ export const saleApi = api.injectEndpoints({
       }),
       invalidatesTags: [{ type: 'Sale' }],
     }),
+    // addInvoiceData: build.mutation<SaleResponse, UpdateSaleStatus>({
+    //   query: ({ id, creditNotes, invoiceRef }) => ({
+    //     url: `/sales/addInvoiceData/${id}`,
+    //     method: 'PUT',
+    //     withCredetials: true,
+    //     data: { status, discounts, creditNotes, invoiceRef },
+    //   }),
+    //   invalidatesTags: [{ type: 'Sale' }],
+    // }),
     cancelSale: build.mutation<DeleteSale, string>({
       query: (id) => ({
         url: `/sales/cancelDoc/${id}`,

@@ -25,7 +25,7 @@ export function StatusRow({ sale }: StatusRowProps): JSX.Element {
   return (
     <>
       <InvoiceModal title="Factura" isDisplayed={isModalOpen} setDisplayModal={setIsModalOpen}>
-        <InvoiceOptions />
+        <InvoiceOptions saleId={sale._id} setDisplayModal={setIsModalOpen} />
       </InvoiceModal>
 
       <HStack mt="1rem" spacing={0}>

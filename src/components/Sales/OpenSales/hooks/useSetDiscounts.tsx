@@ -4,11 +4,22 @@ import type { Discount } from '../InvoiceOptions';
 
 type UseDiscounts = [discount: Discount, setDiscount: Dispatch<SetStateAction<Discount>>];
 
-export function useSetDiscounts(setDiscounts: (discount: Discount) => void): UseDiscounts {
-  const [discount, setDiscount] = useState({ name: '', value: 0 });
+export function useSetDiscounts(
+  id: number,
+  discounts: Discount[],
+  setDiscounts: React.Dispatch<React.SetStateAction<Discount[]>>
+): UseDiscounts {
+  const [discount, setDiscount] = useState<Discount>({ id, concept: undefined, value: undefined });
 
   useEffect(() => {
-    setDiscounts(discount);
+    const newDiscounts = discounts.map((elem) => {
+      if (elem.id === discount?.id) {
+        return discount;
+      } else {
+        return elem;
+      }
+    });
+    setDiscounts(newDiscounts);
   }, [discount]);
 
   return [discount, setDiscount];

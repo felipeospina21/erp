@@ -7,16 +7,17 @@ import { useSetDiscounts } from './hooks/useSetDiscounts';
 
 interface DiscountType {
   id: number;
-  setDiscounts: (discount: Discount) => void;
+  discounts: Discount[];
+  setDiscounts: React.Dispatch<React.SetStateAction<Discount[]>>;
 }
-export function DiscountType({ id, setDiscounts }: DiscountType): JSX.Element {
-  const [discount, setDiscount] = useSetDiscounts(setDiscounts);
+export function DiscountType({ id, discounts, setDiscounts }: DiscountType): JSX.Element {
+  const [discount, setDiscount] = useSetDiscounts(id, discounts, setDiscounts);
 
   function handleChange(e: ChangeEvent<HTMLInputElement>): void {
     const { value, name } = e.target;
 
-    if (name === 'nombre') {
-      setDiscount((prev) => ({ ...prev, name: value }));
+    if (name === 'concepto') {
+      setDiscount((prev) => ({ ...prev, concept: value }));
     } else if (name === 'valor') {
       const formatedValue = Number(value);
       setDiscount((prev) => ({ ...prev, value: formatedValue }));
@@ -25,10 +26,10 @@ export function DiscountType({ id, setDiscounts }: DiscountType): JSX.Element {
 
   return (
     <Flex gap={10}>
-      <CustomFormField id={`discountName${id}`} label="nombre" margin="1rem 0">
-        <Input type="text" name="nombre" value={discount.name} onChange={handleChange} />
+      <CustomFormField id={`discountName${id}`} label="concepto" margin="1rem 0">
+        <Input type="text" name="concepto" value={discount.concept} onChange={handleChange} />
       </CustomFormField>
-      <CustomFormField id={`discountValue${id}`} label="valor" margin="1rem 0">
+      <CustomFormField id={`discountValue${id}`} label="valor (%)" margin="1rem 0">
         <Input type="number" name="valor" value={discount.value} onChange={handleChange} />
       </CustomFormField>
     </Flex>

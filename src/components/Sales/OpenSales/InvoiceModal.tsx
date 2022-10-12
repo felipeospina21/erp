@@ -33,7 +33,9 @@ export default function InvoiceModal({
       <ModalContent py="2rem" data-testid="custom-modal">
         <ModalHeader py="0">{title}</ModalHeader>
         <ModalCloseButton />
-        <ModalBody bgColor="white">{children}</ModalBody>
+        <ModalBody bgColor="white" display="flex" flexDir="column" alignItems="center">
+          {children}
+        </ModalBody>
       </ModalContent>
     </Modal>
   );
