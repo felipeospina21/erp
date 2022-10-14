@@ -231,7 +231,7 @@ export function addTableHeader(page: PDFPage, config: Config, hasPrices = true):
 export function addProducts(
   page: PDFPage,
   config: Config,
-  orderedProducts: NewSaleOrderedProduct[],
+  orderedProducts: Array<NewSaleOrderedProduct>,
   total: number,
   subtotal: number,
   withholdingTax?: number,

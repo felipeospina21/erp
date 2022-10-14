@@ -12,11 +12,14 @@ import {
 
 export interface CreatePdfData extends SaleSummary, Partial<CheckoutData> {
   clientInfo: Client;
+}
+
+export interface CreatePackingList extends CreatePdfData {
   orderedProducts: Array<NewSaleOrderedProduct>;
 }
 
 export async function createPackingList(
-  data: CreatePdfData,
+  data: CreatePackingList,
   docRef: number,
   idx: number,
   observations?: string
@@ -25,6 +28,7 @@ export async function createPackingList(
   const tableBorderHight = orderedProducts.length * 5;
   const newRef = docRef + idx;
   const { pdfDoc, page, config } = await setPDFParams();
+
   page.setSize(config.page.width, config.page.height);
   addInvoiceData(page, clientInfo.paymentTerm, 'remisión', newRef, config);
   addLeftHeader(page, clientInfo, config);

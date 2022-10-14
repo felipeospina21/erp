@@ -1,3 +1,4 @@
+import { Client, NewSaleOrderedProduct, OrderedProduct } from '@/redux/services';
 import { addInvoiceData } from '@/utils/pdf';
 import { CreatePdfData } from './createPackingList';
 import {
@@ -11,12 +12,19 @@ import {
   setPDFParams,
 } from './pdfUtils';
 
+interface CreateInvoice extends CreatePdfData {
+  orderedProducts: Array<OrderedProduct>;
+}
+
+// export type InvoiceProducts = Pick<NewSaleOrderedProduct, 'quantity' | 'price' | 'discount' | 'productId' | 'rowTotal'>
+
 export async function createInvoice(
-  data: CreatePdfData,
+  data: CreateInvoice,
+  client: Client,
   docNumber?: number,
   observations?: string
 ): Promise<void> {
-  const { clientInfo, orderedProducts, subtotal, total, withholdingTax } = data;
+  const { orderedProducts, subtotal, total, withholdingTax, paymentTerm } = data;
   const bankData = {
     header: 'DEBE A',
     name: 'Catalina Restrepo',
@@ -25,13 +33,31 @@ export async function createInvoice(
     accountNumber: 'N°693 657 886 85',
   };
   const tableBorderHight = orderedProducts.length * 15;
-
+  const formatedOrderedProducts: Array<NewSaleOrderedProduct> = orderedProducts.map(
+    ({ quantity, rowTotal, discount, item, rowId }) => ({
+      quantity,
+      rowTotal,
+      discount,
+      rowId,
+      item: item.name,
+      productId: item.name,
+      price: item.price,
+      stock: item.stockAvailable,
+    })
+  );
   const { pdfDoc, page, config } = await setPDFParams();
   page.setSize(config.page.width, config.page.height);
-  addInvoiceData(page, clientInfo.paymentTerm, 'cuenta de cobro', docNumber, config, true);
-  addLeftHeader(page, clientInfo, config);
+  addInvoiceData(
+    page,
+    paymentTerm ?? client.paymentTerm,
+    'cuenta de cobro',
+    docNumber,
+    config,
+    true
+  );
+  addLeftHeader(page, client, config);
   addRightHeader(page, bankData, config);
-  addProducts(page, config, orderedProducts, total, subtotal, withholdingTax);
+  addProducts(page, config, formatedOrderedProducts, total, subtotal, withholdingTax);
   addFooter(page, config, observations);
   addTableBorder(page, config, tableBorderHight);
 
@@ -42,5 +68,5 @@ export async function createInvoice(
     pdfDoc
   );
 
-  await savePDF(pdfDoc, `C. cobro N° ${docNumber} - ${clientInfo.name.toUpperCase()} - DLT`);
+  await savePDF(pdfDoc, `C. cobro N° ${docNumber} - ${client.name.toUpperCase()} - DLT`);
 }

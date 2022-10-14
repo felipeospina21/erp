@@ -1,6 +1,6 @@
-import { CreatePdfData } from '../..';
+import { CreatePackingList } from '../..';
 
-export const salesData: CreatePdfData = {
+export const salesData: CreatePackingList = {
   subtotal: 66940,
   tax: 0.19,
   withholdingTax: 5000,

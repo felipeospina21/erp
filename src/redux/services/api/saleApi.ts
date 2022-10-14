@@ -1,6 +1,6 @@
 import type { Discount } from '@/components/Sales/OpenSales/InvoiceOptions';
 import { api } from './api';
-import type { Client, DocumentId } from './clientApi';
+import type { Client, DocumentId, PaymentOptions } from './clientApi';
 import type { Product } from './productApi';
 
 export interface RowInfo {
@@ -10,6 +10,8 @@ export interface RowInfo {
 
 export interface OrderedProduct extends RowInfo {
   item: Product;
+  discount: number;
+  quantity: number;
 }
 
 export interface NewSaleOrderedProduct extends RowInfo {
@@ -31,7 +33,7 @@ export interface SaleSummary {
 
 export interface CheckoutData {
   deliveryCity: string;
-  paymentTerm: string;
+  paymentTerm: PaymentOptions;
 }
 
 export interface NewSale extends CheckoutData, SaleSummary {
@@ -54,7 +56,7 @@ export interface NewSale extends CheckoutData, SaleSummary {
 }
 export interface SaleResponse extends CheckoutData, SaleSummary {
   clientInfo: Client;
-  orderedProducts: NewSaleOrderedProduct[];
+  orderedProducts: OrderedProduct[];
   clientId?: {
     _id: string;
     name: string;

@@ -75,7 +75,7 @@ const initialState: SalesState = {
   },
   checkoutData: {
     deliveryCity: '',
-    paymentTerm: '',
+    paymentTerm: 'contado',
   },
 };
 
