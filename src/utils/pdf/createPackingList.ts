@@ -1,5 +1,6 @@
 import { CheckoutData, Client, NewSaleOrderedProduct, SaleSummary } from '@/redux/services';
 import { addInvoiceData } from '@/utils/pdf';
+import { StandardFonts } from 'pdf-lib';
 import {
   addFooter,
   addLeftHeader,
@@ -7,7 +8,7 @@ import {
   addProducts,
   addTableBorder,
   savePDF,
-  setPDFParams,
+  createPDF,
 } from './pdfUtils';
 
 export interface CreatePdfData extends SaleSummary, Partial<CheckoutData> {
@@ -24,10 +25,40 @@ export async function createPackingList(
   idx: number,
   observations?: string
 ): Promise<void> {
+  const { pdfDoc, page } = await createPDF();
+  const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+
+  const pageConfig = {
+    width: 545,
+    height: 350,
+    leftColX: 60,
+    rightColX: 335,
+    lineHeight: 15,
+  };
+
+  const config = {
+    page: pageConfig,
+    fonts: {
+      size_lg: 11,
+      size_md: 10,
+      size_sm: 9,
+      style_Regular: helvetica,
+      style_Bold: helveticaBold,
+    },
+    table: {
+      x: {
+        col1: pageConfig.leftColX + 5,
+        col2: pageConfig.leftColX + 130,
+        col3: pageConfig.leftColX + 235,
+        col4: pageConfig.leftColX + 335,
+      },
+    },
+  };
+
   const { clientInfo, orderedProducts, subtotal, total, withholdingTax } = data;
   const tableBorderHight = orderedProducts.length * 5;
   const newRef = docRef + idx;
-  const { pdfDoc, page, config } = await setPDFParams();
 
   page.setSize(config.page.width, config.page.height);
   addInvoiceData(page, clientInfo.paymentTerm, 'remisión', newRef, config);

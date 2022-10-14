@@ -1,5 +1,7 @@
 import { Client, NewSaleOrderedProduct, OrderedProduct } from '@/redux/services';
 import { addInvoiceData } from '@/utils/pdf';
+import { PageConfig } from './types';
+import { StandardFonts } from 'pdf-lib';
 import { CreatePdfData } from './createPackingList';
 import {
   addFooter,
@@ -7,12 +9,13 @@ import {
   addLogo,
   addProducts,
   addRightHeader,
-  addTableBorder,
+  // addTableBorder,
   savePDF,
-  setPDFParams,
+  createPDF,
 } from './pdfUtils';
+import { pdfConfig } from './pdfConfig';
 
-interface CreateInvoice extends CreatePdfData {
+export interface CreateInvoice extends CreatePdfData {
   orderedProducts: Array<OrderedProduct>;
 }
 
@@ -24,6 +27,19 @@ export async function createInvoice(
   docNumber?: number,
   observations?: string
 ): Promise<void> {
+  const { pdfDoc, page } = await createPDF();
+  const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+
+  const pageConfig: PageConfig = {
+    width: 545,
+    height: 700,
+    leftColX: 60,
+    rightColX: 335,
+  };
+
+  const config = pdfConfig(pageConfig, { regular: helvetica, bold: helveticaBold });
+
   const { orderedProducts, subtotal, total, withholdingTax, paymentTerm } = data;
   const bankData = {
     header: 'DEBE A',
@@ -32,7 +48,7 @@ export async function createInvoice(
     accountType: 'Ahorros Bancolombia',
     accountNumber: 'N°693 657 886 85',
   };
-  const tableBorderHight = orderedProducts.length * 15;
+  // const tableBorderHight = orderedProducts.length * 15;
   const formatedOrderedProducts: Array<NewSaleOrderedProduct> = orderedProducts.map(
     ({ quantity, rowTotal, discount, item, rowId }) => ({
       quantity,
@@ -45,7 +61,7 @@ export async function createInvoice(
       stock: item.stockAvailable,
     })
   );
-  const { pdfDoc, page, config } = await setPDFParams();
+
   page.setSize(config.page.width, config.page.height);
   addInvoiceData(
     page,
@@ -59,7 +75,7 @@ export async function createInvoice(
   addRightHeader(page, bankData, config);
   addProducts(page, config, formatedOrderedProducts, total, subtotal, withholdingTax);
   addFooter(page, config, observations);
-  addTableBorder(page, config, tableBorderHight);
+  // addTableBorder(page, config, tableBorderHight);
 
   await addLogo(
     page,
