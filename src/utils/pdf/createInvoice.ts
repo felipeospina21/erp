@@ -1,6 +1,5 @@
 import { Client, NewSaleOrderedProduct, OrderedProduct } from '@/redux/services';
 import { addInvoiceData } from '@/utils/pdf';
-import { PageConfig } from './types';
 import { StandardFonts } from 'pdf-lib';
 import { CreatePdfData } from './createPackingList';
 import {
@@ -31,14 +30,24 @@ export async function createInvoice(
   const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
-  const pageConfig: PageConfig = {
-    width: 545,
-    height: 700,
-    leftColX: 60,
-    rightColX: 335,
+  const invoiceConfig = {
+    page: {
+      width: 545,
+      height: 700,
+      leftColX: 60,
+      rightColX: 335,
+    },
+    y: {
+      _1: 25,
+      _2: 110,
+      _3: 195,
+      _f1: 85,
+      _f2: 55,
+      _f3: 15,
+    },
   };
 
-  const config = pdfConfig(pageConfig, { regular: helvetica, bold: helveticaBold });
+  const config = pdfConfig(invoiceConfig, { regular: helvetica, bold: helveticaBold });
 
   const { orderedProducts, subtotal, total, withholdingTax, paymentTerm } = data;
   const bankData = {

@@ -12,14 +12,12 @@ export interface PageConfig {
   rightColX: number;
 }
 
+export type ConfigProperty = { [val: string]: number };
+
 export interface Config {
   page: PageConfig;
-  y: {
-    [val: string]: number;
-  };
-  lineHeight: {
-    [val: string]: number;
-  };
+  y: ConfigProperty;
+  lineHeight: ConfigProperty;
   fonts: {
     size_lg: number;
     size_md: number;

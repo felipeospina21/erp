@@ -77,6 +77,9 @@ export function addInvoiceData(
     year: 'numeric',
   });
   let formatedDueDate;
+  const docTypeHeader = `${docType.toUpperCase()} N° ${docNumber}`;
+  const dateHeader = `Fecha: ${formatedInvoiceDate}`;
+  const textsList = [docTypeHeader, dateHeader];
 
   if (isInvoice) {
     const formatedPaymentTerm = paymentTerm === 'contado' ? 0 : Number(paymentTerm);
@@ -86,12 +89,9 @@ export function addInvoiceData(
       day: 'numeric',
       year: 'numeric',
     });
+    const dueDateHeader = `Vence: ${formatedDueDate}`;
+    textsList.push(dueDateHeader);
   }
-
-  const docTypeHeader = `${docType.toUpperCase()} N° ${docNumber}`;
-  const dateHeader = `Fecha: ${formatedInvoiceDate}`;
-  const dueDateHeader = `Vence: ${formatedDueDate}`;
-  const textsList = [docTypeHeader, dateHeader, dueDateHeader];
 
   drawTextBlock(textsList, page, props, { style_Regular, style_Bold });
 }
@@ -146,8 +146,10 @@ export function addTableHeader(page: PDFPage, config: Config, hasPrices = true):
     },
   } = config;
   const xArr = [col1];
+  const textList = ['PRODUCTO', 'CANTIDAD'];
   if (hasPrices) {
     xArr.push(col2, col3, col4);
+    textList.push('PRECIO', 'TOTAL');
   } else {
     xArr.push(col3);
   }
@@ -159,7 +161,6 @@ export function addTableHeader(page: PDFPage, config: Config, hasPrices = true):
     size: size_md,
   };
 
-  const textList = ['PRODUCTO', 'CANTIDAD', 'PRECIO', 'TOTAL'];
   drawTextBlock(textList, page, props, { style_Regular, style_Bold });
 }
 
@@ -172,7 +173,7 @@ export function addProducts(
   withholdingTax?: number,
   hasPrices = true
 ): void {
-  let newLineY = 175;
+  let newLineY = config.page.height - config.y._3;
   addTableHeader(page, config, hasPrices);
   const {
     page: { height },
@@ -312,7 +313,7 @@ export function addFooter(page: PDFPage, config: Config, observations?: string):
   const propsBold = {
     font: style_Bold,
     size: size_md,
-    y: 50,
+    y: config.y._f1,
   };
 
   const textList = [
@@ -324,8 +325,8 @@ export function addFooter(page: PDFPage, config: Config, observations?: string):
   const props = [
     { ...propsBold, x: leftColX },
     { ...propsBold, x: rightColX },
-    { ...propsBold, font: style_Regular, y: 35, x: rightColX },
-    { ...propsBold, font: style_Regular, y: 15, x: leftColX * 2, size: size_sm },
+    { ...propsBold, font: style_Regular, y: config.y._f2, x: rightColX },
+    { ...propsBold, font: style_Regular, y: config.y._f3, x: leftColX * 2, size: size_sm },
   ];
   textList.forEach((text, i) => {
     page.drawText(text, { ...props[i] });

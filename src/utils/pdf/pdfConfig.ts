@@ -1,15 +1,22 @@
-import type { Config, PageConfig } from './types';
+import type { Config } from './types';
 import { PDFFont } from 'pdf-lib';
 
-export function pdfConfig(page: PageConfig, font: { regular: PDFFont; bold: PDFFont }): Config {
+type PDFConfigTheme = Pick<Config, 'page' | 'y'>;
+
+export function pdfConfig(
+  config: PDFConfigTheme,
+  font: { regular: PDFFont; bold: PDFFont }
+): Config {
+  const { page, y } = config;
   return {
     page,
     y: {
-      _1: page.height - 25,
-      _2: page.height - 95,
-      _3: page.height - 175,
-      _4: page.height - 1,
-      _5: page.height - 1,
+      _1: page.height - y._1,
+      _2: page.height - y._2,
+      _3: page.height - y._3,
+      _f1: y._f1,
+      _f2: y._f2,
+      _f3: y._f3,
     },
     lineHeight: {
       _12: 12,
