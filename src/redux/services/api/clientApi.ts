@@ -32,7 +32,7 @@ export const clientApi = api.injectEndpoints({
       query: () => ({ url: '/clients', method: 'GET' }),
       providesTags: [{ type: 'Client' }],
     }),
-    getClientById: build.query<Client[], string>({
+    getClientById: build.query<Client, string>({
       query: (id) => ({ url: `/clients/${id}`, method: 'GET' }),
       providesTags: [{ type: 'Client' }],
     }),

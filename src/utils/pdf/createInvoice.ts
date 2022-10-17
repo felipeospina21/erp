@@ -1,4 +1,6 @@
+import { Client, NewSaleOrderedProduct, OrderedProduct } from '@/redux/services';
 import { addInvoiceData } from '@/utils/pdf';
+import { StandardFonts } from 'pdf-lib';
 import { CreatePdfData } from './createPackingList';
 import {
   addFooter,
@@ -6,17 +8,51 @@ import {
   addLogo,
   addProducts,
   addRightHeader,
-  addTableBorder,
+  // addTableBorder,
   savePDF,
-  setPDFParams,
+  createPDF,
 } from './pdfUtils';
+import { pdfConfig } from './pdfConfig';
+import { Discount } from '@/components/Sales/OpenSales/InvoiceOptions';
+
+export interface CreateInvoice extends CreatePdfData {
+  orderedProducts: Array<OrderedProduct>;
+}
+
+// export type InvoiceProducts = Pick<NewSaleOrderedProduct, 'quantity' | 'price' | 'discount' | 'productId' | 'rowTotal'>
 
 export async function createInvoice(
-  data: CreatePdfData,
+  data: CreateInvoice,
+  client: Client,
   docNumber?: number,
-  observations?: string
+  observations?: string,
+  discounts?: Discount[]
 ): Promise<void> {
-  const { clientInfo, orderedProducts, subtotal, total, withholdingTax } = data;
+  const { pdfDoc, page } = await createPDF();
+  const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+
+  const invoiceConfig = {
+    page: {
+      width: 545,
+      height: 700,
+      leftColX: 60,
+      rightColX: 335,
+    },
+    y: {
+      _1: 55,
+      _2: 140,
+      _3: 235,
+      _f1: 115,
+      _f2: 85,
+      _f3: 15,
+      _logo: 100,
+    },
+  };
+
+  const config = pdfConfig(invoiceConfig, { regular: helvetica, bold: helveticaBold });
+
+  const { orderedProducts, subtotal, total, withholdingTax, paymentTerm } = data;
   const bankData = {
     header: 'DEBE A',
     name: 'Catalina Restrepo',
@@ -24,16 +60,43 @@ export async function createInvoice(
     accountType: 'Ahorros Bancolombia',
     accountNumber: 'N°693 657 886 85',
   };
-  const tableBorderHight = orderedProducts.length * 15;
+  // const tableBorderHight = orderedProducts.length * 15;
+  const formatedOrderedProducts: Array<NewSaleOrderedProduct> = orderedProducts.map(
+    ({ quantity, rowTotal, discount, item, rowId }) => ({
+      quantity,
+      rowTotal,
+      discount,
+      rowId,
+      item: item.name,
+      productId: item.name,
+      price: item.price,
+      stock: item.stockAvailable,
+    })
+  );
 
-  const { pdfDoc, page, config } = await setPDFParams();
   page.setSize(config.page.width, config.page.height);
-  addInvoiceData(page, clientInfo.paymentTerm, 'cuenta de cobro', docNumber, config, true);
-  addLeftHeader(page, clientInfo, config);
+  addInvoiceData(
+    page,
+    paymentTerm ?? client.paymentTerm,
+    'cuenta de cobro',
+    docNumber,
+    config,
+    true
+  );
+  addLeftHeader(page, client, config);
   addRightHeader(page, bankData, config);
-  addProducts(page, config, orderedProducts, total, subtotal, withholdingTax);
+  addProducts(
+    page,
+    config,
+    formatedOrderedProducts,
+    total,
+    subtotal,
+    withholdingTax,
+    true,
+    discounts
+  );
   addFooter(page, config, observations);
-  addTableBorder(page, config, tableBorderHight);
+  // addTableBorder(page, config, tableBorderHight);
 
   await addLogo(
     page,
@@ -42,5 +105,5 @@ export async function createInvoice(
     pdfDoc
   );
 
-  await savePDF(pdfDoc, `C. cobro N° ${docNumber} - ${clientInfo.name.toUpperCase()} - DLT`);
+  await savePDF(pdfDoc, `C. cobro N° ${docNumber} - ${client.name.toUpperCase()} - DLT`);
 }

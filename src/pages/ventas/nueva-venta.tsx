@@ -15,7 +15,7 @@ export interface RowData {
   productId: string;
 }
 
-export default function NewSale(): ReactElement {
+export default function NewSalePage(): ReactElement {
   const [isSalesBtnDisabled, setSalesBtnDisabled] = useState(true);
   const { deliveriesList } = useAppSelector((state) => state.sales);
   const dispatch = useAppDispatch();
@@ -46,6 +46,6 @@ export default function NewSale(): ReactElement {
   );
 }
 
-NewSale.getLayout = function getLayout(page: ReactElement): JSX.Element {
+NewSalePage.getLayout = function getLayout(page: ReactElement): JSX.Element {
   return <Layout>{page}</Layout>;
 };

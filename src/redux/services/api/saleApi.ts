@@ -1,5 +1,6 @@
+import type { Discount } from '@/components/Sales/OpenSales/InvoiceOptions';
 import { api } from './api';
-import type { Client, DocumentId } from './clientApi';
+import type { Client, DocumentId, PaymentOptions } from './clientApi';
 import type { Product } from './productApi';
 
 export interface RowInfo {
@@ -9,6 +10,8 @@ export interface RowInfo {
 
 export interface OrderedProduct extends RowInfo {
   item: Product;
+  discount: number;
+  quantity: number;
 }
 
 export interface NewSaleOrderedProduct extends RowInfo {
@@ -30,7 +33,7 @@ export interface SaleSummary {
 
 export interface CheckoutData {
   deliveryCity: string;
-  paymentTerm: string;
+  paymentTerm: PaymentOptions;
 }
 
 export interface NewSale extends CheckoutData, SaleSummary {
@@ -53,7 +56,7 @@ export interface NewSale extends CheckoutData, SaleSummary {
 }
 export interface SaleResponse extends CheckoutData, SaleSummary {
   clientInfo: Client;
-  orderedProducts: NewSaleOrderedProduct[];
+  orderedProducts: OrderedProduct[];
   clientId?: {
     _id: string;
     name: string;
@@ -72,6 +75,14 @@ export interface DeleteSale {
   message: string;
 }
 
+export interface UpdateSaleStatus {
+  id: string;
+  status?: string;
+  discounts?: Discount[];
+  creditNotes?: { concept: string; value: number }[];
+  invoiceRef?: string;
+}
+
 export const saleApi = api.injectEndpoints({
   endpoints: (build) => ({
     getSales: build.query<SaleResponse[], void>({
@@ -86,6 +97,15 @@ export const saleApi = api.injectEndpoints({
         data: { ...body },
       }),
       invalidatesTags: [{ type: 'Sale' }, { type: 'Product' }],
+    }),
+    updateSaleStatus: build.mutation<SaleResponse, UpdateSaleStatus>({
+      query: ({ id, status, discounts, creditNotes, invoiceRef }) => ({
+        url: `/sales/updateStatus/${id}`,
+        method: 'PUT',
+        withCredetials: true,
+        data: { status, discounts, creditNotes, invoiceRef },
+      }),
+      invalidatesTags: [{ type: 'Sale' }],
     }),
     cancelSale: build.mutation<DeleteSale, string>({
       query: (id) => ({
@@ -102,6 +122,7 @@ export const {
   useGetSalesQuery,
   useSaveSaleMutation,
   useCancelSaleMutation,
+  useUpdateSaleStatusMutation,
   util: { getRunningOperationPromises: getSaleRunningOperationPromises },
 } = saleApi;
-export const { getSales, saveSale, cancelSale } = saleApi.endpoints;
+export const { getSales, saveSale, updateSaleStatus, cancelSale } = saleApi.endpoints;

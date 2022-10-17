@@ -1,113 +1,62 @@
-import { PDFDocument, StandardFonts, grayscale, PDFPage, PDFFont } from 'pdf-lib';
+import { PDFDocument, grayscale, PDFPage, PDFFont } from 'pdf-lib';
 import download from 'downloadjs';
-import { Client, NewSaleOrderedProduct, PaymentOptions } from '../../redux/services';
-import { numberToCurrency, formatDate } from '..';
+import type { Client, NewSaleOrderedProduct, PaymentOptions } from '@/redux/services';
+import { numberToCurrency, formatDate, FontsConfig } from '..';
+import type { Config, BankData } from './types';
+import { Discount } from '@/components/Sales/OpenSales/InvoiceOptions';
 
-interface Config {
-  page: {
-    width: number;
-    height: number;
-    leftColX: number;
-    rightColX: number;
-    lineHeight: number;
-  };
-  fonts: {
-    size_lg: number;
-    size_md: number;
-    size_sm: number;
-    style_Regular: PDFFont;
-    style_Bold: PDFFont;
-  };
-  table: {
-    x: {
-      col1: number;
-      col2: number;
-      col3: number;
-      col4: number;
-    };
-  };
+interface Props {
+  x: number | number[];
+  y: number;
+  font: PDFFont;
+  size: number;
+  lineSpace: number;
 }
 
-interface BankData {
-  header: string;
-  name: string;
-  id: string;
-  accountType: string;
-  accountNumber: string;
+type TextStyle = 'bold' | 'regular' | 'boldFirst';
+
+function getLineHeight(y: number, i: number, lineSpace: number): number {
+  return y - i * lineSpace;
 }
 
-export async function setPDFParams(): Promise<{
+function drawTextBlock(
+  list: Array<string>,
+  page: PDFPage,
+  props: Props,
+  font: FontsConfig,
+  textStyle: TextStyle
+): void {
+  list.forEach((text, idx) => {
+    if (idx === 0 && textStyle === 'boldFirst') props.font = font.style_Bold;
+    else if (textStyle === 'bold') props.font = font.style_Bold;
+    else props.font = font.style_Regular;
+
+    if (Array.isArray(props.x)) {
+      page.drawText(text, {
+        ...props,
+        x: props.x[idx],
+        y: getLineHeight(props.y, idx, props.lineSpace),
+      });
+    }
+
+    if (typeof props.x === 'number') {
+      page.drawText(text, {
+        ...props,
+        x: props.x,
+        y: getLineHeight(props.y, idx, props.lineSpace),
+      });
+    }
+  });
+}
+
+export async function createPDF(): Promise<{
   pdfDoc: PDFDocument;
   page: PDFPage;
-  config: Config;
 }> {
   const pdfDoc = await PDFDocument.create();
   const page = pdfDoc.addPage();
-  const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
-  const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-  const pageConfig = {
-    width: 545,
-    height: 350,
-    leftColX: 60,
-    rightColX: 335,
-    lineHeight: 15,
-  };
-  const config: Config = {
-    page: pageConfig,
-    fonts: {
-      size_lg: 11,
-      size_md: 10,
-      size_sm: 9,
-      style_Regular: helvetica,
-      style_Bold: helveticaBold,
-    },
-    table: {
-      x: {
-        col1: pageConfig.leftColX + 5,
-        col2: pageConfig.leftColX + 130,
-        col3: pageConfig.leftColX + 235,
-        col4: pageConfig.leftColX + 335,
-      },
-    },
-  };
-  return { pdfDoc, page, config };
-}
-export function addLeftHeader(page: PDFPage, clientInfo: Client, config: Config): void {
-  const { name: clientName, idType, idNumber, addres1, addres2, city, department } = clientInfo;
-  const {
-    page: { height, leftColX },
-    fonts: { style_Bold, style_Regular, size_md },
-  } = config;
-  const props = {
-    x: leftColX,
-    font: style_Regular,
-    size: size_md,
-  };
 
-  page.drawText('CLIENTE', { ...props, font: style_Bold, y: height - 95 });
-  page.drawText(clientName, { ...props, y: height - 107 });
-  page.drawText(`${idType} ${idNumber}`, { ...props, y: height - 119 });
-  page.drawText(`${addres1}. ${addres2}`, { ...props, y: height - 131 });
-  page.drawText(`${city}, ${department}`, { ...props, y: height - 143 });
-}
-
-export function addRightHeader(page: PDFPage, bankData: BankData, config: Config): void {
-  const { header, name, id, accountType, accountNumber } = bankData;
-  const {
-    page: { height, rightColX },
-    fonts: { style_Bold, style_Regular, size_md },
-  } = config;
-  const props = {
-    x: rightColX,
-    font: style_Regular,
-    size: size_md,
-  };
-
-  page.drawText(header, { ...props, font: style_Bold, y: height - 95 });
-  page.drawText(name, { ...props, y: height - 107 });
-  page.drawText(id, { ...props, y: height - 119 });
-  page.drawText(accountType, { ...props, y: height - 131 });
-  page.drawText(accountNumber, { ...props, y: height - 143 });
+  return { pdfDoc, page };
 }
 
 export function addInvoiceData(
@@ -119,13 +68,16 @@ export function addInvoiceData(
   isInvoice = false
 ): void {
   const {
-    page: { height, rightColX },
+    page: { rightColX },
     fonts: { style_Bold, style_Regular, size_md },
+    y,
   } = config;
   const props = {
     x: rightColX,
+    y: y._1,
     font: style_Regular,
     size: size_md,
+    lineSpace: 15,
   };
 
   const invoiceDate = new Date();
@@ -135,152 +87,150 @@ export function addInvoiceData(
     day: 'numeric',
     year: 'numeric',
   });
-  page.drawText(`${docType.toUpperCase()} N° ${docNumber}`, {
-    ...props,
-    font: style_Bold,
-    y: height - 25,
-  });
-  page.drawText(`Fecha: ${formatedInvoiceDate}`, {
-    ...props,
-    y: height - 40,
-  });
+  let formatedDueDate;
+  const docTypeHeader = `${docType.toUpperCase()} N° ${docNumber}`;
+  const dateHeader = `Fecha: ${formatedInvoiceDate}`;
+  const textsList = [docTypeHeader, dateHeader];
+
   if (isInvoice) {
     const formatedPaymentTerm = paymentTerm === 'contado' ? 0 : Number(paymentTerm);
     dueDate.setDate(invoiceDate.getDate() + formatedPaymentTerm);
-    const formatedDueDate = formatDate(dueDate, 'es', {
+    formatedDueDate = formatDate(dueDate, 'es', {
       month: 'short',
       day: 'numeric',
       year: 'numeric',
     });
-    page.drawText(`Vence: ${formatedDueDate}`, {
-      ...props,
-      y: height - 55,
-    });
+    const dueDateHeader = `Vence: ${formatedDueDate}`;
+    textsList.push(dueDateHeader);
   }
+
+  drawTextBlock(textsList, page, props, { style_Regular, style_Bold }, 'boldFirst');
 }
 
-export function addFooter(page: PDFPage, config: Config, observations?: string): void {
+export function addLeftHeader(page: PDFPage, clientInfo: Client, config: Config): void {
+  const { name: clientName, idType, idNumber, addres1, addres2, city, department } = clientInfo;
   const {
-    page: { leftColX, rightColX },
-    fonts: { style_Bold, style_Regular, size_md, size_sm },
+    y,
+    page: { leftColX },
+    fonts: { style_Bold, style_Regular, size_md },
   } = config;
-  const propsBold = {
-    font: style_Bold,
+  const props = {
+    x: leftColX,
+    y: y._2,
+    lineSpace: 12,
+    font: style_Regular,
     size: size_md,
   };
-  page.drawText('RECIBIDO POR:', {
-    ...propsBold,
-    x: leftColX,
-    y: 50,
-  });
-  page.drawText('OBSERVACIONES:', {
-    ...propsBold,
-    x: rightColX,
-    y: 50,
-  });
-  page.drawText(observations ?? '', {
-    ...propsBold,
-    font: style_Regular,
-    x: rightColX,
-    y: 35,
-  });
+  const clientId = `${idType} ${idNumber}`;
+  const clientAddress = `${addres1}. ${addres2}`;
+  const clientCity = `${city}, ${department}`;
+  const linesText = ['CLIENTE', clientName, clientId, clientAddress, clientCity];
 
-  page.drawText(
-    'DE LA TIERRA - Cll 6 sur # 50 - 30. Medellín - Cel. 304 4070005 - WP 305 4806327',
-    { font: style_Regular, size: size_sm, x: leftColX * 2, y: 15 }
-  );
+  drawTextBlock(linesText, page, props, { style_Regular, style_Bold }, 'boldFirst');
+}
+
+export function addRightHeader(page: PDFPage, bankData: BankData, config: Config): void {
+  const { header, name, id, accountType, accountNumber } = bankData;
+  const {
+    y,
+    page: { rightColX },
+    fonts: { style_Bold, style_Regular, size_md },
+  } = config;
+  const props = {
+    x: rightColX,
+    y: y._2,
+    lineSpace: 12,
+    font: style_Regular,
+    size: size_md,
+  };
+
+  const textsList = [header, name, id, accountType, accountNumber];
+  drawTextBlock(textsList, page, props, { style_Regular, style_Bold }, 'boldFirst');
 }
 
 export function addTableHeader(page: PDFPage, config: Config, hasPrices = true): void {
   const {
-    page: { height },
-    fonts: { style_Bold, size_md },
+    y,
+    fonts: { style_Regular, style_Bold, size_md },
     table: {
       x: { col1, col2, col3, col4 },
     },
   } = config;
+  const xArr = [col1];
+  const textList = ['PRODUCTO', 'CANTIDAD'];
+  if (hasPrices) {
+    xArr.push(col2, col3, col4);
+    textList.push('PRECIO', 'TOTAL');
+  } else {
+    xArr.push(col3);
+  }
   const props = {
+    x: xArr,
+    y: y._3,
+    lineSpace: 0,
     font: style_Bold,
     size: size_md,
   };
 
-  page.drawText('PRODUCTO', {
-    ...props,
-    x: col1,
-    y: height - 175,
-  });
-  page.drawText('CANTIDAD', {
-    ...props,
-    x: hasPrices ? col2 : col3,
-    y: height - 175,
-  });
-  if (hasPrices) {
-    page.drawText('PRECIO', {
-      ...props,
-      x: col3,
-      y: height - 175,
-    });
-    page.drawText('TOTAL', {
-      ...props,
-      x: col4,
-      y: height - 175,
-    });
-  }
+  drawTextBlock(textList, page, props, { style_Regular, style_Bold }, 'bold');
 }
 
 export function addProducts(
   page: PDFPage,
   config: Config,
-  orderedProducts: NewSaleOrderedProduct[],
+  orderedProducts: Array<NewSaleOrderedProduct>,
   total: number,
   subtotal: number,
   withholdingTax?: number,
-  hasPrices = true
+  hasPrices = true,
+  discounts?: Discount[]
 ): void {
-  let newLineY = 175;
+  let newLineY = config.page.height - config.y._3;
   addTableHeader(page, config, hasPrices);
   const {
-    page: { height, lineHeight },
-    fonts: { style_Regular, size_sm },
+    page: { height },
+    lineHeight,
+    y,
+    fonts: { style_Regular, size_sm, style_Bold },
     table: {
       x: { col1, col2, col3, col4 },
     },
   } = config;
+  const xArr = [col1];
+  if (hasPrices) {
+    xArr.push(col2, col3, col4);
+  } else {
+    xArr.push(col3);
+  }
   const props = {
     font: style_Regular,
     size: size_sm,
-    y: height - newLineY,
+    y: y._3,
+    x: xArr,
+    lineSpace: 0,
   };
 
   orderedProducts.forEach((product) => {
     const price = product.price ?? 0;
     const discount = product.discount / 100;
     const discountedPrice = price - price * discount;
-    newLineY += lineHeight;
-    props.y = height - newLineY;
-    page.drawText(product.productId ?? '', {
-      ...props,
-      x: col1,
-    });
-    page.drawText(String(product.quantity), {
-      ...props,
-      x: hasPrices ? col2 : col3,
-    });
 
+    const id = product.productId ?? '';
+    const quantity = String(product.quantity);
+    const textList = [id, quantity];
     if (hasPrices) {
-      page.drawText(discountedPrice.toLocaleString('es-CO'), {
-        ...props,
-        x: col3,
-      });
-      page.drawText(product.rowTotal.toLocaleString('es-CO'), {
-        ...props,
-        x: col4,
-      });
+      const newDiscPrice = discountedPrice.toLocaleString('es-CO');
+      const newRowTotal = product.rowTotal.toLocaleString('es-CO');
+      textList.push(newDiscPrice, newRowTotal);
     }
+
+    newLineY += lineHeight._15;
+    props.y = height - newLineY;
+    drawTextBlock(textList, page, props, { style_Regular, style_Bold }, 'regular');
   });
 
   if (hasPrices) {
-    addTableFooter(page, config, newLineY, total, subtotal, withholdingTax);
+    addTableFooter(page, config, newLineY, total, subtotal, withholdingTax, discounts);
   }
 }
 
@@ -290,11 +240,13 @@ export function addTableFooter(
   newLineY: number,
   total: number,
   subtotal: number,
-  withholdingTax?: number
+  withholdingTax?: number,
+  discounts?: Discount[]
 ): void {
   const {
-    page: { height, lineHeight },
-    fonts: { style_Regular, size_sm },
+    page: { height },
+    lineHeight,
+    fonts: { style_Regular, style_Bold, size_sm },
     table: {
       x: { col3, col4 },
     },
@@ -308,43 +260,47 @@ export function addTableFooter(
     start: { x: col3, y: height - newLineY - 10 },
     end: { x: col4 + 50, y: height - newLineY - 10 },
   });
-  newLineY += lineHeight + 5;
-  if (withholdingTax) {
-    // Subtotal
-    props.y = height - newLineY;
-    page.drawText('SUBTOTAL', {
-      ...props,
-      x: col3,
-    });
-    page.drawText(subtotal.toLocaleString('es-CO'), {
-      ...props,
-      x: col4,
-    });
+  newLineY += lineHeight._15 + 5;
 
-    // RteFuente
-    newLineY += lineHeight;
+  function drawFooterText(concept: string, value: string): void {
     props.y = height - newLineY;
-    page.drawText('Rte Fte', {
+    page.drawText(concept, {
       ...props,
       x: col3,
     });
-    page.drawText(`- ${withholdingTax.toLocaleString('es-CO')}`, {
+    page.drawText(value, {
       ...props,
       x: col4,
     });
+    newLineY += lineHeight._15;
+  }
+
+  if (withholdingTax || (discounts && discounts[0].concept)) {
+    // Subtotal
+    drawFooterText('SUBTOTAL', subtotal.toLocaleString('es-CO'));
+  }
+
+  if (withholdingTax) {
+    // withholdingTax
+    drawFooterText('Rte Fte', `- ${withholdingTax.toLocaleString('es-CO')}`);
+  }
+
+  if (discounts && discounts[0].concept) {
+    // discounts
+    for (const discount of discounts) {
+      if (discount.concept && discount.value) {
+        const concept = `Dto ${discount.concept} (${discount.value}%)`;
+        const calculatedVal = subtotal * (discount.value / 100);
+        const value = `- ${calculatedVal.toLocaleString('es-CO')}`;
+        drawFooterText(concept, value);
+      }
+    }
   }
 
   // Total
-  newLineY += lineHeight;
   props.y = height - newLineY;
-  page.drawText('TOTAL A PAGAR', {
-    ...props,
-    x: col3,
-  });
-  page.drawText(numberToCurrency(total), {
-    ...props,
-    x: col4,
-  });
+  props.font = style_Bold;
+  drawFooterText('TOTAL A PAGAR', numberToCurrency(total));
 }
 
 export function addTableBorder(page: PDFPage, config: Config, tableBorderHeight: number): void {
@@ -364,6 +320,34 @@ export function addTableBorder(page: PDFPage, config: Config, tableBorderHeight:
   });
 }
 
+export function addFooter(page: PDFPage, config: Config, observations?: string): void {
+  const {
+    page: { leftColX, rightColX },
+    fonts: { style_Bold, style_Regular, size_md, size_sm },
+  } = config;
+  const propsBold = {
+    font: style_Bold,
+    size: size_md,
+    y: config.y._f1,
+  };
+
+  const textList = [
+    'RECIBIDO POR:',
+    'OBSERVACIONES:',
+    observations ?? '',
+    'DE LA TIERRA - Cll 6 sur # 50 - 30. Medellín - Cel. 304 4070005 - WP 305 4806327',
+  ];
+  const props = [
+    { ...propsBold, x: leftColX },
+    { ...propsBold, x: rightColX },
+    { ...propsBold, font: style_Regular, y: config.y._f2, x: rightColX },
+    { ...propsBold, font: style_Regular, y: config.y._f3, x: leftColX * 2, size: size_sm },
+  ];
+  textList.forEach((text, i) => {
+    page.drawText(text, { ...props[i] });
+  });
+}
+
 /**
  * @param  {PDFPage} page
  * @param  {Config} config
@@ -378,13 +362,14 @@ export async function addLogo(
   pdfDoc: PDFDocument
 ): Promise<void> {
   const {
-    page: { leftColX, height },
+    page: { leftColX },
+    y,
   } = config;
   const pngImageBytes = await fetch(logoUrl).then((res) => res.arrayBuffer());
   const jpgImage = await pdfDoc.embedPng(pngImageBytes);
   page.drawImage(jpgImage, {
     x: leftColX,
-    y: height - 80,
+    y: y._logo,
     width: 80,
     height: 70,
   });
