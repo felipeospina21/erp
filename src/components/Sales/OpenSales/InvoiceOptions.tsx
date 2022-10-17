@@ -15,7 +15,7 @@ import {
 } from '@/redux/services';
 import { createInvoice } from '@/utils/pdf';
 
-export type Discount = { id?: number; concept?: string; value?: number };
+export type Discount = { id?: number; concept: string; value: number };
 
 interface InvoiceOptionsProps {
   saleId: string;
@@ -66,7 +66,7 @@ export default function InvoiceOptions({
     updateInvoiceRef();
     // get sale data from api cache. filter array with saleId
     // create pdf invoice, createInvoice({data: data from step above , docNumber: invoiceRef, observations: textValue})
-    if (sale && client) createInvoice(sale, client, newCount, textValue);
+    if (sale && client) createInvoice(sale, client, newCount, textValue, discounts);
     // close modal
     setDisplayModal(false);
     // in case of error show toast

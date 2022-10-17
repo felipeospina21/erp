@@ -44,6 +44,7 @@ export async function createPackingList(
       _f1: 55,
       _f2: 35,
       _f3: 15,
+      _logo: 80,
     },
   };
 

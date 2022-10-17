@@ -17,6 +17,7 @@ export function pdfConfig(
       _f1: y._f1,
       _f2: y._f2,
       _f3: y._f3,
+      _logo: page.height - y._logo,
     },
     lineHeight: {
       _12: 12,

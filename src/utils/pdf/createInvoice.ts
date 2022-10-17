@@ -13,6 +13,7 @@ import {
   createPDF,
 } from './pdfUtils';
 import { pdfConfig } from './pdfConfig';
+import { Discount } from '@/components/Sales/OpenSales/InvoiceOptions';
 
 export interface CreateInvoice extends CreatePdfData {
   orderedProducts: Array<OrderedProduct>;
@@ -24,7 +25,8 @@ export async function createInvoice(
   data: CreateInvoice,
   client: Client,
   docNumber?: number,
-  observations?: string
+  observations?: string,
+  discounts?: Discount[]
 ): Promise<void> {
   const { pdfDoc, page } = await createPDF();
   const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
@@ -38,12 +40,13 @@ export async function createInvoice(
       rightColX: 335,
     },
     y: {
-      _1: 25,
-      _2: 110,
-      _3: 195,
-      _f1: 85,
-      _f2: 55,
+      _1: 55,
+      _2: 140,
+      _3: 235,
+      _f1: 115,
+      _f2: 85,
       _f3: 15,
+      _logo: 100,
     },
   };
 
@@ -82,7 +85,16 @@ export async function createInvoice(
   );
   addLeftHeader(page, client, config);
   addRightHeader(page, bankData, config);
-  addProducts(page, config, formatedOrderedProducts, total, subtotal, withholdingTax);
+  addProducts(
+    page,
+    config,
+    formatedOrderedProducts,
+    total,
+    subtotal,
+    withholdingTax,
+    true,
+    discounts
+  );
   addFooter(page, config, observations);
   // addTableBorder(page, config, tableBorderHight);
 

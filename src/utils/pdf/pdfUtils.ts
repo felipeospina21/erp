@@ -3,6 +3,7 @@ import download from 'downloadjs';
 import type { Client, NewSaleOrderedProduct, PaymentOptions } from '@/redux/services';
 import { numberToCurrency, formatDate, FontsConfig } from '..';
 import type { Config, BankData } from './types';
+import { Discount } from '@/components/Sales/OpenSales/InvoiceOptions';
 
 interface Props {
   x: number | number[];
@@ -11,13 +12,23 @@ interface Props {
   size: number;
   lineSpace: number;
 }
+
+type TextStyle = 'bold' | 'regular' | 'boldFirst';
+
 function getLineHeight(y: number, i: number, lineSpace: number): number {
   return y - i * lineSpace;
 }
 
-function drawTextBlock(list: Array<string>, page: PDFPage, props: Props, font: FontsConfig): void {
+function drawTextBlock(
+  list: Array<string>,
+  page: PDFPage,
+  props: Props,
+  font: FontsConfig,
+  textStyle: TextStyle
+): void {
   list.forEach((text, idx) => {
-    if (idx === 0) props.font = font.style_Bold;
+    if (idx === 0 && textStyle === 'boldFirst') props.font = font.style_Bold;
+    else if (textStyle === 'bold') props.font = font.style_Bold;
     else props.font = font.style_Regular;
 
     if (Array.isArray(props.x)) {
@@ -93,7 +104,7 @@ export function addInvoiceData(
     textsList.push(dueDateHeader);
   }
 
-  drawTextBlock(textsList, page, props, { style_Regular, style_Bold });
+  drawTextBlock(textsList, page, props, { style_Regular, style_Bold }, 'boldFirst');
 }
 
 export function addLeftHeader(page: PDFPage, clientInfo: Client, config: Config): void {
@@ -115,7 +126,7 @@ export function addLeftHeader(page: PDFPage, clientInfo: Client, config: Config)
   const clientCity = `${city}, ${department}`;
   const linesText = ['CLIENTE', clientName, clientId, clientAddress, clientCity];
 
-  drawTextBlock(linesText, page, props, { style_Regular, style_Bold });
+  drawTextBlock(linesText, page, props, { style_Regular, style_Bold }, 'boldFirst');
 }
 
 export function addRightHeader(page: PDFPage, bankData: BankData, config: Config): void {
@@ -134,7 +145,7 @@ export function addRightHeader(page: PDFPage, bankData: BankData, config: Config
   };
 
   const textsList = [header, name, id, accountType, accountNumber];
-  drawTextBlock(textsList, page, props, { style_Regular, style_Bold });
+  drawTextBlock(textsList, page, props, { style_Regular, style_Bold }, 'boldFirst');
 }
 
 export function addTableHeader(page: PDFPage, config: Config, hasPrices = true): void {
@@ -161,7 +172,7 @@ export function addTableHeader(page: PDFPage, config: Config, hasPrices = true):
     size: size_md,
   };
 
-  drawTextBlock(textList, page, props, { style_Regular, style_Bold });
+  drawTextBlock(textList, page, props, { style_Regular, style_Bold }, 'bold');
 }
 
 export function addProducts(
@@ -171,7 +182,8 @@ export function addProducts(
   total: number,
   subtotal: number,
   withholdingTax?: number,
-  hasPrices = true
+  hasPrices = true,
+  discounts?: Discount[]
 ): void {
   let newLineY = config.page.height - config.y._3;
   addTableHeader(page, config, hasPrices);
@@ -214,11 +226,11 @@ export function addProducts(
 
     newLineY += lineHeight._15;
     props.y = height - newLineY;
-    drawTextBlock(textList, page, props, { style_Regular, style_Bold });
+    drawTextBlock(textList, page, props, { style_Regular, style_Bold }, 'regular');
   });
 
   if (hasPrices) {
-    addTableFooter(page, config, newLineY, total, subtotal, withholdingTax);
+    addTableFooter(page, config, newLineY, total, subtotal, withholdingTax, discounts);
   }
 }
 
@@ -228,12 +240,13 @@ export function addTableFooter(
   newLineY: number,
   total: number,
   subtotal: number,
-  withholdingTax?: number
+  withholdingTax?: number,
+  discounts?: Discount[]
 ): void {
   const {
     page: { height },
     lineHeight,
-    fonts: { style_Regular, size_sm },
+    fonts: { style_Regular, style_Bold, size_sm },
     table: {
       x: { col3, col4 },
     },
@@ -242,50 +255,50 @@ export function addTableFooter(
     font: style_Regular,
     size: size_sm,
     y: height - newLineY,
-    // x:[col3, col4],
-    // lineSpace: 0,
   };
   page.drawLine({
     start: { x: col3, y: height - newLineY - 10 },
     end: { x: col4 + 50, y: height - newLineY - 10 },
   });
   newLineY += lineHeight._15 + 5;
-  if (withholdingTax) {
-    // Subtotal
-    props.y = height - newLineY;
-    page.drawText('SUBTOTAL', {
-      ...props,
-      x: col3,
-    });
-    page.drawText(subtotal.toLocaleString('es-CO'), {
-      ...props,
-      x: col4,
-    });
 
-    // RteFuente
-    newLineY += lineHeight._15;
+  function drawFooterText(concept: string, value: string): void {
     props.y = height - newLineY;
-    page.drawText('Rte Fte', {
+    page.drawText(concept, {
       ...props,
       x: col3,
     });
-    page.drawText(`- ${withholdingTax.toLocaleString('es-CO')}`, {
+    page.drawText(value, {
       ...props,
       x: col4,
     });
+    newLineY += lineHeight._15;
+  }
+
+  if (withholdingTax || discounts?.length) {
+    // Subtotal
+    drawFooterText('SUBTOTAL', subtotal.toLocaleString('es-CO'));
+  }
+
+  if (withholdingTax) {
+    // withholdingTax
+    drawFooterText('Rte Fte', `- ${withholdingTax.toLocaleString('es-CO')}`);
+  }
+
+  if (discounts && discounts?.length) {
+    // discounts
+    for (const discount of discounts) {
+      const concept = `Dto ${discount.concept} (${discount.value}%)`;
+      const calculatedVal = subtotal * (discount.value / 100);
+      const value = `- ${calculatedVal.toLocaleString('es-CO')}`;
+      drawFooterText(concept, value);
+    }
   }
 
   // Total
-  newLineY += lineHeight._15;
   props.y = height - newLineY;
-  page.drawText('TOTAL A PAGAR', {
-    ...props,
-    x: col3,
-  });
-  page.drawText(numberToCurrency(total), {
-    ...props,
-    x: col4,
-  });
+  props.font = style_Bold;
+  drawFooterText('TOTAL A PAGAR', numberToCurrency(total));
 }
 
 export function addTableBorder(page: PDFPage, config: Config, tableBorderHeight: number): void {
@@ -347,13 +360,14 @@ export async function addLogo(
   pdfDoc: PDFDocument
 ): Promise<void> {
   const {
-    page: { leftColX, height },
+    page: { leftColX },
+    y,
   } = config;
   const pngImageBytes = await fetch(logoUrl).then((res) => res.arrayBuffer());
   const jpgImage = await pdfDoc.embedPng(pngImageBytes);
   page.drawImage(jpgImage, {
     x: leftColX,
-    y: height - 80,
+    y: y._logo,
     width: 80,
     height: 70,
   });
