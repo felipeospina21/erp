@@ -15,7 +15,7 @@ import {
 } from '@/redux/services';
 import { createInvoice } from '@/utils/pdf';
 
-export type Discount = { id?: number; concept: string; value: number };
+export type Discount = { id?: number; concept?: string; value?: number };
 
 interface InvoiceOptionsProps {
   saleId: string;

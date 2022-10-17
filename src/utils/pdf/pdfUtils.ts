@@ -288,10 +288,12 @@ export function addTableFooter(
   if (discounts && discounts[0].concept) {
     // discounts
     for (const discount of discounts) {
-      const concept = `Dto ${discount.concept} (${discount.value}%)`;
-      const calculatedVal = subtotal * (discount.value / 100);
-      const value = `- ${calculatedVal.toLocaleString('es-CO')}`;
-      drawFooterText(concept, value);
+      if (discount.concept && discount.value) {
+        const concept = `Dto ${discount.concept} (${discount.value}%)`;
+        const calculatedVal = subtotal * (discount.value / 100);
+        const value = `- ${calculatedVal.toLocaleString('es-CO')}`;
+        drawFooterText(concept, value);
+      }
     }
   }
 
