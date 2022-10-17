@@ -275,7 +275,7 @@ export function addTableFooter(
     newLineY += lineHeight._15;
   }
 
-  if (withholdingTax || discounts?.length) {
+  if (withholdingTax || (discounts && discounts[0].concept)) {
     // Subtotal
     drawFooterText('SUBTOTAL', subtotal.toLocaleString('es-CO'));
   }
@@ -285,7 +285,7 @@ export function addTableFooter(
     drawFooterText('Rte Fte', `- ${withholdingTax.toLocaleString('es-CO')}`);
   }
 
-  if (discounts && discounts?.length) {
+  if (discounts && discounts[0].concept) {
     // discounts
     for (const discount of discounts) {
       const concept = `Dto ${discount.concept} (${discount.value}%)`;
