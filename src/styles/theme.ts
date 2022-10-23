@@ -13,8 +13,8 @@ export const theme = extendTheme({
       green: '#988c24',
       purple: '#a16586',
       bg: '#fff1e6',
+      bg_100: '#f6e2d4',
       bgLight: '#FEFEFE',
-      // bgLight: '#ecf2fe',
     },
     custom: {
       grey: {
@@ -64,6 +64,18 @@ export const theme = extendTheme({
         700: '#711e0c',
         800: '#461505',
         900: '#1e0a00',
+      },
+      orange: {
+        50: '#fff5de',
+        100: '#fde1b2',
+        200: '#fac985',
+        300: '#f6ad55',
+        400: '#f3a427',
+        500: '#da970f',
+        600: '#aa8109',
+        700: '#796404',
+        800: '#4a4100',
+        900: '#1d1800',
       },
     },
   },

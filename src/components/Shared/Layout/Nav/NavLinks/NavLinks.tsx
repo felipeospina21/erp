@@ -16,6 +16,7 @@ export function NavLinks({ onClose }: NavLinksProps): JSX.Element {
       <DropDownLink moduleName="Ventas">
         <StyledLink href="/ventas/nueva-venta" text="Crear Venta" onClose={onClose} />
         <StyledLink href="/ventas/listado-ventas" text="Listado Ventas" onClose={onClose} />
+        <StyledLink href="/ventas/ventas-abiertas" text="Ventas Abiertas" onClose={onClose} />
       </DropDownLink>
     </List>
   );
