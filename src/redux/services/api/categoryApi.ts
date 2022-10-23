@@ -11,6 +11,7 @@ export const categoryApi = api.injectEndpoints({
       query: () => ({
         url: '/category',
         method: 'GET',
+        withCredentials: true,
       }),
       providesTags: [{ type: 'Category' }],
     }),
