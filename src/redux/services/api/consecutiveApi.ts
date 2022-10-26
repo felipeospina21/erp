@@ -13,6 +13,7 @@ export const consecutiveApi = api.injectEndpoints({
       query: () => ({
         url: `/consecutive/${process.env.NEXT_PUBLIC_COUNT_ID}`,
         method: 'GET',
+        withCredentials: true,
       }),
       providesTags: [{ type: 'Consecutive' }],
     }),
@@ -20,6 +21,7 @@ export const consecutiveApi = api.injectEndpoints({
       query: () => ({
         url: '/consecutive',
         method: 'PUT',
+        withCredentials: true,
         data: { _id: process.env.NEXT_PUBLIC_COUNT_ID },
       }),
       invalidatesTags: [{ type: 'Consecutive' }],
@@ -28,6 +30,7 @@ export const consecutiveApi = api.injectEndpoints({
       query: () => ({
         url: `/consecutive/${process.env.NEXT_PUBLIC_SALE_REF_COUNT_ID}`,
         method: 'GET',
+        withCredentials: true,
       }),
       providesTags: [{ type: 'Consecutive' }],
     }),
@@ -36,6 +39,7 @@ export const consecutiveApi = api.injectEndpoints({
         url: '/consecutive',
         method: 'PUT',
         data: { _id: process.env.NEXT_PUBLIC_SALE_REF_COUNT_ID },
+        withCredentials: true,
       }),
       invalidatesTags: [{ type: 'Consecutive' }],
     }),

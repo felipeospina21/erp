@@ -1,7 +1,14 @@
 module.exports = {
   reactStrictMode: true,
   images: {
-    domains: ['res.cloudinary.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        port: '',
+        pathname: '/felipeospina21/**',
+      },
+    ],
   },
   compiler: {
     styledComponents: true,
