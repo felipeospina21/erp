@@ -6,13 +6,15 @@ import React, { ReactElement } from 'react';
 
 export default function OpenSalesPage(): JSX.Element {
   const { data: sales } = useGetSalesQuery();
+  const closedStatuses = ['pagado', 'anulado'];
+  const openSales = sales?.filter(({ status }) => !closedStatuses.includes(status));
 
   return (
     <Container maxW="1300px" h="100%" mt="2rem">
       <Box overflow={'auto'} h="100%" fontSize="0.85rem">
         <StatusHeader />
 
-        {sales?.map((sale) => {
+        {openSales?.map((sale) => {
           return <StatusRow key={sale._id} sale={sale} />;
         })}
       </Box>
