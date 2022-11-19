@@ -4,7 +4,10 @@ import { CategoryModel } from '@/server/models';
 import { dbConnect, controllerResponse } from '@/server/utils';
 import { findAll, createNewElement, deletetById } from '@/server/mongoose/helpers';
 
-export default async function categoryHandler(req: NextApiRequest, res: NextApiResponse) {
+export default async function categoryHandler(
+  req: NextApiRequest,
+  res: NextApiResponse
+): Promise<void> {
   const { method } = req;
   await dbConnect();
 

@@ -3,7 +3,10 @@ import { CategoryModel } from '@/server/models';
 import { dbConnect, controllerResponse } from '@/server/utils';
 import { findById } from '@/server/mongoose/helpers';
 
-export default async function categoryIdHandler(req: NextApiRequest, res: NextApiResponse) {
+export default async function categoryIdHandler(
+  req: NextApiRequest,
+  res: NextApiResponse
+): Promise<void> {
   const {
     method,
     query: { id },
