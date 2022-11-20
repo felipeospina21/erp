@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, models } from 'mongoose';
 
 export interface WithholdingTax {
   _id: string;
@@ -18,4 +18,5 @@ const withholdingTaxSchema = new Schema<WithholdingTax>(
   }
 );
 
-export const WithholdingTaxModel = model<WithholdingTax>('WithholdingTax', withholdingTaxSchema);
+export const WithholdingTaxModel =
+  models.WithholdingTax || model<WithholdingTax>('WithholdingTax', withholdingTaxSchema);

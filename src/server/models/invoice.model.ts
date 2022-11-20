@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, models } from 'mongoose';
 
 export interface Invoice {
   count: number;
@@ -13,4 +13,4 @@ const invoiceSchema = new Schema<Invoice>(
   }
 );
 
-export const InvoiceModel = model<Invoice>('Invoice', invoiceSchema);
+export const InvoiceModel = models.Invoice || model<Invoice>('Invoice', invoiceSchema);

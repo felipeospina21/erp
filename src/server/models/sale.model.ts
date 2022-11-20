@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, models } from 'mongoose';
 import { Client } from './client.model';
 import { Product } from './product.model';
 import mongooseAutoPopulate from 'mongoose-autopopulate';
@@ -110,4 +110,4 @@ const saleSchema = new Schema<Sale>(
 
 saleSchema.plugin(mongooseAutoPopulate);
 
-export const SaleModel = model<Sale>('Sale', saleSchema);
+export const SaleModel = models.Sale || model<Sale>('Sale', saleSchema);

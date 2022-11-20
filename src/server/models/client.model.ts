@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, models } from 'mongoose';
 
 export interface Client {
   _id: string;
@@ -36,4 +36,4 @@ const clientSchema = new Schema<Client>(
   }
 );
 
-export const ClientModel = model<Client>('Client', clientSchema);
+export const ClientModel = models.Client || model<Client>('Client', clientSchema);

@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, models } from 'mongoose';
 
 export interface Category {
   _id: string;
@@ -9,4 +9,4 @@ const categorySchema = new Schema<Category>({
   name: { type: String, required: true, unique: true, lowercase: true },
 });
 
-export const CategoryModel = model<Category>('Category', categorySchema);
+export const CategoryModel = models.Category || model<Category>('Category', categorySchema);

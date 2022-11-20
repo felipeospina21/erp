@@ -13,18 +13,18 @@ export default async function categoryHandler(
 
   switch (method) {
     case 'GET':
-      const categories = findAll(CategoryModel);
+      const categories = await findAll(CategoryModel);
       controllerResponse(categories, 200, 400, res);
       break;
 
     case 'POST':
-      const newCategory = createNewElement(CategoryModel, req.body);
+      const newCategory = await createNewElement(CategoryModel, req.body);
       controllerResponse(newCategory, 201, 400, res);
       break;
 
     case 'DELETE':
       const { _id: id } = req.body as Category;
-      const deletedCategory = deletetById(CategoryModel, id);
+      const deletedCategory = await deletetById(CategoryModel, id);
       controllerResponse(deletedCategory, 200, 400, res);
       break;
   }

@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, models } from 'mongoose';
 
 export interface Consecutive {
   name: string;
@@ -15,4 +15,5 @@ const consecutiveSchema = new Schema<Consecutive>(
   }
 );
 
-export const ConsecutiveModel = model<Consecutive>('Consecutive', consecutiveSchema);
+export const ConsecutiveModel =
+  models.Consecutive || model<Consecutive>('Consecutive', consecutiveSchema);

@@ -1,51 +1,75 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import type { Category } from '@/server/models';
+import type {
+  Category,
+  Client,
+  Product,
+  Sale,
+  User,
+  WithholdingTax,
+  Consecutive,
+  Invoice,
+} from '@/server/models';
 import { Model } from 'mongoose';
 import Logger from '@/server/utils/logger';
 
-export type ModelsTypes = Category; //| IProduct | ISale | IUser | IWithholdingTax;
+export type ModelTypes =
+  | Category
+  | Client
+  | Product
+  | Sale
+  | User
+  | Consecutive
+  | Invoice
+  | WithholdingTax;
 
-export async function createNewElement(Schema: Model<ModelsTypes>, payload: ModelsTypes) {
+export async function createNewElement(
+  Schema: Model<any>,
+  payload: ModelTypes
+): Promise<ModelTypes> {
   try {
-    const newElement = await Schema.create(payload);
-    return newElement;
+    return Schema.create(payload);
   } catch (error) {
     Logger.error(error);
     throw error;
   }
 }
 
-export async function findAll(Schema: Model<ModelsTypes>, sortBy?: string) {
+export async function findAll(Schema: Model<any>, sortBy?: string): Promise<ModelTypes[]> {
   try {
-    const elementsList = await Schema.find().sort(sortBy);
-    return elementsList;
+    return Schema.find().sort(sortBy);
   } catch (error) {
     Logger.error(error);
     throw error;
   }
 }
 
-export async function findById(Schema: Model<ModelsTypes>, id: string, field?: string) {
+export async function findById(
+  Schema: Model<any>,
+  id: string,
+  field?: string
+): Promise<ModelTypes> {
   try {
-    const element = await Schema.findById(id).select(field);
-    return element;
+    return Schema.findById(id).select(field);
   } catch (error) {
     Logger.error(error);
     throw error;
   }
 }
 
-export async function findOneByField(Schema: Model<ModelsTypes>, field: { [key: string]: string }) {
+export async function findOneByField(
+  Schema: Model<any>,
+  field: { [key: string]: string }
+): Promise<ModelTypes> {
   try {
-    const element = await Schema.findOne(field);
-    return element;
+    const result = await Schema.findOne(field);
+    return result;
   } catch (error) {
     Logger.error(error);
     throw error;
   }
 }
 
-export async function deletetById(Schema: Model<ModelsTypes>, id: string) {
+export async function deletetById(Schema: Model<any>, id: string): Promise<ModelTypes> {
   try {
     const deletedElement = await Schema.findByIdAndDelete(id);
     if (!deletedElement) {
@@ -57,7 +81,11 @@ export async function deletetById(Schema: Model<ModelsTypes>, id: string) {
   }
 }
 
-export async function updateById(Schema: Model<ModelsTypes>, id: string, update: object) {
+export async function updateById(
+  Schema: Model<any>,
+  id: string,
+  update: object
+): Promise<ModelTypes> {
   try {
     const updatedElement = await Schema.findByIdAndUpdate(id, update);
     if (!updatedElement) {

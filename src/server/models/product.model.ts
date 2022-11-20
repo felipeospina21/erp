@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, models } from 'mongoose';
 import { Category } from './category.model';
 import mongooseAutoPopulate from 'mongoose-autopopulate';
 
@@ -33,4 +33,4 @@ const productSchema = new Schema<Product>(
 
 productSchema.plugin(mongooseAutoPopulate);
 
-export const ProductModel = model<Product>('Product', productSchema);
+export const ProductModel = models.Product || model<Product>('Product', productSchema);

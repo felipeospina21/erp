@@ -1,15 +1,16 @@
 import type { NextApiResponse } from 'next';
+import type { ModelTypes } from '../mongoose/helpers';
 
-export async function controllerResponse(
-  servicePromise: Promise<any>,
+// TODO: refactor error response to iherit error object
+export function controllerResponse(
+  serviceResponse: ModelTypes | ModelTypes[],
   resStatus: number,
   errStatus: number,
   res: NextApiResponse
-) {
-  try {
-    const response = await servicePromise;
-    res.status(resStatus).json(response);
-  } catch (error) {
-    res.status(errStatus).json({ error });
+): void {
+  if (serviceResponse) {
+    res.status(resStatus).json(serviceResponse);
+  } else {
+    res.status(errStatus).json({ msg: 'error' });
   }
 }
