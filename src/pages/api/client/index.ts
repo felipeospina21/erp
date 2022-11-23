@@ -3,25 +3,16 @@ import { ClientModel } from '@/server/models';
 import { Client } from '@/server/models';
 import { dbConnect, controllerResponse } from '@/server/utils';
 import { findAll, createNewElement, deletetById, updateById } from '@/server/mongoose/helpers';
+import { transformRetailer } from '@/server/middleware';
 
 export default async function categoryHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<void> {
   const { method, body } = req;
-  const {
-    _id: id,
-    addres1,
-    addres2,
-    city,
-    department,
-    discount,
-    email,
-    name,
-    paymentTerm,
-    retailer,
-  } = body as Client;
+  const { _id: id } = body as Client;
   await dbConnect();
+  const transformedBody = transformRetailer(req);
 
   switch (method) {
     case 'GET':
@@ -30,8 +21,7 @@ export default async function categoryHandler(
       break;
 
     case 'POST':
-      const payload: Client = body;
-      const newClient = await createNewElement(ClientModel, payload);
+      const newClient = await createNewElement(ClientModel, transformedBody);
       controllerResponse(newClient, 201, 400, res);
       break;
 
@@ -41,6 +31,8 @@ export default async function categoryHandler(
       break;
 
     case 'Put':
+      const { addres1, addres2, city, department, discount, email, name, paymentTerm, retailer } =
+        transformedBody;
       const update = {
         addres1,
         addres2,

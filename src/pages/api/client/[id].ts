@@ -16,7 +16,6 @@ export default async function clientHandler(
   switch (method) {
     case 'GET':
       const client = await findById(ClientModel, id as string);
-      console.log(client);
       controllerResponse(client, 200, 400, res);
       break;
   }
