@@ -3,7 +3,7 @@ import type { ModelTypes } from '../mongoose/helpers';
 
 // TODO: refactor error response to iherit error object
 export function controllerResponse(
-  serviceResponse: ModelTypes | ModelTypes[],
+  serviceResponse: ModelTypes | ModelTypes[] | { message: string },
   resStatus: number,
   errStatus: number,
   res: NextApiResponse
