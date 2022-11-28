@@ -2,8 +2,8 @@ import type { NextApiResponse } from 'next';
 import type { ModelTypes } from '../mongoose/helpers';
 
 // TODO: refactor error response to iherit error object
-export function controllerResponse(
-  serviceResponse: ModelTypes | ModelTypes[] | { message: string },
+export function controllerResponse<T = ModelTypes | ModelTypes[]>(
+  serviceResponse: T,
   resStatus: number,
   errStatus: number,
   res: NextApiResponse
