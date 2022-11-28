@@ -33,14 +33,7 @@
     "**/*.ts",
     "**/*.tsx",
     "src/utils/pdf/pdfUtils.ts",
-    "server/utils/global.d.ts"
+    "src/server/utils/global.d.ts"
   ],
-  "exclude": [
-    "node_modules",
-    "node_modules/*",
-    "node_modules/mongoose/types/query.d.ts",
-    "./node_modules",
-    "./node_modules/*",
-    "./node_modules/@types/node/index.d.ts"
-  ]
+  "exclude": ["node_modules"]
 }
