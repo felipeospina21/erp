@@ -12,7 +12,9 @@ export default async function categoryHandler(
   const { method, body } = req;
   const { _id: id } = body as Client;
   await dbConnect();
-  const transformedBody = transformRetailer(req);
+  let transformedBody;
+  if (body) transformedBody = transformRetailer(req);
+  else transformedBody = body;
 
   switch (method) {
     case 'GET':

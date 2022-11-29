@@ -31,10 +31,8 @@ export default async function loginHandler(
         return;
       }
 
-      // TODO: Check how to use cookie method in response
       const cookies = new Cookies(req, res);
       cookies.set('session-token', token, { httpOnly: true, sameSite: 'none', secure: true });
-      // res.cookie('session-token', token, { httpOnly: true, sameSite: 'none', secure: true });
       res.status(200).json({ message: 'success', user: { id: user._id } });
       break;
   }

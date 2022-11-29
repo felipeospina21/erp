@@ -12,8 +12,6 @@ export default async function logoutHandler(
   switch (method) {
     case 'POST':
       try {
-        // TODO: Check how to clear cookie
-        // res.clearCookie('session-token');
         const cookies = new Cookies(req, res);
         cookies.set('session-token');
         res.status(200).json({ message: 'session canceled' });
