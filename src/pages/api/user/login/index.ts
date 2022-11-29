@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { User, UserModel } from '@/server/models';
 import { dbConnect, generateToken } from '@/server/utils';
 import { findOneByField } from '@/server/mongoose/helpers';
+import Cookies from 'cookies';
 
 export default async function loginHandler(
   req: NextApiRequest,
@@ -31,6 +32,8 @@ export default async function loginHandler(
       }
 
       // TODO: Check how to use cookie method in response
+      const cookies = new Cookies(req, res);
+      cookies.set('session-token', token, { httpOnly: true, sameSite: 'none', secure: true });
       // res.cookie('session-token', token, { httpOnly: true, sameSite: 'none', secure: true });
       res.status(200).json({ message: 'success', user: { id: user._id } });
       break;

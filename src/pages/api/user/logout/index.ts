@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { dbConnect } from '@/server/utils';
+import Cookies from 'cookies';
 
 export default async function logoutHandler(
   req: NextApiRequest,
@@ -13,6 +14,8 @@ export default async function logoutHandler(
       try {
         // TODO: Check how to clear cookie
         // res.clearCookie('session-token');
+        const cookies = new Cookies(req, res);
+        cookies.set('session-token');
         res.status(200).json({ message: 'session canceled' });
       } catch (error) {
         res.json({ message: 'not cookie found' });
