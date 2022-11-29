@@ -11,6 +11,9 @@ module.exports = {
     /* Handle image imports
     https://jestjs.io/docs/webpack#handling-static-assets */
     '^.+\\.(jpg|jpeg|png|gif|webp|svg)$': '<rootDir>/__mocks__/fileMock.js',
+    'react-dnd': 'react-dnd-cjs',
+    'react-dnd-html5-backend': 'react-dnd-html5-backend-cjs',
+    'dnd-core': 'dnd-core-cjs',
     '^@/assets/(.*)$': '<rootDir>/src/assets/$1',
     '^@/components/(.*)$': '<rootDir>/src/components/$1',
     '^@/pages/(.*)$': '<rootDir>/src/pages/$1',
