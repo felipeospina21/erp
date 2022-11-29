@@ -1,5 +1,4 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { createWrapper } from 'next-redux-wrapper';
 import { citiesApi, api } from './services';
 import clientsReducer from './slices/clientsSlice';
 import salesReducer from './slices/salesSlice';
@@ -18,32 +17,13 @@ export const reducer = {
 
 export const middlewares = [api.middleware, citiesApi.middleware];
 
-export const store = () =>
-  configureStore({
-    reducer,
-    middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware()
-        .concat(...middlewares)
-        .concat(rtkQueryErrorLogger),
-  });
+export const store = configureStore({
+  reducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware()
+      .concat(...middlewares)
+      .concat(rtkQueryErrorLogger),
+});
 
-export type AppStore = ReturnType<typeof store>;
-export type RootState = ReturnType<AppStore['getState']>;
-export type AppDispatch = AppStore['dispatch'];
-
-export const wrapper = createWrapper<AppStore>(store);
-
-// export const store = configureStore({
-//   reducer,
-//   middleware: (getDefaultMiddleware) =>
-//     getDefaultMiddleware().concat(
-//       clientApi.middleware,
-//       productApi.middleware,
-//       saleApi.middleware,
-//       userApi.middleware,
-//       invoiceApi.middleware
-//     ),
-// });
-
-// export type RootState = ReturnType<typeof store.getState>;
-// export type AppDispatch = typeof store.dispatch;
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

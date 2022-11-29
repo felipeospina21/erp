@@ -19,9 +19,4 @@ export const taxApi = api.injectEndpoints({
   }),
 });
 
-export const {
-  useGetwithholdingTaxQuery,
-  util: { getRunningOperationPromises: getTaxRunningOperationPromises },
-} = taxApi;
-
-export const { getwithholdingTax } = taxApi.endpoints;
+export const { useGetwithholdingTaxQuery } = taxApi;

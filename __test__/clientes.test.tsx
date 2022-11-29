@@ -11,8 +11,8 @@ const { name: clientName, idNumber } = clients[0]
 test('should render table with clients data, { name, idNubmer } ', async () => {
   render(<ClientesPage/>)
   await screen.findByRole('table')
-  await screen.findByRole('gridcell', { name: clientName })
-  await screen.findByRole('gridcell', { name: idNumber })
+  await screen.findByRole('cell', { name: clientName })
+  await screen.findByRole('cell', { name: idNumber })
  });
 
 test('When clicking create new client button it should open the form', async () => {

@@ -47,9 +47,4 @@ export const citiesApi = createApi({
   }),
 });
 
-export const {
-  useGetDepartmentsQuery,
-  useGetCitiesQuery,
-  util: { getRunningOperationPromises: getCitiesRunningOperationPromises },
-} = citiesApi;
-export const { getDepartments, getCities } = citiesApi.endpoints;
+export const { useGetDepartmentsQuery, useGetCitiesQuery } = citiesApi;

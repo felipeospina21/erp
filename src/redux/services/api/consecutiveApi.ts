@@ -51,8 +51,4 @@ export const {
   useGetInvoiceCountQuery,
   useUpdateSaleRefCountMutation,
   useGetSaleRefCountQuery,
-  util: { getRunningOperationPromises: getConsecutiveRunningOperationPromises },
 } = consecutiveApi;
-
-export const { updateInvoiceCount, getInvoiceCount, getSaleRefCount, updateSaleRefCount } =
-  consecutiveApi.endpoints;

@@ -32,7 +32,7 @@ test('Add stock in batch', async()=> {
   await user.type( await screen.findByRole('textbox', {name: /prod 1/i}), '5')
   await user.click(screen.getByRole('button', { name:/actualizar/i}))
   
-  const alert = await screen.findByRole('alert')
+  const alert = await screen.findByRole('status')
   expect(within(alert).getByText(/inventario actualizado/i)).toBeInTheDocument();  
 })
 

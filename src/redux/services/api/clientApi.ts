@@ -69,8 +69,4 @@ export const {
   useCreateClientMutation,
   useUpdateClientMutation,
   useDeleteClientMutation,
-  util: { getRunningOperationPromises: getClientRunningOperationPromises },
 } = clientApi;
-
-export const { getClients, getClientById, createClient, updateClient, deleteClient } =
-  clientApi.endpoints;

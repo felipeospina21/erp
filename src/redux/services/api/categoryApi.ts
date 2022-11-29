@@ -18,9 +18,4 @@ export const categoryApi = api.injectEndpoints({
   }),
 });
 
-export const {
-  useGetCategoriesQuery,
-  util: { getRunningOperationPromises: getCategoryRunningOperationPromises },
-} = categoryApi;
-
-export const { getCategories } = categoryApi.endpoints;
+export const { useGetCategoriesQuery } = categoryApi;
