@@ -15,11 +15,6 @@ import { Flex } from '@chakra-ui/react';
 import { ReactElement, useState } from 'react';
 import { toastConfig } from '@/config/toastsConfig';
 
-export interface ProductDataForm extends Omit<Product, 'price' | 'stockAvailable' | 'category'> {
-  price: string | Blob;
-  stockAvailable: string | Blob;
-  category: string;
-}
 export default function ProductosPage(): JSX.Element {
   const [displayModal, setDisplayModal] = useState(false);
   const [displayStockModal, setDisplayStockModal] = useState(false);
@@ -62,18 +57,8 @@ export default function ProductosPage(): JSX.Element {
     toastConfig.update
   );
 
-  function createNewProduct(data: ProductDataForm): void {
-    const newProduct = new FormData();
-
-    newProduct.append('category', data.category);
-    newProduct.append('name', data.name);
-    newProduct.append('price', data.price);
-    newProduct.append('stockAvailable', data.stockAvailable);
-    newProduct.append('stockReserved', '0');
-    if (data.image?.length) {
-      newProduct.append('image', data.image[0]);
-    }
-
+  function createNewProduct(data: Product): void {
+    const newProduct = { ...data, stockReserved: 0 };
     createProduct(newProduct);
     setDisplayModal(false);
   }

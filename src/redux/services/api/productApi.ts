@@ -25,11 +25,10 @@ export const productApi = api.injectEndpoints({
       query: () => ({ url: '/products', method: 'GET' }),
       providesTags: [{ type: 'Product' }],
     }),
-    updateProduct: build.mutation<Product, FormData>({
+    updateProduct: build.mutation<Product, Product>({
       query: (body) => ({
         url: '/products',
         method: 'put',
-        headers: { 'Content-Type': 'multipart/form-data' },
         data: body,
       }),
       invalidatesTags: [{ type: 'Product' }],
@@ -66,11 +65,10 @@ export const productApi = api.injectEndpoints({
       }),
       invalidatesTags: [{ type: 'Product' }],
     }),
-    createProduct: build.mutation<Product, FormData>({
+    createProduct: build.mutation<Product, Product>({
       query: (body) => ({
         url: '/products',
         method: 'POST',
-        headers: { 'Content-Type': 'multipart/form-data' },
         data: body,
       }),
       invalidatesTags: [{ type: 'Product' }],

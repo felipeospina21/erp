@@ -24,14 +24,12 @@ export default async function productHandler(
       break;
 
     case 'POST':
-      // TODO: add form middleware
       const payload: Product = req.body;
       const newProduct = await createNewElement(ProductModel, payload);
       controllerResponse(newProduct, 201, 400, res);
       break;
 
     case 'PUT':
-      // TODO: add form middleware
       const update: UpdateProduct = {
         category,
         name,

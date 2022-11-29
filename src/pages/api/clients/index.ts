@@ -27,12 +27,7 @@ export default async function categoryHandler(
       controllerResponse(newClient, 201, 400, res);
       break;
 
-    case 'DELETE':
-      const deletedClient = await deletetById(ClientModel, id);
-      controllerResponse(deletedClient, 200, 400, res);
-      break;
-
-    case 'Put':
+    case 'PUT':
       const { addres1, addres2, city, department, discount, email, name, paymentTerm, retailer } =
         transformedBody;
       const update = {
@@ -48,6 +43,11 @@ export default async function categoryHandler(
       };
       const updatedClient = await updateById(ClientModel, id, update);
       controllerResponse(updatedClient, 200, 400, res);
+      break;
+
+    case 'DELETE':
+      const deletedClient = await deletetById(ClientModel, id);
+      controllerResponse(deletedClient, 200, 400, res);
       break;
   }
 }
