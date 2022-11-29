@@ -123,6 +123,4 @@ export const {
   useSaveSaleMutation,
   useCancelSaleMutation,
   useUpdateSaleStatusMutation,
-  util: { getRunningOperationPromises: getSaleRunningOperationPromises },
 } = saleApi;
-export const { getSales, saveSale, updateSaleStatus, cancelSale } = saleApi.endpoints;

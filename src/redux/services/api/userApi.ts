@@ -59,11 +59,5 @@ export const userApi = api.injectEndpoints({
   }),
 });
 
-export const {
-  useCreateUserMutation,
-  useLoginMutation,
-  useLogoutMutation,
-  useGetUserQuery,
-  util: { getRunningOperationPromises: getUserProductRunningOperationPromises },
-} = userApi;
-export const { createUser, login, logout, getUser } = userApi.endpoints;
+export const { useCreateUserMutation, useLoginMutation, useLogoutMutation, useGetUserQuery } =
+  userApi;

@@ -84,15 +84,4 @@ export const {
   useUpdateProductStockInBatchMutation,
   useDeleteProductMutation,
   useCreateProductMutation,
-  util: { getRunningOperationPromises: getProductRunningOperationPromises },
 } = productApi;
-
-export const {
-  getProducts,
-  updateProduct,
-  updateProductStockAvailable,
-  updateProductStockReserved,
-  updateProductStockInBatch,
-  deleteProduct,
-  createProduct,
-} = productApi.endpoints;
