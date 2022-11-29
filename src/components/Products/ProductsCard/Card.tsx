@@ -1,7 +1,6 @@
 import { CardSkeleton, ConfirmationAlert, CustomModal } from '@/components/Shared';
 import { DeleteButton, EditButton } from '@/components/Shared/IconButtons';
 import { useConfirmDelete } from '@/hooks/useConfirmDelete';
-import { ProductDataForm } from '@/pages/productos';
 import {
   Product,
   useDeleteProductMutation,
@@ -11,7 +10,6 @@ import {
 } from '@/redux/services';
 import { numberToCurrency } from '@/utils/numberToCurrency';
 import { Box, Flex, Heading, Text } from '@chakra-ui/react';
-import Image from 'next/image';
 import React, { useState } from 'react';
 import { SubmitHandler } from 'react-hook-form';
 import ProductForm from '../ProductForm/ProductForm';
@@ -34,18 +32,8 @@ export function Card({ product, locale }: CardProps): JSX.Element {
     return await deleteProduct({ _id: product._id ?? '' });
   }
 
-  function onSubmit(values: ProductDataForm): void | SubmitHandler<Product> {
-    const updatedProduct = new FormData();
-
-    updatedProduct.append('_id', product._id);
-    updatedProduct.append('category', values.category);
-    updatedProduct.append('name', values.name);
-    updatedProduct.append('price', values.price);
-    updatedProduct.append('stockAvailable', values.stockAvailable);
-    if (values.image?.length) {
-      updatedProduct.append('image', values.image[0]);
-    }
-
+  function onSubmit(values: Product): void | SubmitHandler<Product> {
+    const updatedProduct = { ...values, _id: product._id };
     updateProduct(updatedProduct);
     setDisplayModal(false);
   }
@@ -68,16 +56,7 @@ export function Card({ product, locale }: CardProps): JSX.Element {
       p="0.5rem 1rem"
       bgColor="brand.bgLight"
     >
-      <Box borderRadius="xl" width="100%" overflow="hidden">
-        <Image
-          src={product.image ?? '/img-placeholder.png'}
-          alt="product image"
-          width="100%"
-          height="80px"
-          layout="responsive"
-          objectFit={'scale-down'}
-        />
-      </Box>
+      <Box borderRadius="xl" width="100%" overflow="hidden"></Box>
       <Flex flexDir="column" justify="center" align="center" mt="1rem" w="100%">
         <Heading as="h1" size="md">
           {product.name.toLocaleUpperCase(locale)}

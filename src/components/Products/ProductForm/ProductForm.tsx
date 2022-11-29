@@ -25,12 +25,7 @@ export default function ProductForm({
   defaultValues,
   isLoading,
 }: ProductFormProps): JSX.Element {
-  const {
-    register,
-    handleSubmit,
-    control,
-    // formState: { errors },
-  } = useForm<ProductFormValues>();
+  const { handleSubmit, control } = useForm<ProductFormValues>();
 
   return (
     <Container>
@@ -111,16 +106,6 @@ export default function ProductForm({
           />
         </CustomFormField>
 
-        <CustomFormField
-          id="image"
-          label="Imagen"
-          // isError={!!errors?.name}
-          isRequired={false}
-          errorMessage="This field is required"
-          variant={'floating'}
-        >
-          <Input type="file" variant="flushed" {...register('image', { required: false })} />
-        </CustomFormField>
         <Button m="1.5rem auto 0 auto" variant={'primary'} type="submit" isLoading={isLoading}>
           {buttonText}
         </Button>
