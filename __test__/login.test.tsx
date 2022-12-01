@@ -24,7 +24,7 @@ test('On successful login it should redirect to Home page', async () => {
   });
 });
 
-describe('On login error it should not redirect &', ()=>{
+describe('On login error it should not redirect &', () => {
   it('should render wrong password error toast', async () => {
     const user = userEvent.setup();
     render(<Login />);
@@ -33,7 +33,7 @@ describe('On login error it should not redirect &', ()=>{
     await user.click(screen.getByRole('button', { name: /login/i }));
     const alert = await screen.findByRole('status');
     expect(within(alert).getByText(/wrong password/i)).toBeInTheDocument();
-    expect(Router.pathname).toBe('/login')
+    expect(Router.pathname).toBe('/login');
   });
 
   it('should render user not found error toast', async () => {
@@ -44,7 +44,7 @@ describe('On login error it should not redirect &', ()=>{
     await user.click(screen.getByRole('button', { name: /login/i }));
     const alert = await screen.findByRole('status');
     expect(within(alert).getByText(/user not found/i)).toBeInTheDocument();
-    expect(Router.pathname).toBe('/login')
+    expect(Router.pathname).toBe('/login');
   });
 
   it('should render network error toast', async () => {
@@ -55,7 +55,6 @@ describe('On login error it should not redirect &', ()=>{
     await user.click(screen.getByRole('button', { name: /login/i }));
     const alert = await screen.findByRole('status');
     expect(within(alert).getByText(/network error/i)).toBeInTheDocument();
-    expect(Router.pathname).toBe('/login')
+    expect(Router.pathname).toBe('/login');
   });
-})
-
+});

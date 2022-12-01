@@ -3,7 +3,7 @@ import { NoAuthLayout } from '@/components/Shared';
 import { LoginData, useLoginMutation } from '@/redux/services/api/userApi';
 import type { CustomError } from '@/redux/services/customBaseQuery';
 import { Container, Grid, GridItem, Heading, useToast } from '@chakra-ui/react';
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 import Router from 'next/router';
 import React, { ReactElement, useEffect } from 'react';
 
