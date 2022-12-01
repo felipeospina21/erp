@@ -15,8 +15,7 @@ export default async function userByIdHandler(
 
   switch (method) {
     case 'GET':
-      // TODO: add isAuthenticated middleware
-      const user = (await findById(UserModel, id as string)) as User;
+      const user = (await findById(UserModel, id as string, '-password')) as User;
       controllerResponse(user, 200, 400, res);
       break;
   }

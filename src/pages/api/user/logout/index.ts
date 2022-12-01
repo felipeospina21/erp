@@ -1,23 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { dbConnect } from '@/server/utils';
-// import Cookies from 'cookies';
+import { sessionOptions } from '@/server/utils';
+import { withIronSessionApiRoute } from 'iron-session/next';
 
-export default async function logoutHandler(
-  req: NextApiRequest,
-  res: NextApiResponse
-): Promise<void> {
-  const { method } = req;
-  await dbConnect();
+export default withIronSessionApiRoute(logoutRoute, sessionOptions);
 
-  switch (method) {
-    case 'POST':
-      try {
-        // const cookies = new Cookies(req, res);
-        // cookies.set('session-token');
-        res.status(200).json({ message: 'session canceled' });
-      } catch (error) {
-        res.json({ message: 'not cookie found' });
-      }
-      break;
-  }
+function logoutRoute(req: NextApiRequest, res: NextApiResponse): void {
+  req.session.destroy();
+  res.status(200).json({ message: 'session canceled' });
 }
