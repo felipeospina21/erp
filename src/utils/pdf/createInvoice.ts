@@ -55,10 +55,10 @@ export async function createInvoice(
   const { orderedProducts, subtotal, total, withholdingTax, paymentTerm } = data;
   const bankData = {
     header: 'DEBE A',
-    name: 'Catalina Restrepo',
-    id: 'CC 1.039.454.392',
+    name: 'Marcela Murillo Ramirez',
+    id: 'CC 43.204.148',
     accountType: 'Ahorros Bancolombia',
-    accountNumber: 'N°693 657 886 85',
+    accountNumber: 'N°102 822034 31',
   };
   // const tableBorderHight = orderedProducts.length * 15;
   const formatedOrderedProducts: Array<NewSaleOrderedProduct> = orderedProducts.map(
