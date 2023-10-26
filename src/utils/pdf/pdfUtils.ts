@@ -335,7 +335,7 @@ export function addFooter(page: PDFPage, config: Config, observations?: string):
     'RECIBIDO POR:',
     'OBSERVACIONES:',
     observations ?? '',
-    'DE LA TIERRA - Cll 6 sur # 50 - 30. Medellín - Cel. 324 6813404 - WP 305 4806327',
+    'DE LA TIERRA - Cll 6 sur # 50 - 30. Medellín - Cel. 311 7999457 - WP 305 4806327',
   ];
   const props = [
     { ...propsBold, x: leftColX },
